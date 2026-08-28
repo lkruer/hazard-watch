@@ -119,9 +119,63 @@ def main(date: str) -> None:
     print(f"wrote {out_dir}")
 
 
+def parity(date: str) -> None:
+    """Compare world-field percentiles against the validated point pipelines.
+
+    Exact equality is not expected: the world ladders use fortnight bins and a
+    21-step quantile ladder over 2001+, while the point pipelines use a
+    +/-15-day sliding window over 2004+. Agreement within ~0.10 mean absolute
+    difference is the pass bar; larger drift would mean the world maps say
+    something different from what was validated, which would be disqualifying.
+    """
+    from pipelines import fireweather as fw
+    from pipelines import nasapower
+    from eval.drought_validate import DroughtSeries
+
+    z = np.load(LADDERS)
+    lat, lon = z["lat"], z["lon"]
+    src = PROCESSED / "world" / date
+    fields = {s: np.load(src / f"{s}_pctl.npy").astype("float32")
+              for s in ("rain3d", "rain30d", "spi90", "kbdi", "vpd")}
+
+    POINTS = [("pnw-coast-range", 45.5, -123.5),
+              ("kathmandu", 27.75, 85.40),
+              ("paradise-CA", 39.75, -121.60),
+              ("okavango", -19.5, 23.0),
+              ("iowa", 41.9, -93.6)]
+    diffs = []
+    print(f"{'point':<18}{'signal':<10}{'world':>7}{'point':>7}{'diff':>7}")
+    for name, la, lo in POINTS:
+        i = int(np.argmin(np.abs(lat - la)))
+        j = int(np.argmin(np.abs(lon - lo)))
+        w = nasapower.features_at(la, lo, date) or {}
+        fwf = fw.features_at(la, lo, date) or {}
+        raw = nasapower.fetch_cell(*nasapower.cell(la, lo))
+        dsf = DroughtSeries(raw).features(date) if raw else {}
+        ref = {"rain3d": w.get("precip_3d_pctl_seasonal"),
+               "rain30d": w.get("precip_30d_pctl_seasonal"),
+               "spi90": (dsf or {}).get("spi90"),
+               "kbdi": fwf.get("kbdi_pctl_seasonal"),
+               "vpd": fwf.get("vpd_pctl_seasonal")}
+        for s, rv in ref.items():
+            wv = float(fields[s][i, j])
+            if rv is None or not np.isfinite(wv):
+                continue
+            d = wv - rv
+            diffs.append(abs(d))
+            print(f"{name:<18}{s:<10}{wv:>7.2f}{rv:>7.2f}{d:>+7.2f}")
+    mad = float(np.mean(diffs))
+    print(f"\nmean |diff| = {mad:.3f} over {len(diffs)} comparisons  "
+          f"-> {'PASS (<=0.10)' if mad <= 0.10 else 'INVESTIGATE'}")
+
+
 if __name__ == "__main__":
     import argparse
     ap = argparse.ArgumentParser()
     ap.add_argument("--date", default="2024-11-15")
+    ap.add_argument("--parity", action="store_true",
+                    help="compare world fields to the point pipelines")
     a = ap.parse_args()
     main(a.date)
+    if a.parity:
+        parity(a.date)

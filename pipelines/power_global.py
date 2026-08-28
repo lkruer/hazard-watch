@@ -54,11 +54,16 @@ def _open():
 
 
 def _rolling_sum(a: np.ndarray, w: int) -> np.ndarray:
-    """Trailing w-day sum along axis 0, NaN for the first w-1 days."""
-    c = np.cumsum(np.nan_to_num(a, nan=0.0), axis=0, dtype="float64")
+    """Trailing w-day sum along axis 0, NaN for the first w-1 days.
+
+    prefix[i] = sum of the first i days; out[i] = prefix[i+1] - prefix[i+1-w]
+    -- the same prefix-sum form as CellSeries._cum, which parity-checked
+    against the validated point features."""
+    prefix = np.concatenate(
+        [np.zeros((1,) + a.shape[1:], dtype="float64"),
+         np.cumsum(np.nan_to_num(a, nan=0.0), axis=0, dtype="float64")], axis=0)
     out = np.full_like(a, np.nan, dtype="float32")
-    out[w - 1:] = (c[w - 1:] - np.concatenate(
-        [np.zeros((1,) + a.shape[1:]), c[:-w]], axis=0)[w - 1:]).astype("float32")
+    out[w - 1:] = (prefix[w:] - prefix[:-w]).astype("float32")
     return out
 
 
