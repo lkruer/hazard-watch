@@ -1,0 +1,43 @@
+{
+  "lat": 39.75,
+  "lon": -121.6,
+  "date": "2018-11-08",
+  "generated_at": "2026-08-28T01:41:37",
+  "hazards": [
+    {
+      "hazard": "landslide",
+      "tier": "B",
+      "susceptibility": 0.224,
+      "trigger_rain_pctl_seasonal": 0.353,
+      "alert": false,
+      "caveats": [
+        "global-floor ensemble; relative score, not probability"
+      ]
+    },
+    {
+      "hazard": "fire",
+      "tier": "B",
+      "danger": 0.274,
+      "kbdi": 691.0,
+      "vpd_kpa": 1.02,
+      "days_since_rain": 35,
+      "caveats": [
+        "danger conditions, not ignition prediction",
+        "calibrated on US+Canada fire records; validated to transfer between them (ROC 0.77 cold)"
+      ]
+    },
+    {
+      "hazard": "drought",
+      "tier": "B",
+      "spi30": 0.025,
+      "spi90": 0.075,
+      "spi180": 0.066,
+      "caveats": [
+        "empirical SPI vs own 2004-2024 climatology",
+        "severity head calibrated on US Drought Monitor only"
+      ],
+      "p_severe_drought": 0.333
+    }
+  ],
+  "note": "Free public-data hazard context. Not an official warning; consult local authorities."
+}

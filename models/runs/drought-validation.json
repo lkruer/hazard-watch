@@ -1,0 +1,510 @@
+{
+  "name": "drought-validation",
+  "layer": "drought",
+  "indicator": "empirical SPI (30/90/180d seasonal percentile of precip)",
+  "truth": "US Drought Monitor county weekly area-% (open API)",
+  "n_counties": 61,
+  "n_county_weeks": 60573,
+  "auc_spi90_median": 0.7989921012324688,
+  "auc_spi90_iqr": [
+    0.7256111934295464,
+    0.8691996987101026
+  ],
+  "spearman_median": 0.44991899522784773,
+  "drought_head_cv": {
+    "roc_auc": 0.7946978699461831,
+    "pr_auc": 0.4455256478899957,
+    "base_rate": 0.16053357106301488
+  },
+  "per_county": [
+    {
+      "fips": "01003",
+      "state": "AL",
+      "n_weeks": 993,
+      "d2_weeks": 79,
+      "auc_spi90": 0.8924466110849514,
+      "spearman_sev_spi90": 0.6169313156944966
+    },
+    {
+      "fips": "01093",
+      "state": "AL",
+      "n_weeks": 993,
+      "d2_weeks": 103,
+      "auc_spi90": 0.9125668157521545,
+      "spearman_sev_spi90": 0.5581493250235412
+    },
+    {
+      "fips": "04013",
+      "state": "AZ",
+      "n_weeks": 993,
+      "d2_weeks": 353,
+      "auc_spi90": 0.7109485658640226,
+      "spearman_sev_spi90": 0.40304688718109083
+    },
+    {
+      "fips": "04023",
+      "state": "AZ",
+      "n_weeks": 993,
+      "d2_weeks": 325,
+      "auc_spi90": 0.7293689543988946,
+      "spearman_sev_spi90": 0.3868469247293246
+    },
+    {
+      "fips": "05025",
+      "state": "AR",
+      "n_weeks": 993,
+      "d2_weeks": 95,
+      "auc_spi90": 0.9144824756769429,
+      "spearman_sev_spi90": 0.5592470606985539
+    },
+    {
+      "fips": "06015",
+      "state": "CA",
+      "n_weeks": 993,
+      "d2_weeks": 145,
+      "auc_spi90": 0.6712548796356539,
+      "spearman_sev_spi90": 0.3270013753561201
+    },
+    {
+      "fips": "06049",
+      "state": "CA",
+      "n_weeks": 993,
+      "d2_weeks": 380,
+      "auc_spi90": 0.5999849746715893,
+      "spearman_sev_spi90": 0.2319996336677632
+    },
+    {
+      "fips": "06065",
+      "state": "CA",
+      "n_weeks": 993,
+      "d2_weeks": 349,
+      "auc_spi90": 0.5983822456352668,
+      "spearman_sev_spi90": 0.2934980874485872
+    },
+    {
+      "fips": "06075",
+      "state": "CA",
+      "n_weeks": 993,
+      "d2_weeks": 279,
+      "auc_spi90": 0.6464514121060609,
+      "spearman_sev_spi90": 0.2808093269486362
+    },
+    {
+      "fips": "06083",
+      "state": "CA",
+      "n_weeks": 993,
+      "d2_weeks": 401,
+      "auc_spi90": 0.6518564231313608,
+      "spearman_sev_spi90": 0.29570322413421546
+    },
+    {
+      "fips": "06109",
+      "state": "CA",
+      "n_weeks": 993,
+      "d2_weeks": 333,
+      "auc_spi90": 0.6150627900627901,
+      "spearman_sev_spi90": 0.2888072761329722
+    },
+    {
+      "fips": "08089",
+      "state": "CO",
+      "n_weeks": 993,
+      "d2_weeks": 294,
+      "auc_spi90": 0.7976190476190477,
+      "spearman_sev_spi90": 0.5524284538537553
+    },
+    {
+      "fips": "08091",
+      "state": "CO",
+      "n_weeks": 993,
+      "d2_weeks": 230,
+      "auc_spi90": 0.7761382414952419,
+      "spearman_sev_spi90": 0.4589495629360449
+    },
+    {
+      "fips": "09150",
+      "state": "CT",
+      "n_weeks": 993,
+      "d2_weeks": 24,
+      "auc_spi90": 0.9463364293085654,
+      "spearman_sev_spi90": 0.5372030979886385
+    },
+    {
+      "fips": "12011",
+      "state": "FL",
+      "n_weeks": 993,
+      "d2_weeks": 69,
+      "auc_spi90": 0.8808504297634733,
+      "spearman_sev_spi90": 0.4099632804544713
+    },
+    {
+      "fips": "12035",
+      "state": "FL",
+      "n_weeks": 993,
+      "d2_weeks": 74,
+      "auc_spi90": 0.7758212510660824,
+      "spearman_sev_spi90": 0.407471139294294
+    },
+    {
+      "fips": "16061",
+      "state": "ID",
+      "n_weeks": 993,
+      "d2_weeks": 76,
+      "auc_spi90": 0.7243586064397636,
+      "spearman_sev_spi90": 0.312326682463057
+    },
+    {
+      "fips": "16073",
+      "state": "ID",
+      "n_weeks": 993,
+      "d2_weeks": 268,
+      "auc_spi90": 0.5573932063818836,
+      "spearman_sev_spi90": 0.2073057753910267
+    },
+    {
+      "fips": "17043",
+      "state": "IL",
+      "n_weeks": 993,
+      "d2_weeks": 22,
+      "auc_spi90": 0.8081172174889992,
+      "spearman_sev_spi90": 0.38701377986569274
+    },
+    {
+      "fips": "18129",
+      "state": "IN",
+      "n_weeks": 993,
+      "d2_weeks": 32,
+      "auc_spi90": 0.9079409469302809,
+      "spearman_sev_spi90": 0.374789733502692
+    },
+    {
+      "fips": "19011",
+      "state": "IA",
+      "n_weeks": 993,
+      "d2_weeks": 71,
+      "auc_spi90": 0.8064602364730683,
+      "spearman_sev_spi90": 0.5121905924741075
+    },
+    {
+      "fips": "19133",
+      "state": "IA",
+      "n_weeks": 993,
+      "d2_weeks": 140,
+      "auc_spi90": 0.8370289733712946,
+      "spearman_sev_spi90": 0.5408872306900318
+    },
+    {
+      "fips": "20083",
+      "state": "KS",
+      "n_weeks": 993,
+      "d2_weeks": 266,
+      "auc_spi90": 0.7481978674333702,
+      "spearman_sev_spi90": 0.5667270761430226
+    },
+    {
+      "fips": "20207",
+      "state": "KS",
+      "n_weeks": 993,
+      "d2_weeks": 144,
+      "auc_spi90": 0.8152483313702396,
+      "spearman_sev_spi90": 0.5700823476935128
+    },
+    {
+      "fips": "21173",
+      "state": "KY",
+      "n_weeks": 993,
+      "d2_weeks": 35,
+      "auc_spi90": 0.930181926632866,
+      "spearman_sev_spi90": 0.4181941872238236
+    },
+    {
+      "fips": "22055",
+      "state": "LA",
+      "n_weeks": 993,
+      "d2_weeks": 88,
+      "auc_spi90": 0.896798091411351,
+      "spearman_sev_spi90": 0.54047475741757
+    },
+    {
+      "fips": "23019",
+      "state": "ME",
+      "n_weeks": 993,
+      "d2_weeks": 9,
+      "auc_spi90": 0.9231594399277326,
+      "spearman_sev_spi90": 0.42021587800750776
+    },
+    {
+      "fips": "24039",
+      "state": "MD",
+      "n_weeks": 993,
+      "d2_weeks": 42,
+      "auc_spi90": 0.780206299133744,
+      "spearman_sev_spi90": 0.4535725671332745
+    },
+    {
+      "fips": "26033",
+      "state": "MI",
+      "n_weeks": 993,
+      "d2_weeks": 14,
+      "auc_spi90": 0.9353932584269663,
+      "spearman_sev_spi90": 0.22383912519093488
+    },
+    {
+      "fips": "26043",
+      "state": "MI",
+      "n_weeks": 993,
+      "d2_weeks": 68,
+      "auc_spi90": 0.8042289348171701,
+      "spearman_sev_spi90": 0.4324431135228791
+    },
+    {
+      "fips": "26091",
+      "state": "MI",
+      "n_weeks": 993,
+      "d2_weeks": 4,
+      "auc_spi90": 0.9858442871587462,
+      "spearman_sev_spi90": 0.41904547530668074
+    },
+    {
+      "fips": "27051",
+      "state": "MN",
+      "n_weeks": 993,
+      "d2_weeks": 49,
+      "auc_spi90": 0.723225095122795,
+      "spearman_sev_spi90": 0.386488432065614
+    },
+    {
+      "fips": "29125",
+      "state": "MO",
+      "n_weeks": 993,
+      "d2_weeks": 43,
+      "auc_spi90": 0.8691064871481028,
+      "spearman_sev_spi90": 0.4949298201003825
+    },
+    {
+      "fips": "30043",
+      "state": "MT",
+      "n_weeks": 993,
+      "d2_weeks": 136,
+      "auc_spi90": 0.7464093280252592,
+      "spearman_sev_spi90": 0.5254918746579403
+    },
+    {
+      "fips": "30111",
+      "state": "MT",
+      "n_weeks": 993,
+      "d2_weeks": 108,
+      "auc_spi90": 0.8321301527516216,
+      "spearman_sev_spi90": 0.4847060834619857
+    },
+    {
+      "fips": "31009",
+      "state": "NE",
+      "n_weeks": 993,
+      "d2_weeks": 187,
+      "auc_spi90": 0.8110129908042623,
+      "spearman_sev_spi90": 0.5100918281004162
+    },
+    {
+      "fips": "31157",
+      "state": "NE",
+      "n_weeks": 993,
+      "d2_weeks": 242,
+      "auc_spi90": 0.7957214072696459,
+      "spearman_sev_spi90": 0.5337653712189874
+    },
+    {
+      "fips": "32023",
+      "state": "NV",
+      "n_weeks": 993,
+      "d2_weeks": 330,
+      "auc_spi90": 0.551702545820193,
+      "spearman_sev_spi90": 0.1434291361799534
+    },
+    {
+      "fips": "35003",
+      "state": "NM",
+      "n_weeks": 993,
+      "d2_weeks": 341,
+      "auc_spi90": 0.6765557814439668,
+      "spearman_sev_spi90": 0.39086151908244854
+    },
+    {
+      "fips": "35011",
+      "state": "NM",
+      "n_weeks": 993,
+      "d2_weeks": 326,
+      "auc_spi90": 0.8003651548458899,
+      "spearman_sev_spi90": 0.5134925822856935
+    },
+    {
+      "fips": "36007",
+      "state": "NY",
+      "n_weeks": 993,
+      "d2_weeks": 0,
+      "auc_spi90": null,
+      "spearman_sev_spi90": null
+    },
+    {
+      "fips": "36089",
+      "state": "NY",
+      "n_weeks": 993,
+      "d2_weeks": 4,
+      "auc_spi90": 0.9567745197168858,
+      "spearman_sev_spi90": 0.3531081536524959
+    },
+    {
+      "fips": "37031",
+      "state": "NC",
+      "n_weeks": 993,
+      "d2_weeks": 29,
+      "auc_spi90": 0.8564708828158535,
+      "spearman_sev_spi90": 0.493991857292184
+    },
+    {
+      "fips": "38011",
+      "state": "ND",
+      "n_weeks": 993,
+      "d2_weeks": 206,
+      "auc_spi90": 0.7802549931533043,
+      "spearman_sev_spi90": 0.49995345858753903
+    },
+    {
+      "fips": "40013",
+      "state": "OK",
+      "n_weeks": 993,
+      "d2_weeks": 217,
+      "auc_spi90": 0.871680364862939,
+      "spearman_sev_spi90": 0.6836734118062212
+    },
+    {
+      "fips": "41007",
+      "state": "OR",
+      "n_weeks": 993,
+      "d2_weeks": 34,
+      "auc_spi90": 0.7667913880880819,
+      "spearman_sev_spi90": 0.38718770554506254
+    },
+    {
+      "fips": "42049",
+      "state": "PA",
+      "n_weeks": 993,
+      "d2_weeks": 0,
+      "auc_spi90": null,
+      "spearman_sev_spi90": null
+    },
+    {
+      "fips": "45041",
+      "state": "SC",
+      "n_weeks": 993,
+      "d2_weeks": 43,
+      "auc_spi90": 0.8470379436964504,
+      "spearman_sev_spi90": 0.5686163666620024
+    },
+    {
+      "fips": "46021",
+      "state": "SD",
+      "n_weeks": 993,
+      "d2_weeks": 106,
+      "auc_spi90": 0.828167875603582,
+      "spearman_sev_spi90": 0.46858234838882323
+    },
+    {
+      "fips": "48061",
+      "state": "TX",
+      "n_weeks": 993,
+      "d2_weeks": 217,
+      "auc_spi90": 0.7935768920138724,
+      "spearman_sev_spi90": 0.5857126132799938
+    },
+    {
+      "fips": "48155",
+      "state": "TX",
+      "n_weeks": 993,
+      "d2_weeks": 399,
+      "auc_spi90": 0.8224306557639891,
+      "spearman_sev_spi90": 0.6612050457716485
+    },
+    {
+      "fips": "48377",
+      "state": "TX",
+      "n_weeks": 993,
+      "d2_weeks": 285,
+      "auc_spi90": 0.7862920011894142,
+      "spearman_sev_spi90": 0.5675974344999869
+    },
+    {
+      "fips": "48385",
+      "state": "TX",
+      "n_weeks": 993,
+      "d2_weeks": 462,
+      "auc_spi90": 0.7648906335347013,
+      "spearman_sev_spi90": 0.5813094517909373
+    },
+    {
+      "fips": "48473",
+      "state": "TX",
+      "n_weeks": 993,
+      "d2_weeks": 158,
+      "auc_spi90": 0.8923671644053665,
+      "spearman_sev_spi90": 0.6702829473318512
+    },
+    {
+      "fips": "48505",
+      "state": "TX",
+      "n_weeks": 993,
+      "d2_weeks": 304,
+      "auc_spi90": 0.8124021274157818,
+      "spearman_sev_spi90": 0.5924445700229024
+    },
+    {
+      "fips": "49031",
+      "state": "UT",
+      "n_weeks": 993,
+      "d2_weeks": 250,
+      "auc_spi90": 0.7100242261103633,
+      "spearman_sev_spi90": 0.36203533842824687
+    },
+    {
+      "fips": "50019",
+      "state": "VT",
+      "n_weeks": 993,
+      "d2_weeks": 0,
+      "auc_spi90": null,
+      "spearman_sev_spi90": null
+    },
+    {
+      "fips": "51005",
+      "state": "VA",
+      "n_weeks": 993,
+      "d2_weeks": 5,
+      "auc_spi90": 0.8692307692307693,
+      "spearman_sev_spi90": 0.3171594168004111
+    },
+    {
+      "fips": "53005",
+      "state": "WA",
+      "n_weeks": 993,
+      "d2_weeks": 142,
+      "auc_spi90": 0.6723779811654889,
+      "spearman_sev_spi90": 0.20813911328171975
+    },
+    {
+      "fips": "55129",
+      "state": "WI",
+      "n_weeks": 993,
+      "d2_weeks": 84,
+      "auc_spi90": 0.7503143171460003,
+      "spearman_sev_spi90": 0.4462654233224209
+    },
+    {
+      "fips": "56037",
+      "state": "WY",
+      "n_weeks": 993,
+      "d2_weeks": 205,
+      "auc_spi90": 0.7117927448310015,
+      "spearman_sev_spi90": 0.3605750714350427
+    }
+  ],
+  "trained_at": "2026-08-28T01:38:49"
+}

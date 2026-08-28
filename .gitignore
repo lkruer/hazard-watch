@@ -7,3 +7,5 @@ data/processed/
 data/cache/
 reports/*.png
 .ipynb_checkpoints/
+data/raw/fire/
+data/raw/gaz_counties.zip

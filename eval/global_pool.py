@@ -60,6 +60,18 @@ REGIONS = {          # country_name value in coolr_events_points.csv
     "malawi": "Malawi",
     "mexico": "Mexico",
 }
+
+# Report-catalog regions (the PNW's regime): position-trusted rows from
+# coolr_reports_points.csv inside report-dense boxes found by
+# pipelines/select_region.py. Smaller but regime-diverse -- Himalaya and the
+# tropical Andes/archipelagos are exactly the physiography the inventory pool
+# lacks, and diversity of regimes is what raises the pooled floor (D19).
+REPORT_REGIONS = {
+    "nepal": (83.25, 27.50, 85.25, 29.50),
+    "india_nw_him": (74.75, 31.00, 78.75, 34.50),
+    "colombia": (-77.5, 3.0, -73.5, 7.5),
+    "indonesia": (106.0, -8.5, 112.5, -5.5),
+}
 N_POS = 3000
 BG_RATIO = 3
 SEED = 17
@@ -131,7 +143,59 @@ def build_region(name: str, country: str) -> None:
     print(f"[{name}] wrote {len(df):,} rows")
 
 
+def reports_for(bbox) -> list[dict]:
+    x0, y0, x1, y1 = bbox
+    out = []
+    with (RAW / "coolr_reports_points.csv").open(encoding="utf-8") as fh:
+        for r in _csv.DictReader(fh):
+            if (r.get("location_accuracy") or "").strip() not in ("exact", "1km"):
+                continue
+            try:
+                la, lo = float(r["latitude"]), float(r["longitude"])
+            except (TypeError, ValueError):
+                continue
+            if x0 <= lo <= x1 and y0 <= la <= y1:
+                out.append({"lat": la, "lon": lo})
+    return out
+
+
+def build_report_region(name: str, bbox) -> None:
+    out = region_csv(name)
+    if out.exists():
+        print(f"[{name}] cached ({out.name})")
+        return
+    pos_all = sampling.dedupe_locations(reports_for(bbox))
+    if len(pos_all) < 100:
+        print(f"[{name}] only {len(pos_all)} trusted sites -- skipping")
+        return
+    rng = random.Random(SEED)
+    pos = (rng.sample(pos_all, N_POS) if len(pos_all) > N_POS else list(pos_all))
+    bg = sampling.target_group_background(bbox, pos_all,
+                                          int(len(pos) * BG_RATIO * 1.3), seed=SEED)
+    print(f"[{name}] {len(pos_all):,} trusted report sites, {len(bg):,} bg candidates")
+    prefetch_dem(pos + bg)
+    rows = []
+    for label, pts, cap in ((1, pos, len(pos)), (0, bg, len(pos) * BG_RATIO)):
+        kept = 0
+        for pnt in pts:
+            if kept >= cap:
+                break
+            t = terrain.derive(pnt["lat"], pnt["lon"])
+            if t is None or (t["elev_m"] <= 0.5 and t["roughness_std"] < 0.1):
+                continue
+            rows.append({"lat": pnt["lat"], "lon": pnt["lon"], "label": label, **t})
+            kept += 1
+        print(f"[{name}]   label={label}: kept {kept:,}")
+    terrain.close_all()
+    df = pd.DataFrame(sampling.spatial_blocks(rows))
+    df["region"] = name
+    df.to_csv(out, index=False)
+    print(f"[{name}] wrote {len(df):,} rows")
+
+
 def build_all() -> None:
+    for name, bbox in REPORT_REGIONS.items():
+        build_report_region(name, bbox)
     for name, country in REGIONS.items():
         # myanmar matrix already exists from the transfer test -- reuse it
         if name == "myanmar" and not region_csv(name).exists():
@@ -176,7 +240,7 @@ def sample_nasa_for(df: pd.DataFrame, batch: int = 400) -> np.ndarray:
 
 
 def nasa_all() -> None:
-    for name in list(REGIONS) + ["pnw"]:
+    for name in list(REGIONS) + list(REPORT_REGIONS) + ["pnw"]:
         p = region_csv(name)
         if not p.exists():
             continue
@@ -197,7 +261,7 @@ def rank_within(df: pd.DataFrame) -> pd.DataFrame:
 
 def loro() -> None:
     frames = {}
-    for name in list(REGIONS) + ["pnw"]:
+    for name in list(REGIONS) + list(REPORT_REGIONS) + ["pnw"]:
         p = region_csv(name)
         if p.exists():
             frames[name] = pd.read_csv(p)

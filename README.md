@@ -1,8 +1,24 @@
 # Multi-Hazard Risk Platform
 
-Free, public, location-based hazard risk scoring. v1 builds the **landslide**
-hazard end to end — ingest → features → model → spatial CV → serve — before any
-other hazard is attempted, per `docs/CLAUDE.md`.
+Free, public, location-based hazard risk scoring — **landslide, fire danger,
+and drought**, built entirely on public datasets, scoreable for any point on
+Earth with explicit confidence tiers:
+
+```bash
+python serve/score_global.py --lat 27.75 --lon 85.40 --date 2024-07-15
+```
+
+The landslide hazard was built end to end first (ingest → features → model →
+spatial CV → hindcast → serve), then the pipeline generalized, per
+`docs/CLAUDE.md`. All decisions and their evidence: `docs/decisions.md`
+(D1–D23).
+
+| hazard | global method | validation |
+|---|---|---|
+| landslide susceptibility | 9-region pool: Tier-A local models + ensemble floor | leave-one-region-out, 4 continents |
+| landslide trigger | rain percentile vs own climatology (label-free) | prospective 2016–2024 hindcast |
+| fire danger | KBDI + VPD + weather percentiles (label-free) | 49k fires, US + Canada, transfers cold (ROC 0.77) |
+| drought | empirical SPI 30/90/180 d (label-free) | 60k county-weeks vs US Drought Monitor (AUC 0.80) |
 
 See `docs/decisions.md` for why each data source and modelling choice was made,
 including the ones that differ from the brief and why.

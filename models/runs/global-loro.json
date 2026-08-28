@@ -17,14 +17,14 @@
     "myanmar": {
       "n": 12000,
       "base_rate": 0.25,
-      "n_train_regions": 7,
+      "n_train_regions": 8,
       "loro": {
-        "roc_auc": 0.6110472962962963,
-        "pr_auc": 0.31835443376961864
+        "roc_auc": 0.6105561481481482,
+        "pr_auc": 0.319226255018663
       },
       "loro_rank": {
-        "roc_auc": 0.661907037037037,
-        "pr_auc": 0.35178048814767343
+        "roc_auc": 0.657563074074074,
+        "pr_auc": 0.34973361602255526
       },
       "local": {
         "roc_auc": 0.7415357777777779,
@@ -40,14 +40,14 @@
     "vietnam": {
       "n": 12000,
       "base_rate": 0.25,
-      "n_train_regions": 7,
+      "n_train_regions": 8,
       "loro": {
-        "roc_auc": 0.663174074074074,
-        "pr_auc": 0.3549609426542023
+        "roc_auc": 0.6626123333333332,
+        "pr_auc": 0.35489605476761266
       },
       "loro_rank": {
-        "roc_auc": 0.7018249629629629,
-        "pr_auc": 0.4233226604987745
+        "roc_auc": 0.7033652222222222,
+        "pr_auc": 0.4246558101395445
       },
       "local": {
         "roc_auc": 0.7824374814814815,
@@ -63,14 +63,14 @@
     "laos": {
       "n": 6676,
       "base_rate": 0.25,
-      "n_train_regions": 7,
+      "n_train_regions": 8,
       "loro": {
-        "roc_auc": 0.6649764027186386,
-        "pr_auc": 0.3686776596249531
+        "roc_auc": 0.6562121597767918,
+        "pr_auc": 0.35857451976932625
       },
       "loro_rank": {
-        "roc_auc": 0.7306762743064444,
-        "pr_auc": 0.422971206721372
+        "roc_auc": 0.7315608358005203,
+        "pr_auc": 0.42525781193956835
       },
       "local": {
         "roc_auc": 0.7690503516766162,
@@ -86,14 +86,14 @@
     "philippines": {
       "n": 12000,
       "base_rate": 0.25,
-      "n_train_regions": 7,
+      "n_train_regions": 8,
       "loro": {
-        "roc_auc": 0.6180582592592594,
-        "pr_auc": 0.33871739623779173
+        "roc_auc": 0.6171265185185185,
+        "pr_auc": 0.3402318046810938
       },
       "loro_rank": {
-        "roc_auc": 0.6486299259259259,
-        "pr_auc": 0.36242872269547804
+        "roc_auc": 0.6542224074074073,
+        "pr_auc": 0.3661274227043737
       },
       "local": {
         "roc_auc": 0.675648,
@@ -109,14 +109,14 @@
     "brazil": {
       "n": 12000,
       "base_rate": 0.25,
-      "n_train_regions": 7,
+      "n_train_regions": 8,
       "loro": {
-        "roc_auc": 0.8207758148148148,
-        "pr_auc": 0.499236177971037
+        "roc_auc": 0.8271663703703703,
+        "pr_auc": 0.5081255299267667
       },
       "loro_rank": {
-        "roc_auc": 0.7928068518518517,
-        "pr_auc": 0.5296646224513202
+        "roc_auc": 0.7963229629629629,
+        "pr_auc": 0.5295454702943478
       },
       "local": {
         "roc_auc": 0.9479714814814814,
@@ -132,14 +132,14 @@
     "malawi": {
       "n": 6056,
       "base_rate": 0.25,
-      "n_train_regions": 7,
+      "n_train_regions": 8,
       "loro": {
-        "roc_auc": 0.9314155508516724,
-        "pr_auc": 0.75577553207483
+        "roc_auc": 0.9322909850059361,
+        "pr_auc": 0.758090743624209
       },
       "loro_rank": {
-        "roc_auc": 0.8141898278623061,
-        "pr_auc": 0.575316453841086
+        "roc_auc": 0.8099887618685314,
+        "pr_auc": 0.5678173537320015
       },
       "local": {
         "roc_auc": 0.9182706598097777,
@@ -155,14 +155,14 @@
     "mexico": {
       "n": 12000,
       "base_rate": 0.25,
-      "n_train_regions": 7,
+      "n_train_regions": 8,
       "loro": {
-        "roc_auc": 0.5865258888888889,
-        "pr_auc": 0.2896997924637234
+        "roc_auc": 0.5898489259259259,
+        "pr_auc": 0.2925694909409772
       },
       "loro_rank": {
-        "roc_auc": 0.5644473333333333,
-        "pr_auc": 0.2768991116030154
+        "roc_auc": 0.566025,
+        "pr_auc": 0.278882070299845
       },
       "local": {
         "roc_auc": 0.5768656651683621,
@@ -175,17 +175,40 @@
         "roc_auc": 0.567800037037037
       }
     },
+    "colombia": {
+      "n": 956,
+      "base_rate": 0.25,
+      "n_train_regions": 8,
+      "loro": {
+        "roc_auc": 0.6563668936701622,
+        "pr_auc": 0.3627359567794767
+      },
+      "loro_rank": {
+        "roc_auc": 0.582628688806802,
+        "pr_auc": 0.29198664711024813
+      },
+      "local": {
+        "roc_auc": 0.6478878170900368,
+        "pr_auc": 0.38821004194244346
+      },
+      "slope": {
+        "roc_auc": 0.5227382807257109
+      },
+      "nasa": {
+        "roc_auc": 0.549561457257401
+      }
+    },
     "pnw": {
       "n": 5352,
       "base_rate": 0.16666666666666666,
-      "n_train_regions": 7,
+      "n_train_regions": 8,
       "loro": {
-        "roc_auc": 0.6061420398560196,
-        "pr_auc": 0.22239697994536298
+        "roc_auc": 0.5992170061734601,
+        "pr_auc": 0.2170107881878301
       },
       "loro_rank": {
-        "roc_auc": 0.6013038166864405,
-        "pr_auc": 0.22430432598331568
+        "roc_auc": 0.6028489412616381,
+        "pr_auc": 0.22607259440115196
       },
       "local": {
         "roc_auc": 0.8100763638922961,
@@ -199,66 +222,75 @@
       }
     }
   },
-  "wins": 3,
-  "n_regions": 8,
-  "verdict": "pooled model beats both heuristic floors in 3/8 held-out regions",
+  "wins": 4,
+  "n_regions": 9,
+  "verdict": "pooled model beats both heuristic floors in 4/9 held-out regions",
   "ensemble": {
     "myanmar": {
-      "ensemble": 0.6448863333333332,
-      "rankM": 0.661907037037037,
+      "ensemble": 0.6435258333333334,
+      "rankM": 0.657563074074074,
       "slope": 0.6205433703703703,
-      "nasa": 0.5586548703703704,
-      "beats_all_components": false
+      "nasa": 0.5586548703703704
     },
     "vietnam": {
-      "ensemble": 0.7127938703703703,
-      "rankM": 0.7018249629629629,
+      "ensemble": 0.713727,
+      "rankM": 0.7033652222222222,
       "slope": 0.675028,
-      "nasa": 0.5775074814814815,
-      "beats_all_components": true
+      "nasa": 0.5775074814814815
     },
     "laos": {
-      "ensemble": 0.7441839064614513,
-      "rankM": 0.7306762743064444,
+      "ensemble": 0.7448120863265963,
+      "rankM": 0.7315608358005203,
       "slope": 0.7394844341947637,
-      "nasa": 0.5815001598122126,
-      "beats_all_components": true
+      "nasa": 0.5815001598122126
     },
     "philippines": {
-      "ensemble": 0.601023925925926,
-      "rankM": 0.6486299259259259,
+      "ensemble": 0.603442074074074,
+      "rankM": 0.6542224074074073,
       "slope": 0.5512269259259259,
-      "nasa": 0.5434476666666667,
-      "beats_all_components": false
+      "nasa": 0.5434476666666667
     },
     "brazil": {
-      "ensemble": 0.8844263518518518,
-      "rankM": 0.7928068518518517,
+      "ensemble": 0.8859764629629628,
+      "rankM": 0.7963229629629629,
       "slope": 0.9082824814814815,
-      "nasa": 0.6868589444444444,
-      "beats_all_components": false
+      "nasa": 0.6868589444444444
     },
     "malawi": {
-      "ensemble": 0.9216415175665605,
-      "rankM": 0.8141898278623061,
+      "ensemble": 0.9208030930455628,
+      "rankM": 0.8099887618685314,
       "slope": 0.9144513238251293,
-      "nasa": 0.858731175984369,
-      "beats_all_components": true
+      "nasa": 0.858731175984369
     },
     "mexico": {
-      "ensemble": 0.5875422777777778,
-      "rankM": 0.5644473333333333,
+      "ensemble": 0.5882494259259259,
+      "rankM": 0.566025,
       "slope": 0.5838147037037037,
-      "nasa": 0.567800037037037,
-      "beats_all_components": true
+      "nasa": 0.567800037037037
+    },
+    "colombia": {
+      "ensemble": 0.5534333549249255,
+      "rankM": 0.582628688806802,
+      "slope": 0.5227382807257109,
+      "nasa": 0.549561457257401
     },
     "pnw": {
-      "ensemble": 0.6452929879949325,
-      "rankM": 0.6013038166864405,
+      "ensemble": 0.6459716664320617,
+      "rankM": 0.6028489412616381,
       "slope": 0.6150920489050655,
-      "nasa": 0.6670932705262522,
-      "beats_all_components": false
+      "nasa": 0.6670932705262522
     }
   },
-  "ensemble_verdict": "equal-weight ensemble (rank-pooled model + slope + NASA class, each as within-region percentile) >= best heuristic floor in 6/8 regions"
+  "ensemble_summary": {
+    "mean": {
+      "ensemble": 0.699993444113938,
+      "rankM": 0.6782806549337954,
+      "slope": 0.6811846187924613
+    },
+    "worst": {
+      "ensemble": 0.5534333549249255,
+      "rankM": 0.566025,
+      "slope": 0.5227382807257109
+    }
+  }
 }

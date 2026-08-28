@@ -541,6 +541,101 @@ labels exist, and every new inventory that appears anywhere on Earth converts
 territory from the floor to a local model. The path to raising the floor
 further is more *diverse regions in the pool*, not a cleverer model class.
 
+## D20 — Fire danger layer: global by construction, validated on two continents
+
+Built per the brief's framing — danger *conditions*, never ignition prediction.
+`pipelines/fireweather.py` computes, from NASA POWER daily weather alone:
+KBDI (the brief's named fuel-moisture proxy — a 0–800 running moisture deficit
+that self-scales to local mean annual rainfall), vapor pressure deficit, days
+since rain, and seasonal percentiles of all of it. **No labels enter the
+features**, so the layer is computable for any point on Earth today.
+
+Labels only *validate*. Case-crossover (a fire day vs season-matched non-fire
+days at the same location, ±21-day exclusion) against two public databases:
+FPA-FOD 6th ed. (USDA, public domain; 40,232 fires ≥100 acres in span) and
+Canada's NFDB (open; 9,005 fires ≥100 ha):
+
+| test | ROC-AUC | PR-AUC (base 0.20) |
+|---|---|---|
+| US, 5-fold CV, 320 cells | 0.759 | 0.424 |
+| Canada, 5-fold CV, 220 cells | 0.806 | 0.499 |
+| **train US → test Canada cold** | **0.769** | 0.426 |
+| train Canada → test US cold | 0.696 | 0.340 |
+| pooled CV | 0.780 | 0.453 |
+| VPD seasonal percentile alone | 0.72–0.74 | — |
+
+The transfer rows are the finding: fire-weather skill crosses the
+temperate→boreal boundary essentially intact (0.769 cold vs 0.806 local) —
+the mirror image of D16's terrain result. **Weather-driven layers are global
+by construction because percentile features self-normalize; terrain layers
+are regional because labels and regimes are.** The architecture's split into
+susceptibility (regional) and trigger (global) tiers is now evidenced from
+both directions.
+
+Known gaps, stated: 0.5° daily 2 m wind smooths downslope wind events — the
+Camp Fire day scores KBDI 691/800 with 35 rainless days but only moderate
+model danger, because the 80 km/h Jarbo Gap winds are invisible at this
+resolution. And there is no fuel/vegetation layer yet, so barren deserts score
+on weather alone. Both are v2 features (ERA5 gusts; a vegetation mask).
+
+## D21 — Drought layer: empirical SPI, 20 years against the US Drought Monitor
+
+The indicator is the same move that carried everything else: a 30/90/180-day
+precipitation total as a percentile of the *same calendar window* across all
+years — the empirical SPI. Label-free, global, `eval/drought_validate.py`.
+
+Validated against the expert-drawn USDM (open API, county weekly area-%):
+~40 counties sampled on a 4° grid across CONUS, 60,573 county-weeks,
+2006–2024. Detecting "county ≥50% in severe drought (D2+)":
+
+- **SPI-90 alone: median AUC 0.799** (IQR 0.73–0.87) across counties;
+  Spearman with graded severity +0.45.
+- Calibrated head (SPI features → P(D2+), county-grouped CV): ROC 0.795,
+  PR 0.446 at base 0.161. Saved as `drought_head.pkl`.
+
+Where it underperforms is itself information: precipitation-only SPI misses
+snowpack- and temperature-driven drought (the low-IQR counties), and the USDM
+blends soil moisture, streamflow and expert judgement — so the ~0.80 ceiling
+against it is expected, not a defect. The head's calibration is US-only and
+ships with that caveat.
+
+## D22 — Tier-A expansion meets a data-quality wall; Colombia proves the floor
+
+Attempting to add report-based regions: Nepal, NW-India Himalaya and Java
+**failed the location-accuracy gate** — after requiring exact/1 km locations
+(anything looser makes 30 m terrain features meaningless), only 41–68 usable
+sites remained. Media reports in high mountains are geolocated too loosely to
+train on. The growth path for Tier A is satellite-mapped inventories, not
+news reports — and the places that most need coverage are exactly where
+reports are least precise.
+
+Colombia (tropical Andes, 239 exact-located reports) did qualify, and its
+LORO debut is the clearest validation of the floor design yet: the pooled
+model scored **0.656 on Colombia having never seen it — beating Colombia's
+own locally-trained model (0.648) and crushing slope (0.523)**. For
+small-label regions, the world pool is better than themselves. 9-region
+ensemble floor after the update: mean 0.700, worst-case 0.553.
+
+## D23 — The global scorer: "proficient everywhere" as a runnable contract
+
+`serve/score_global.py` scores ANY (lat, lon, date) on Earth for all three
+hazards, each block carrying its tier and caveats:
+
+- **landslide** — Tier A regional artifact when the point falls in one of the
+  modeled regions; else the Tier B floor (slope + NASA class + pooled model,
+  averaged as percentiles of the global pool). Trigger = rain percentile rule
+  (D14: it carries the trained model's skill and needs no labels).
+- **fire** — the two-continent-validated danger model; Tier B everywhere.
+- **drought** — SPI percentiles + the USDM-calibrated severity head.
+- Missing inputs degrade the affected block to **Tier C with the reason
+  named** — the user's "warn even with weak info" requirement, honestly.
+
+World demo (all Tier-B points): monsoon Kathmandu reads soaked (KBDI 5,
+SPI-90 0.97); Camp Fire day reads KBDI 691, 35 rainless days, drought
+P(severe) 0.33; end-of-dry-season Okavango reads KBDI 775 with 175 rainless
+days; the Sahara pins KBDI at 797 while the seasonal percentiles correctly
+refuse to call a desert being dry "unusual".
+
 ---
 
 ## Open / not yet done

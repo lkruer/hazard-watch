@@ -1,0 +1,151 @@
+{
+  "name": "fire-trigger",
+  "layer": "fire",
+  "model": "LightGBM",
+  "status": "complete",
+  "framing": "fire danger conditions (not ignition), case-crossover",
+  "labels": {
+    "us": "FPA-FOD 6th ed >=100 acres (public domain)",
+    "canada": "NFDB points >=100 ha (open)"
+  },
+  "features": [
+    "kbdi",
+    "kbdi_pctl",
+    "kbdi_pctl_seasonal",
+    "vpd_kpa",
+    "vpd_pctl_seasonal",
+    "tmax_c",
+    "tmax_pctl_seasonal",
+    "rh_pct",
+    "rh_pctl_seasonal",
+    "ws_ms",
+    "ws_pctl_seasonal",
+    "days_since_rain",
+    "precip_30d_pctl_seasonal",
+    "precip_90d_pctl_seasonal"
+  ],
+  "results": {
+    "us_local_cv": {
+      "n": 6400,
+      "n_cases": 1280,
+      "roc_auc": 0.758854522705078,
+      "pr_auc": 0.42433027364107506,
+      "base_rate": 0.2
+    },
+    "us_kbdi_pctl_seasonal": {
+      "n": 6400,
+      "n_cases": 1280,
+      "roc_auc": 0.643255157470703,
+      "pr_auc": 0.29490362649849255,
+      "base_rate": 0.2
+    },
+    "us_vpd_pctl_seasonal": {
+      "n": 6400,
+      "n_cases": 1280,
+      "roc_auc": 0.7217195892333984,
+      "pr_auc": 0.3687103732857556,
+      "base_rate": 0.2
+    },
+    "canada_local_cv": {
+      "n": 4400,
+      "n_cases": 880,
+      "roc_auc": 0.8060356404958677,
+      "pr_auc": 0.49926782097886185,
+      "base_rate": 0.2
+    },
+    "canada_kbdi_pctl_seasonal": {
+      "n": 4400,
+      "n_cases": 880,
+      "roc_auc": 0.752952931301653,
+      "pr_auc": 0.38769489792805767,
+      "base_rate": 0.2
+    },
+    "canada_vpd_pctl_seasonal": {
+      "n": 4400,
+      "n_cases": 880,
+      "roc_auc": 0.7439545131714876,
+      "pr_auc": 0.40750325364985185,
+      "base_rate": 0.2
+    },
+    "us_to_canada_transfer": {
+      "n": 4400,
+      "n_cases": 880,
+      "roc_auc": 0.7685601756198346,
+      "pr_auc": 0.4261038540612197,
+      "base_rate": 0.2
+    },
+    "canada_to_us_transfer": {
+      "n": 6400,
+      "n_cases": 1280,
+      "roc_auc": 0.6958821105957032,
+      "pr_auc": 0.34022882743364136,
+      "base_rate": 0.2
+    },
+    "pooled_cv": {
+      "n": 10800,
+      "n_cases": 2160,
+      "roc_auc": 0.7799884795096022,
+      "pr_auc": 0.45302174638315873,
+      "base_rate": 0.2
+    }
+  },
+  "feature_importance": [
+    {
+      "feature": "vpd_pctl_seasonal",
+      "gain_pct": 13.142934643198501
+    },
+    {
+      "feature": "tmax_pctl_seasonal",
+      "gain_pct": 9.513708184290978
+    },
+    {
+      "feature": "precip_30d_pctl_seasonal",
+      "gain_pct": 8.52927530238341
+    },
+    {
+      "feature": "kbdi_pctl",
+      "gain_pct": 8.170431628905078
+    },
+    {
+      "feature": "vpd_kpa",
+      "gain_pct": 7.213840088115857
+    },
+    {
+      "feature": "kbdi",
+      "gain_pct": 6.8600810311184155
+    },
+    {
+      "feature": "ws_ms",
+      "gain_pct": 6.424332501837821
+    },
+    {
+      "feature": "precip_90d_pctl_seasonal",
+      "gain_pct": 6.243642038751072
+    },
+    {
+      "feature": "rh_pct",
+      "gain_pct": 6.061828948443723
+    },
+    {
+      "feature": "kbdi_pctl_seasonal",
+      "gain_pct": 6.017552785943106
+    },
+    {
+      "feature": "tmax_c",
+      "gain_pct": 5.783317924120222
+    },
+    {
+      "feature": "ws_pctl_seasonal",
+      "gain_pct": 5.699821985473275
+    },
+    {
+      "feature": "rh_pctl_seasonal",
+      "gain_pct": 5.536109823113306
+    },
+    {
+      "feature": "days_since_rain",
+      "gain_pct": 4.803123114305237
+    }
+  ],
+  "trained_at": "2026-08-28T01:33:19"
+}

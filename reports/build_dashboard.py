@@ -72,7 +72,8 @@ def read_runs():
 def read_validation():
     return {k: read_json(RUNS / f"{k}.json") for k in
             ("hindcast-trigger", "external-susceptibility",
-             "transfer-susceptibility", "global-loro")}
+             "transfer-susceptibility", "global-loro",
+             "fire-trigger", "drought-validation")}
 
 
 def read_ablations():
@@ -276,7 +277,7 @@ def render_validation(v):
         ens = gl.get("ensemble", {})
         rows = []
         for rg in ("myanmar", "vietnam", "laos", "philippines", "brazil",
-                   "malawi", "mexico", "pnw"):
+                   "malawi", "mexico", "colombia", "pnw"):
             r = regs.get(rg)
             if not r:
                 continue
@@ -311,6 +312,61 @@ def render_validation(v):
             'case (~0.58 for everything, including local): a single-storm inventory in a '
             'half-degree box of homogeneous terrain &mdash; some places are Tier B because '
             'their labels cannot support more yet.</p></section>')
+    fr = v.get("fire-trigger")
+    if fr:
+        r = fr.get("results", {})
+
+        def g(k, m="roc_auc"):
+            return r.get(k, {}).get(m)
+
+        rows = "".join(
+            f'<tr><td>{lbl}</td><td class="num">{g(k):.3f}</td>'
+            f'<td class="num">{g(k, "pr_auc"):.3f}</td></tr>'
+            for k, lbl in (
+                ("us_local_cv", "US, 5-fold CV (320 cells)"),
+                ("canada_local_cv", "Canada, 5-fold CV (220 cells)"),
+                ("us_to_canada_transfer", "<strong>Train US &rarr; test Canada cold</strong>"),
+                ("canada_to_us_transfer", "Train Canada &rarr; test US cold"),
+                ("pooled_cv", "Pooled both, CV"),
+                ("us_vpd_pctl_seasonal", "VPD percentile alone (US)"),
+                ("us_kbdi_pctl_seasonal", "KBDI percentile alone (US)"),
+            ) if g(k) is not None)
+        cards.append(
+            '<section class="card"><h2>Fire danger layer &mdash; two continents of validation</h2>'
+            '<p class="empty" style="margin-bottom:12px">Danger <em>conditions</em>, not '
+            'ignition (most fires are human-started). KBDI fuel-moisture deficit + vapor '
+            'pressure deficit + weather percentiles, all label-free functions of NASA POWER '
+            'weather &mdash; computable anywhere on Earth. Validated case-crossover against '
+            '40,232 US wildfires &ge;100 acres (FPA-FOD, public domain) and 9,005 Canadian '
+            'fires &ge;100 ha (NFDB, open): a fire day vs season-matched non-fire days at the '
+            'same location.</p>'
+            '<div class="tablewrap"><table class="grid"><thead><tr><th>Test</th>'
+            '<th class="num">ROC-AUC</th><th class="num">PR-AUC</th></tr></thead>'
+            f'<tbody>{rows}</tbody></table></div>'
+            '<p class="sm muted" style="margin-top:10px">The transfer rows are the point: '
+            'fire-weather skill crosses the temperate&rarr;boreal boundary nearly intact '
+            '(0.769 cold vs 0.806 local) &mdash; the mirror image of the terrain layer, which '
+            'does not travel. Weather layers are global by construction; terrain layers are '
+            'regional. Known gaps: 0.5&deg; daily wind smooths downslope wind events (the Camp '
+            'Fire mechanism), and there is no fuel/vegetation layer yet, so barren deserts '
+            'score on weather alone.</p></section>')
+    dr = v.get("drought-validation")
+    if dr:
+        head = dr.get("drought_head_cv", {})
+        cards.append(
+            '<section class="card"><h2>Drought layer &mdash; 20 years vs the US Drought Monitor</h2>'
+            f'<p class="empty">Empirical SPI &mdash; 30/90/180-day precipitation as a '
+            f'percentile of the same calendar window across all years &mdash; label-free and '
+            f'global from NASA POWER. Validated against {dr.get("n_county_weeks", 0):,} '
+            f'county-weeks of expert-drawn USDM maps across {dr.get("n_counties", 0)} CONUS '
+            f'counties: SPI-90 alone detects &ldquo;county &ge;50% in severe drought '
+            f'(D2+)&rdquo; at median AUC <strong>{dr.get("auc_spi90_median", 0):.3f}</strong> '
+            f'(IQR {dr.get("auc_spi90_iqr", [0,0])[0]:.2f}&ndash;'
+            f'{dr.get("auc_spi90_iqr", [0,0])[1]:.2f}); the calibrated severity head reaches '
+            f'ROC {head.get("roc_auc", 0):.3f} under county-grouped CV. Where it '
+            f'underperforms is informative: precipitation-only misses snowpack- and '
+            f'temperature-driven drought, and the head is calibrated on US truth only.</p>'
+            '</section>')
     return "".join(cards)
 
 
@@ -496,7 +552,7 @@ def render(ev, rp, region, feats, runs, blockers, ablations, validation):
     return out
 
 
-TEMPLATE = """<title>Landslide Model Telemetry</title>
+TEMPLATE = """<title>Hazard Model Telemetry</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
@@ -633,8 +689,8 @@ td.drop { color:var(--crit); font-weight:600; }
 <div class="wrap">
   <header class="hd">
     <div>
-      <div class="hd__eyebrow">Multi-hazard risk platform &middot; Landslide</div>
-      <h1>Landslide model telemetry</h1>
+      <div class="hd__eyebrow">Multi-hazard risk platform &middot; Landslide &middot; Fire &middot; Drought</div>
+      <h1>Hazard model telemetry</h1>
     </div>
     <div class="hd__meta">Generated __NOW__<br><code>__ROOT__</code></div>
   </header>
