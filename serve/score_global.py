@@ -95,6 +95,17 @@ def _pool_reference():
 
 
 _POOL = None
+_PQ: dict = {}
+
+
+def _precip_quality(lat: float, lon: float) -> dict:
+    """Memoized source-agreement check (see pipelines/precip_quality.py)."""
+    from pipelines import nasapower as _np
+    from pipelines.precip_quality import check
+    key = _np.cell(lat, lon)
+    if key not in _PQ:
+        _PQ[key] = check(lat, lon)
+    return _PQ[key]
 
 
 def _nasa_class(lat: float, lon: float) -> float | None:
@@ -111,6 +122,33 @@ def _nasa_class(lat: float, lon: float) -> float | None:
         return v if 0 <= v <= 5 else None
     except Exception:                                       # noqa: BLE001
         return None
+
+
+def _susc_from_terrain(t: dict, lat: float, lon: float) -> float | None:
+    """Point susceptibility for a terrain dict, regional artifact preferred."""
+    global _POOL
+    hit = next(((n, r) for n, r in _regions().items()
+                if r["bbox"][0] <= lon <= r["bbox"][2]
+                and r["bbox"][1] <= lat <= r["bbox"][3]), None)
+    if hit:
+        b = hit[1]["artifact"]
+        feats = {**t}
+        if "road_dist_m" in b.get("features", ()):
+            try:
+                from pipelines.osm_roads import road_dist_m
+                feats["road_dist_m"] = float(road_dist_m([lat], [lon])[0])
+            except Exception:                               # noqa: BLE001
+                feats["road_dist_m"] = float("nan")
+        x = np.array([[feats.get(f, np.nan) for f in b["features"]]])
+        pr = float(b["model"].predict_proba(x)[:, 1][0])
+        cal = b.get("calibrator")
+        return float(cal.predict([pr])[0]) if cal is not None else pr
+    if _POOL is None:
+        _POOL = _pool_reference()
+    x = np.array([[t.get(f, np.nan) for f in _POOL["features"]]])
+    pm = float(_POOL["model"].predict_proba(x)[:, 1][0])
+    return float(np.searchsorted(_POOL["ref_scores"], pm)
+                 / len(_POOL["ref_scores"]))
 
 
 def landslide_block(lat: float, lon: float, date: str) -> dict:
@@ -160,19 +198,56 @@ def landslide_block(lat: float, lon: float, date: str) -> dict:
             tier = "B"
             caveats.append("global-floor ensemble; relative score, not probability")
 
+    # What looms NEARBY matters as much as the exact point: Oso's victims
+    # lived on the flat valley floor 600 m from the scarp that killed them, and
+    # the point score there reads 0.02. Score a ~900 m ring and keep the max.
+    susc_near = susc
+    if t is not None and susc is not None:
+        vals = [susc]
+        for dla in (-0.008, 0.0, 0.008):
+            for dlo in (-0.008, 0.0, 0.008):
+                if dla == 0.0 and dlo == 0.0:
+                    continue
+                tn = terrain.derive(lat + dla, lon + dlo)
+                if tn is None:
+                    continue
+                pn = _susc_from_terrain(tn, lat + dla, lon + dlo)
+                if pn is not None:
+                    vals.append(pn)
+        susc_near = float(max(vals))
+
     w = nasapower.features_at(lat, lon, date)
     if w is None:
         trig = None
+        trig30 = None
         tier = "C"
         caveats.append("no rainfall record at this point/date")
     else:
         trig = float(w["precip_3d_pctl_seasonal"])
+        # Antecedent saturation kills as surely as cloudbursts: Oso followed
+        # 45 days of ~2x rain (30d pctl 0.96) with an unremarkable 3-day total
+        # (0.33). Surface both; the alert gate takes the worse of the two.
+        trig30 = float(w["precip_30d_pctl_seasonal"])
+        pq = _precip_quality(lat, lon)
+        if pq["verdict"] == "disagree":
+            tier = "C"
+            caveats.append("precipitation sources disagree at this cell "
+                           f"(corr {pq.get('corr_monthly')}, ratio "
+                           f"{pq.get('annual_ratio_power_over_era5')}) -- "
+                           "rain trigger not trustworthy here")
+    trig_worst = (max(x for x in (trig, trig30) if x is not None)
+                  if (trig is not None or trig30 is not None) else None)
     return {"hazard": "landslide", "tier": tier,
             "susceptibility": None if susc is None else round(susc, 3),
+            "susceptibility_nearby_max": (None if susc_near is None
+                                          else round(susc_near, 3)),
             "trigger_rain_pctl_seasonal": None if trig is None else round(trig, 3),
-            "alert": (bool(trig is not None and trig >= 0.98
-                           and susc is not None and susc >= 0.5)
-                      if (trig is not None and susc is not None) else None),
+            "trigger_rain30d_pctl_seasonal": (None if trig30 is None
+                                              else round(trig30, 3)),
+            "alert": (bool(trig_worst is not None and trig_worst >= 0.95
+                           and susc_near is not None and susc_near >= 0.3)
+                      if (trig_worst is not None and susc_near is not None)
+                      else None),
             "caveats": caveats}
 
 
@@ -186,13 +261,29 @@ def fire_block(lat: float, lon: float, date: str) -> dict:
     p = float(b["model"].predict_proba(x)[:, 1][0])
     cal = b.get("calibrator")
     danger = float(cal.predict([p])[0]) if cal is not None else p
-    return {"hazard": "fire", "tier": "B",
-            "danger": round(danger, 3),
-            "kbdi": round(f["kbdi"], 0), "vpd_kpa": round(f["vpd_kpa"], 2),
-            "days_since_rain": int(f["days_since_rain"]),
-            "caveats": ["danger conditions, not ignition prediction",
-                        "calibrated on US+Canada fire records; validated to "
-                        "transfer between them (ROC 0.77 cold)"]}
+    # deployment-priced alarm threshold (D14's lesson applied to fire): the
+    # score only becomes an alarm against the real distribution of days
+    thr = None
+    tj = ROOT / "serve" / "thresholds.json"
+    if tj.exists():
+        try:
+            thr = float(json.loads(tj.read_text(encoding="utf-8"))
+                        ["fire"]["threshold"])
+        except (json.JSONDecodeError, KeyError, TypeError, ValueError):
+            thr = None
+    out = {"hazard": "fire", "tier": "B",
+           "danger": round(danger, 3),
+           "alert": (bool(danger >= thr) if thr is not None else None),
+           "kbdi": round(f["kbdi"], 0), "vpd_kpa": round(f["vpd_kpa"], 2),
+           "kbdi_pctl_seasonal": round(f["kbdi_pctl_seasonal"], 3),
+           "vpd_pctl_seasonal": round(f["vpd_pctl_seasonal"], 3),
+           "tmax_pctl_seasonal": round(f["tmax_pctl_seasonal"], 3),
+           "days_since_rain": int(f["days_since_rain"]),
+           "caveats": ["danger conditions, not ignition prediction",
+                       "calibrated on US+Canada fire records; validated to "
+                       "transfer between them (ROC 0.77 cold)",
+                       "0.5-deg daily wind cannot see downslope wind events"]}
+    return out
 
 
 def drought_block(lat: float, lon: float, date: str) -> dict:
@@ -210,6 +301,19 @@ def drought_block(lat: float, lon: float, date: str) -> dict:
            "spi30": round(f["spi30"], 3), "spi90": round(f["spi90"], 3),
            "spi180": round(f["spi180"], 3),
            "caveats": ["empirical SPI vs own 2004-2024 climatology"]}
+    if "spi365" in f:
+        out["spi365"] = round(f["spi365"], 3)
+    pq = _precip_quality(lat, lon)
+    if pq["verdict"] == "disagree":
+        out["tier"] = "C"
+        out["caveats"].append(
+            "precipitation sources disagree at this cell (corr "
+            f"{pq.get('corr_monthly')}, ratio "
+            f"{pq.get('annual_ratio_power_over_era5')}) -- SPI values here "
+            "are not trustworthy; treat as unknown")
+    elif pq["verdict"] == "unverified":
+        out["caveats"].append("source cross-check unavailable (rate limit); "
+                              "single-source values")
     if b is not None:
         x = np.array([[f.get(k, np.nan) for k in b["features"]]])
         p = float(b["model"].predict_proba(x)[:, 1][0])
@@ -221,11 +325,31 @@ def drought_block(lat: float, lon: float, date: str) -> dict:
 
 
 def score(lat: float, lon: float, date: str) -> dict:
+    blocks = [landslide_block(lat, lon, date),
+              fire_block(lat, lon, date),
+              drought_block(lat, lon, date)]
+    hz = {b["hazard"]: b for b in blocks}
+    # Compound-extremes summary: which signals sit in their local tail today.
+    # Compound events (hot+dry+windy; saturated+steep) drive outsized losses,
+    # and a flat list of tail signals reads at a glance.
+    flags = []
+    ls, fr, dr = hz["landslide"], hz["fire"], hz["drought"]
+    if (ls.get("trigger_rain_pctl_seasonal") or 0) >= 0.98:
+        flags.append("rainfall_3d_extreme_for_season")
+    if (fr.get("kbdi_pctl_seasonal") or 0) >= 0.95:
+        flags.append("fuel_dryness_extreme_for_season")
+    if (fr.get("vpd_pctl_seasonal") or 0) >= 0.95:
+        flags.append("atmospheric_dryness_extreme_for_season")
+    if (fr.get("tmax_pctl_seasonal") or 0) >= 0.98:
+        flags.append("heat_extreme_for_season")
+    if dr.get("spi90") is not None and dr["spi90"] <= 0.05:
+        flags.append("3-month_precipitation_deficit_severe")
+    if dr.get("spi180") is not None and dr["spi180"] <= 0.05:
+        flags.append("6-month_precipitation_deficit_severe")
     return {"lat": lat, "lon": lon, "date": date,
             "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
-            "hazards": [landslide_block(lat, lon, date),
-                        fire_block(lat, lon, date),
-                        drought_block(lat, lon, date)],
+            "hazards": blocks,
+            "compound_extremes": flags,
             "note": ("Free public-data hazard context. Not an official warning; "
                      "consult local authorities.")}
 

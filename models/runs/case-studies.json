@@ -1,0 +1,621 @@
+{
+  "name": "case-studies",
+  "generated_at": "2026-08-28T01:57:39",
+  "note": "expectations written before scoring; misses kept verbatim",
+  "cases": [
+    {
+      "name": "oso-landslide-WA",
+      "lat": 48.2836,
+      "lon": -121.8477,
+      "date": "2014-03-22",
+      "hazard": "landslide",
+      "expect": "Deadliest US landslide (43 dead). Inside the PNW Tier-A region after weeks of record March rain -- expect Tier A, elevated susceptibility, very high rain percentile.",
+      "result": {
+        "lat": 48.2836,
+        "lon": -121.8477,
+        "date": "2014-03-22",
+        "generated_at": "2026-08-28T01:45:42",
+        "hazards": [
+          {
+            "hazard": "landslide",
+            "tier": "A",
+            "susceptibility": 0.023,
+            "trigger_rain_pctl_seasonal": 0.329,
+            "alert": false,
+            "caveats": [
+              "regional model: pnw"
+            ]
+          },
+          {
+            "hazard": "fire",
+            "tier": "B",
+            "danger": 0.011,
+            "kbdi": 0.0,
+            "vpd_kpa": 0.15,
+            "days_since_rain": 2,
+            "caveats": [
+              "danger conditions, not ignition prediction",
+              "calibrated on US+Canada fire records; validated to transfer between them (ROC 0.77 cold)"
+            ]
+          },
+          {
+            "hazard": "drought",
+            "tier": "B",
+            "spi30": 0.962,
+            "spi90": 0.895,
+            "spi180": 0.444,
+            "caveats": [
+              "empirical SPI vs own 2004-2024 climatology",
+              "severity head calibrated on US Drought Monitor only"
+            ],
+            "p_severe_drought": 0.119
+          }
+        ],
+        "note": "Free public-data hazard context. Not an official warning; consult local authorities."
+      }
+    },
+    {
+      "name": "freetown-mudslide-sierra-leone",
+      "lat": 8.426,
+      "lon": -13.191,
+      "date": "2017-08-14",
+      "hazard": "landslide",
+      "expect": "Regent/Freetown mudslide, ~1,100 dead, after 3 days of extreme rain in the wettest August stretch. Unmodeled region -> Tier B; the rain percentile should be extreme.",
+      "result": {
+        "lat": 8.426,
+        "lon": -13.191,
+        "date": "2017-08-14",
+        "generated_at": "2026-08-28T01:45:49",
+        "hazards": [
+          {
+            "hazard": "landslide",
+            "tier": "B",
+            "susceptibility": 0.382,
+            "trigger_rain_pctl_seasonal": 0.983,
+            "alert": false,
+            "caveats": [
+              "global-floor ensemble; relative score, not probability"
+            ]
+          },
+          {
+            "hazard": "fire",
+            "tier": "B",
+            "danger": 0.047,
+            "kbdi": 26.0,
+            "vpd_kpa": 0.19,
+            "days_since_rain": 0,
+            "caveats": [
+              "danger conditions, not ignition prediction",
+              "calibrated on US+Canada fire records; validated to transfer between them (ROC 0.77 cold)"
+            ]
+          },
+          {
+            "hazard": "drought",
+            "tier": "B",
+            "spi30": 0.937,
+            "spi90": 0.914,
+            "spi180": 0.906,
+            "caveats": [
+              "empirical SPI vs own 2004-2024 climatology",
+              "severity head calibrated on US Drought Monitor only"
+            ],
+            "p_severe_drought": 0.025
+          }
+        ],
+        "note": "Free public-data hazard context. Not an official warning; consult local authorities."
+      }
+    },
+    {
+      "name": "uttarakhand-kedarnath-india",
+      "lat": 30.7346,
+      "lon": 79.0669,
+      "date": "2013-06-17",
+      "hazard": "landslide",
+      "expect": "Himalayan flood/landslide disaster, >5,000 dead; early-monsoon deluge. Tier B; rain percentile should be near 1.0. Note: glacial-lake component is outside any rainfall model.",
+      "result": {
+        "lat": 30.7346,
+        "lon": 79.0669,
+        "date": "2013-06-17",
+        "generated_at": "2026-08-28T01:46:23",
+        "hazards": [
+          {
+            "hazard": "landslide",
+            "tier": "B",
+            "susceptibility": 0.319,
+            "trigger_rain_pctl_seasonal": 1.0,
+            "alert": false,
+            "caveats": [
+              "global-floor ensemble; relative score, not probability"
+            ]
+          },
+          {
+            "hazard": "fire",
+            "tier": "B",
+            "danger": 0.011,
+            "kbdi": 6.0,
+            "vpd_kpa": 0.16,
+            "days_since_rain": 0,
+            "caveats": [
+              "danger conditions, not ignition prediction",
+              "calibrated on US+Canada fire records; validated to transfer between them (ROC 0.77 cold)"
+            ]
+          },
+          {
+            "hazard": "drought",
+            "tier": "B",
+            "spi30": 0.978,
+            "spi90": 0.978,
+            "spi180": 0.977,
+            "caveats": [
+              "empirical SPI vs own 2004-2024 climatology",
+              "severity head calibrated on US Drought Monitor only"
+            ],
+            "p_severe_drought": 0.014
+          }
+        ],
+        "note": "Free public-data hazard context. Not an official warning; consult local authorities."
+      }
+    },
+    {
+      "name": "camp-fire-paradise-CA",
+      "lat": 39.7596,
+      "lon": -121.6219,
+      "date": "2018-11-08",
+      "hazard": "fire",
+      "expect": "Deadliest CA fire. Extreme fuel dryness after 200+ dry days -- KBDI should be extreme -- but it was a WIND event, and 0.5-deg daily wind cannot see Jarbo Gap gusts. Expect high dryness, only moderate model danger: the documented gap.",
+      "result": {
+        "lat": 39.7596,
+        "lon": -121.6219,
+        "date": "2018-11-08",
+        "generated_at": "2026-08-28T01:48:09",
+        "hazards": [
+          {
+            "hazard": "landslide",
+            "tier": "B",
+            "susceptibility": 0.202,
+            "trigger_rain_pctl_seasonal": 0.353,
+            "alert": false,
+            "caveats": [
+              "global-floor ensemble; relative score, not probability"
+            ]
+          },
+          {
+            "hazard": "fire",
+            "tier": "B",
+            "danger": 0.274,
+            "kbdi": 691.0,
+            "vpd_kpa": 1.02,
+            "days_since_rain": 35,
+            "caveats": [
+              "danger conditions, not ignition prediction",
+              "calibrated on US+Canada fire records; validated to transfer between them (ROC 0.77 cold)"
+            ]
+          },
+          {
+            "hazard": "drought",
+            "tier": "B",
+            "spi30": 0.025,
+            "spi90": 0.075,
+            "spi180": 0.066,
+            "caveats": [
+              "empirical SPI vs own 2004-2024 climatology",
+              "severity head calibrated on US Drought Monitor only"
+            ],
+            "p_severe_drought": 0.333
+          }
+        ],
+        "note": "Free public-data hazard context. Not an official warning; consult local authorities."
+      }
+    },
+    {
+      "name": "fort-mcmurray-alberta",
+      "lat": 56.7266,
+      "lon": -111.379,
+      "date": "2016-05-03",
+      "hazard": "fire",
+      "expect": "Costliest Canadian disaster. Record early-May heat (32C in boreal spring) after a dry El Nino winter. Expect seasonal temperature/VPD percentiles near 1.0 -- this one the weather features SHOULD catch.",
+      "result": {
+        "lat": 56.7266,
+        "lon": -111.379,
+        "date": "2016-05-03",
+        "generated_at": "2026-08-28T01:48:09",
+        "hazards": [
+          {
+            "hazard": "landslide",
+            "tier": "B",
+            "susceptibility": 0.106,
+            "trigger_rain_pctl_seasonal": 0.148,
+            "alert": false,
+            "caveats": [
+              "global-floor ensemble; relative score, not probability"
+            ]
+          },
+          {
+            "hazard": "fire",
+            "tier": "B",
+            "danger": 0.636,
+            "kbdi": 28.0,
+            "vpd_kpa": 1.37,
+            "days_since_rain": 7,
+            "caveats": [
+              "danger conditions, not ignition prediction",
+              "calibrated on US+Canada fire records; validated to transfer between them (ROC 0.77 cold)"
+            ]
+          },
+          {
+            "hazard": "drought",
+            "tier": "B",
+            "spi30": 0.117,
+            "spi90": 0.738,
+            "spi180": 0.34,
+            "caveats": [
+              "empirical SPI vs own 2004-2024 climatology",
+              "severity head calibrated on US Drought Monitor only"
+            ],
+            "p_severe_drought": 0.112
+          }
+        ],
+        "note": "Free public-data hazard context. Not an official warning; consult local authorities."
+      }
+    },
+    {
+      "name": "black-saturday-victoria-AU",
+      "lat": -37.441,
+      "lon": 145.52,
+      "date": "2009-02-07",
+      "hazard": "fire",
+      "expect": "173 dead. Culmination of a record heatwave (46C in Melbourne) during the Millennium Drought. First Australian point ever scored -- full pipeline cold. Expect extreme KBDI/VPD/tmax percentiles.",
+      "result": {
+        "lat": -37.441,
+        "lon": 145.52,
+        "date": "2009-02-07",
+        "generated_at": "2026-08-28T01:50:09",
+        "hazards": [
+          {
+            "hazard": "landslide",
+            "tier": "B",
+            "susceptibility": 0.478,
+            "trigger_rain_pctl_seasonal": 0.313,
+            "alert": false,
+            "caveats": [
+              "global-floor ensemble; relative score, not probability"
+            ]
+          },
+          {
+            "hazard": "fire",
+            "tier": "B",
+            "danger": 0.403,
+            "kbdi": 424.0,
+            "vpd_kpa": 4.94,
+            "days_since_rain": 16,
+            "caveats": [
+              "danger conditions, not ignition prediction",
+              "calibrated on US+Canada fire records; validated to transfer between them (ROC 0.77 cold)"
+            ]
+          },
+          {
+            "hazard": "drought",
+            "tier": "B",
+            "spi30": 0.031,
+            "spi90": 0.456,
+            "spi180": 0.292,
+            "caveats": [
+              "empirical SPI vs own 2004-2024 climatology",
+              "severity head calibrated on US Drought Monitor only"
+            ],
+            "p_severe_drought": 0.12
+          }
+        ],
+        "note": "Free public-data hazard context. Not an official warning; consult local authorities."
+      }
+    },
+    {
+      "name": "marshall-fire-boulder-CO",
+      "lat": 39.955,
+      "lon": -105.166,
+      "date": "2021-12-30",
+      "hazard": "fire",
+      "expect": "Winter grass fire driven by 185 km/h chinook winds. Snowless dry autumn helps, but this is THE wind-gap case -- expect a documented miss on model danger.",
+      "result": {
+        "lat": 39.955,
+        "lon": -105.166,
+        "date": "2021-12-30",
+        "generated_at": "2026-08-28T01:52:44",
+        "hazards": [
+          {
+            "hazard": "landslide",
+            "tier": "B",
+            "susceptibility": 0.21,
+            "trigger_rain_pctl_seasonal": 0.728,
+            "alert": false,
+            "caveats": [
+              "global-floor ensemble; relative score, not probability"
+            ]
+          },
+          {
+            "hazard": "fire",
+            "tier": "B",
+            "danger": 0.195,
+            "kbdi": 452.0,
+            "vpd_kpa": 0.43,
+            "days_since_rain": 6,
+            "caveats": [
+              "danger conditions, not ignition prediction",
+              "calibrated on US+Canada fire records; validated to transfer between them (ROC 0.77 cold)"
+            ]
+          },
+          {
+            "hazard": "drought",
+            "tier": "B",
+            "spi30": 0.431,
+            "spi90": 0.036,
+            "spi180": 0.006,
+            "caveats": [
+              "empirical SPI vs own 2004-2024 climatology",
+              "severity head calibrated on US Drought Monitor only"
+            ],
+            "p_severe_drought": 0.574
+          }
+        ],
+        "note": "Free public-data hazard context. Not an official warning; consult local authorities."
+      }
+    },
+    {
+      "name": "iowa-drought-2012",
+      "lat": 41.9,
+      "lon": -93.6,
+      "date": "2012-07-24",
+      "hazard": "drought",
+      "expect": "Peak of the 2012 US flash drought, worst since the 1950s; USDM had most of Iowa in D3. Expect SPI-30/90 in the bottom few percent and a high severe-drought probability.",
+      "result": {
+        "lat": 41.9,
+        "lon": -93.6,
+        "date": "2012-07-24",
+        "generated_at": "2026-08-28T01:54:20",
+        "hazards": [
+          {
+            "hazard": "landslide",
+            "tier": "B",
+            "susceptibility": 0.107,
+            "trigger_rain_pctl_seasonal": 0.201,
+            "alert": false,
+            "caveats": [
+              "global-floor ensemble; relative score, not probability"
+            ]
+          },
+          {
+            "hazard": "fire",
+            "tier": "B",
+            "danger": 0.641,
+            "kbdi": 546.0,
+            "vpd_kpa": 4.79,
+            "days_since_rain": 11,
+            "caveats": [
+              "danger conditions, not ignition prediction",
+              "calibrated on US+Canada fire records; validated to transfer between them (ROC 0.77 cold)"
+            ]
+          },
+          {
+            "hazard": "drought",
+            "tier": "B",
+            "spi30": 0.002,
+            "spi90": 0.025,
+            "spi180": 0.078,
+            "caveats": [
+              "empirical SPI vs own 2004-2024 climatology",
+              "severity head calibrated on US Drought Monitor only"
+            ],
+            "p_severe_drought": 0.406
+          }
+        ],
+        "note": "Free public-data hazard context. Not an official warning; consult local authorities."
+      }
+    },
+    {
+      "name": "cape-town-day-zero",
+      "lat": -33.9249,
+      "lon": 18.4241,
+      "date": "2018-02-01",
+      "hazard": "drought",
+      "expect": "Day Zero crisis after three failed winter rain seasons. Expect SPI-180 (the long window) far below SPI-30 -- a structural, multi-season drought signature.",
+      "result": {
+        "lat": -33.9249,
+        "lon": 18.4241,
+        "date": "2018-02-01",
+        "generated_at": "2026-08-28T01:56:19",
+        "hazards": [
+          {
+            "hazard": "landslide",
+            "tier": "B",
+            "susceptibility": 0.305,
+            "trigger_rain_pctl_seasonal": 0.676,
+            "alert": false,
+            "caveats": [
+              "global-floor ensemble; relative score, not probability"
+            ]
+          },
+          {
+            "hazard": "fire",
+            "tier": "B",
+            "danger": 0.22,
+            "kbdi": 443.0,
+            "vpd_kpa": 1.32,
+            "days_since_rain": 72,
+            "caveats": [
+              "danger conditions, not ignition prediction",
+              "calibrated on US+Canada fire records; validated to transfer between them (ROC 0.77 cold)"
+            ]
+          },
+          {
+            "hazard": "drought",
+            "tier": "B",
+            "spi30": 0.218,
+            "spi90": 0.51,
+            "spi180": 0.4,
+            "caveats": [
+              "empirical SPI vs own 2004-2024 climatology",
+              "severity head calibrated on US Drought Monitor only"
+            ],
+            "p_severe_drought": 0.093
+          }
+        ],
+        "note": "Free public-data hazard context. Not an official warning; consult local authorities."
+      }
+    },
+    {
+      "name": "horn-of-africa-2022",
+      "lat": 2.0,
+      "lon": 45.0,
+      "date": "2022-10-15",
+      "hazard": "drought",
+      "expect": "Fifth consecutive failed rainy season in Somalia; famine conditions. Expect all three SPI windows depressed at once.",
+      "result": {
+        "lat": 2.0,
+        "lon": 45.0,
+        "date": "2022-10-15",
+        "generated_at": "2026-08-28T01:56:58",
+        "hazards": [
+          {
+            "hazard": "landslide",
+            "tier": "B",
+            "susceptibility": 0.08,
+            "trigger_rain_pctl_seasonal": 0.157,
+            "alert": false,
+            "caveats": [
+              "global-floor ensemble; relative score, not probability"
+            ]
+          },
+          {
+            "hazard": "fire",
+            "tier": "B",
+            "danger": 0.107,
+            "kbdi": 275.0,
+            "vpd_kpa": 1.08,
+            "days_since_rain": 23,
+            "caveats": [
+              "danger conditions, not ignition prediction",
+              "calibrated on US+Canada fire records; validated to transfer between them (ROC 0.77 cold)"
+            ]
+          },
+          {
+            "hazard": "drought",
+            "tier": "B",
+            "spi30": 0.567,
+            "spi90": 0.878,
+            "spi180": 0.883,
+            "caveats": [
+              "empirical SPI vs own 2004-2024 climatology",
+              "severity head calibrated on US Drought Monitor only"
+            ],
+            "p_severe_drought": 0.014
+          }
+        ],
+        "note": "Free public-data hazard context. Not an official warning; consult local authorities."
+      }
+    }
+  ],
+  "post_fix": {
+    "fixes_applied": [
+      "spi365 window added (Cape-Town-class multi-season droughts)",
+      "precip source-agreement detector (POWER vs ERA5); disagreement -> Tier C",
+      "neighborhood-max susceptibility (~900m ring): what looms nearby, not just the exact point",
+      "antecedent trigger: alert gate takes worse of 3d and 30d rain percentile (Oso mechanism)"
+    ],
+    "rescored": {
+      "horn-of-africa-2022": {
+        "drought": {
+          "hazard": "drought",
+          "tier": "C",
+          "spi30": 0.567,
+          "spi90": 0.878,
+          "spi180": 0.883,
+          "caveats": [
+            "empirical SPI vs own 2004-2024 climatology",
+            "precipitation sources disagree at this cell (corr 0.543, ratio 1.177) -- SPI values here are not trustworthy; treat as unknown",
+            "severity head calibrated on US Drought Monitor only"
+          ],
+          "spi365": 0.923,
+          "p_severe_drought": 0.002
+        },
+        "landslide_tier": "C"
+      },
+      "cape-town-day-zero": {
+        "drought": {
+          "hazard": "drought",
+          "tier": "C",
+          "spi30": 0.218,
+          "spi90": 0.51,
+          "spi180": 0.4,
+          "caveats": [
+            "empirical SPI vs own 2004-2024 climatology",
+            "precipitation sources disagree at this cell (corr 0.931, ratio 1.738) -- SPI values here are not trustworthy; treat as unknown",
+            "severity head calibrated on US Drought Monitor only"
+          ],
+          "spi365": 0.213,
+          "p_severe_drought": 0.131
+        },
+        "landslide_tier": "C"
+      },
+      "iowa-drought-2012": {
+        "drought": {
+          "hazard": "drought",
+          "tier": "B",
+          "spi30": 0.002,
+          "spi90": 0.025,
+          "spi180": 0.078,
+          "caveats": [
+            "empirical SPI vs own 2004-2024 climatology",
+            "severity head calibrated on US Drought Monitor only"
+          ],
+          "spi365": 0.015,
+          "p_severe_drought": 0.532
+        },
+        "landslide_tier": "B"
+      },
+      "freetown-mudslide-sierra-leone": {
+        "landslide": {
+          "hazard": "landslide",
+          "tier": "B",
+          "susceptibility": 0.382,
+          "susceptibility_nearby_max": 0.984,
+          "trigger_rain_pctl_seasonal": 0.983,
+          "trigger_rain30d_pctl_seasonal": 0.937,
+          "alert": true,
+          "caveats": [
+            "global-floor ensemble; relative score, not probability"
+          ]
+        }
+      },
+      "uttarakhand-kedarnath-india": {
+        "landslide": {
+          "hazard": "landslide",
+          "tier": "C",
+          "susceptibility": 0.319,
+          "susceptibility_nearby_max": 0.779,
+          "trigger_rain_pctl_seasonal": 1.0,
+          "trigger_rain30d_pctl_seasonal": 0.978,
+          "alert": true,
+          "caveats": [
+            "global-floor ensemble; relative score, not probability",
+            "precipitation sources disagree at this cell (corr 0.858, ratio 0.504) -- rain trigger not trustworthy here"
+          ]
+        }
+      },
+      "oso-landslide-WA": {
+        "landslide": {
+          "hazard": "landslide",
+          "tier": "A",
+          "susceptibility": 0.023,
+          "susceptibility_nearby_max": 0.064,
+          "trigger_rain_pctl_seasonal": 0.329,
+          "trigger_rain30d_pctl_seasonal": 0.962,
+          "alert": false,
+          "caveats": [
+            "regional model: pnw"
+          ]
+        }
+      }
+    },
+    "oso_verdict": "trigger side fixed (30d pctl 0.962 now gates); susceptibility side remains a documented miss -- deep-seated failure in glacial outwash is invisible to surface slope; needs geology (GLiM) / LiDAR scarp features, already on the roadmap"
+  }
+}

@@ -3,18 +3,18 @@
   "layer": "drought",
   "indicator": "empirical SPI (30/90/180d seasonal percentile of precip)",
   "truth": "US Drought Monitor county weekly area-% (open API)",
-  "n_counties": 61,
-  "n_county_weeks": 60573,
+  "n_counties": 65,
+  "n_county_weeks": 64545,
   "auc_spi90_median": 0.7989921012324688,
   "auc_spi90_iqr": [
-    0.7256111934295464,
+    0.7248072419508385,
     0.8691996987101026
   ],
-  "spearman_median": 0.44991899522784773,
+  "spearman_median": 0.43935426842265,
   "drought_head_cv": {
-    "roc_auc": 0.7946978699461831,
-    "pr_auc": 0.4455256478899957,
-    "base_rate": 0.16053357106301488
+    "roc_auc": 0.8406967308233676,
+    "pr_auc": 0.48925806998601074,
+    "base_rate": 0.15778139282671005
   },
   "per_county": [
     {
@@ -144,6 +144,38 @@
       "d2_weeks": 74,
       "auc_spi90": 0.7758212510660824,
       "spearman_sev_spi90": 0.407471139294294
+    },
+    {
+      "fips": "12115",
+      "state": "FL",
+      "n_weeks": 993,
+      "d2_weeks": 85,
+      "auc_spi90": 0.7261531484840632,
+      "spearman_sev_spi90": 0.42589900106479156
+    },
+    {
+      "fips": "12123",
+      "state": "FL",
+      "n_weeks": 993,
+      "d2_weeks": 55,
+      "auc_spi90": 0.8880597014925373,
+      "spearman_sev_spi90": 0.4088755331840278
+    },
+    {
+      "fips": "13135",
+      "state": "GA",
+      "n_weeks": 993,
+      "d2_weeks": 191,
+      "auc_spi90": 0.8343636980846313,
+      "spearman_sev_spi90": 0.6212134686753759
+    },
+    {
+      "fips": "16041",
+      "state": "ID",
+      "n_weeks": 993,
+      "d2_weeks": 129,
+      "auc_spi90": 0.5702967987367212,
+      "spearman_sev_spi90": 0.33676204232729806
     },
     {
       "fips": "16061",
@@ -506,5 +538,5 @@
       "spearman_sev_spi90": 0.3605750714350427
     }
   ],
-  "trained_at": "2026-08-28T01:38:49"
+  "trained_at": "2026-08-28T02:03:12"
 }

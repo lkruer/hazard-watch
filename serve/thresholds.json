@@ -17,5 +17,24 @@
     }
   },
   "recommended_budget": 0.05,
-  "trigger_threshold": 0.4019607843137255
+  "trigger_threshold": 0.4019607843137255,
+  "fire": {
+    "computed_at": "2026-08-28T01:57:45",
+    "samples": 546041,
+    "budgets": {
+      "0.02": {
+        "threshold": 0.5065616797900261,
+        "expected_alarm_days_per_cell_year": 7.3
+      },
+      "0.05": {
+        "threshold": 0.4027777777777778,
+        "expected_alarm_days_per_cell_year": 18.3
+      },
+      "0.10": {
+        "threshold": 0.3048780487804878,
+        "expected_alarm_days_per_cell_year": 36.5
+      }
+    },
+    "threshold": 0.4027777777777778
+  }
 }

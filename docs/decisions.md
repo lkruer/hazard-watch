@@ -636,6 +636,48 @@ P(severe) 0.33; end-of-dry-season Okavango reads KBDI 775 with 175 rainless
 days; the Sahara pins KBDI at 797 while the seasonal percentiles correctly
 refuse to call a desert being dry "unusual".
 
+## D24 — The case file: ten famous disasters, and what the misses fixed
+
+`eval/case_studies.py` scores ten historical catastrophes through the global
+scorer with expectations written down **before** scoring — misses kept
+verbatim (`models/runs/case-studies.json`). Outcome: 5 hits (Freetown 2017,
+Kedarnath 2013, Fort McMurray 2016, Iowa 2012, Black Saturday borderline at
+the alert threshold with VPD 4.94 kPa), 2 misses predicted in advance (Camp
+Fire, Marshall Fire — both wind-driven, the documented 0.5° wind gap; in both
+the *enabling dryness* was caught), and 3 instructive failures that produced
+same-night structural fixes:
+
+1. **Cape Town Day Zero** read near-normal — a 180-day window cannot see three
+   failed winters. Fix: **SPI-365** added; Cape Town's annual window now reads
+   0.213 vs the 90-day 0.51, and the USDM-validated drought head improved from
+   ROC 0.795 to **0.841**.
+2. **Horn of Africa 2022** read *wet* during a famine drought — because NASA
+   POWER's precipitation is faulty in East Africa (claims 2022 as the wettest
+   year on record; ERA5 disagrees by 2× and matches ground truth). Fix:
+   `pipelines/precip_quality.py` — a **source-agreement detector** (POWER vs
+   ERA5 monthly correlation + annual ratio, cached per cell). Where sources
+   disagree, every precip-derived score degrades to **Tier C with the reason
+   named**. Discriminates perfectly on test cells: Horn and Cape Town flagged,
+   Iowa and the PNW pass. This is the user's "warn even with possibly faulty
+   info" requirement made mechanical: the system now knows when its own inputs
+   are lying.
+3. **Oso 2014** — susceptibility 0.023 and 3-day rain 0.329 at the deadliest
+   US landslide. Two mechanisms, one fixed: (a) victims lived on the flat
+   valley floor 600 m from the scarp → **neighborhood-max susceptibility**
+   (~900 m ring) now reported and gated on; (b) Oso was an antecedent-
+   saturation failure — the 30-day rain sat at the **96.2nd percentile** while
+   the 3-day was unremarkable → the alert gate now takes the worse of the
+   3-day and 30-day percentiles. After both fixes Freetown and Kedarnath raise
+   `alert=True` cold; Oso's trigger side gates but its susceptibility stays
+   honestly low — a deep-seated failure in glacial outwash is invisible to
+   surface slope, and the fix (GLiM lithology / LiDAR scarp morphology) is on
+   the roadmap, not tuned around. Refusing to lower the gate until one famous
+   anecdote passes is the difference between validation and overfitting.
+
+Also deployment-priced this session: fire alarm thresholds computed on the
+real distribution of days (weekly-sampled 541-cell grid; 5% budget threshold
+0.4028), same D14 discipline as the landslide trigger.
+
 ---
 
 ## Open / not yet done

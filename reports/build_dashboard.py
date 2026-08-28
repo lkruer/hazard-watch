@@ -73,7 +73,7 @@ def read_validation():
     return {k: read_json(RUNS / f"{k}.json") for k in
             ("hindcast-trigger", "external-susceptibility",
              "transfer-susceptibility", "global-loro",
-             "fire-trigger", "drought-validation")}
+             "fire-trigger", "drought-validation", "case-studies")}
 
 
 def read_ablations():
@@ -367,6 +367,57 @@ def render_validation(v):
             f'underperforms is informative: precipitation-only misses snowpack- and '
             f'temperature-driven drought, and the head is calibrated on US truth only.</p>'
             '</section>')
+    cs = v.get("case-studies")
+    if cs:
+        VERDICTS = {
+            "oso-landslide-WA": ("miss&rarr;half-fixed",
+                "30d rain 0.96 now gates (antecedent fix); deep-seated glacial failure "
+                "still invisible to surface slope &mdash; needs geology/LiDAR features"),
+            "freetown-mudslide-sierra-leone": ("HIT + alert",
+                "rain3d 0.983, nearby susceptibility 0.984 &rarr; alert fires"),
+            "uttarakhand-kedarnath-india": ("HIT + alert",
+                "rain3d 1.000 &mdash; most extreme on record for the season"),
+            "camp-fire-paradise-CA": ("predicted miss",
+                "KBDI 691, drought caught (spi 0.03&ndash;0.08); wind event invisible at 0.5&deg;"),
+            "fort-mcmurray-alberta": ("HIT + alert",
+                "danger 0.636 &gt; threshold; boreal May heat/VPD percentiles extreme"),
+            "black-saturday-victoria-AU": ("borderline hit",
+                "danger 0.403 at the alert threshold; VPD 4.94 kPa extreme; first AU point ever scored"),
+            "marshall-fire-boulder-CO": ("predicted miss",
+                "185 km/h chinook invisible; enabling drought caught (spi180 0.006)"),
+            "iowa-drought-2012": ("HIT",
+                "spi30 0.002, fire danger 0.641, P(severe drought) 0.53"),
+            "cape-town-day-zero": ("miss&rarr;fixed",
+                "180d window too short for 3 failed winters &rarr; added SPI-365 (0.213); "
+                "POWER also biased there &rarr; source check degrades to Tier C"),
+            "horn-of-africa-2022": ("data fault&rarr;detected",
+                "POWER calls famine-drought 2022 its wettest year; ERA5 disagrees 2&times; "
+                "&rarr; source-agreement detector now degrades cell to Tier C"),
+        }
+        rows = []
+        for c in cs.get("cases", []):
+            n = c.get("name", "")
+            verdict, note = VERDICTS.get(n, ("&mdash;", ""))
+            cls = ("ok" if "HIT" in verdict else
+                   ("warn" if ("fixed" in verdict or "detected" in verdict
+                               or "borderline" in verdict) else "crit"))
+            rows.append(
+                f'<tr><td><code>{E(n)}</code><div class="muted sm">{E(c.get("date",""))}'
+                f' &middot; {E(c.get("hazard",""))}</div></td>'
+                f'<td>{pill(cls, verdict)}</td>'
+                f'<td class="sm">{note}</td></tr>')
+        cards.append(
+            '<section class="card"><h2>Case file &mdash; ten famous disasters, '
+            'expectations written before scoring</h2>'
+            '<p class="empty" style="margin-bottom:12px">Every point scored cold through '
+            '<code>serve/score_global.py</code> &mdash; several on continents the system had '
+            'never touched. Misses are kept verbatim; two produced structural fixes the same '
+            'night (SPI-365, the precip source-agreement detector, neighborhood-max '
+            'susceptibility, antecedent-rain gating), and two were predicted in advance '
+            '(wind-driven fires &mdash; the documented 0.5&deg; wind gap).</p>'
+            '<div class="tablewrap"><table class="grid"><thead><tr><th>Case</th>'
+            '<th>Verdict</th><th>What happened</th></tr></thead><tbody>'
+            + "".join(rows) + "</tbody></table></div></section>")
     return "".join(cards)
 
 

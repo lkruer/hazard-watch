@@ -49,7 +49,7 @@ from pipelines.common import SESSION  # noqa: E402
 
 USDM = ("https://usdmdataservices.unl.edu/api/CountyStatistics/"
         "GetDroughtSeverityStatisticsByAreaPercent")
-WINDOWS = (30, 90, 180)
+WINDOWS = (30, 90, 180, 365)   # 365: Cape-Town-class multi-season droughts
 FEATURES = [f"spi{w}" for w in WINDOWS] + ["spi90_trend_8w"]
 D2_THRESHOLD = 50.0          # county is "in severe drought" if >=50% area D2+
 RUNS = ROOT / "models" / "runs"
