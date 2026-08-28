@@ -234,12 +234,45 @@ def stack_for(lat: float, lon: float, min_years: int = 15):
                   f"pipelines/glofas.py --tile)")
 
 
+# Priority basins for progressive global coverage, ordered by flood exposure
+# (population living in the floodplain). Each entry is a point inside the
+# basin; its 6-degree tile gets fetched. Resumable: cached years are skipped.
+PRIORITY_BASINS = [
+    ("ganges-brahmaputra (Dhaka)", 23.8, 90.4),
+    ("mekong delta (Can Tho)", 10.0, 105.8),
+    ("indus (Sukkur)", 27.7, 68.9),
+    ("yangtze (Wuhan)", 30.6, 114.3),
+    ("irrawaddy (Yangon)", 17.0, 95.2),
+    ("niger inland delta (Niamey)", 13.5, 2.1),
+    ("nile (Khartoum)", 15.6, 32.5),
+    ("mississippi (Memphis)", 35.1, -90.1),
+    ("rhine-meuse (Cologne)", 50.9, 6.96),
+    ("chao phraya (Bangkok)", 13.8, 100.5),
+]
+
+
+def fetch_priority():
+    for name, la, lo in PRIORITY_BASINS:
+        bb = tile_bbox(la, lo)
+        have = tile_years_cached(bb)
+        if have >= len(YEARS):
+            print(f"== {name}: complete ({have}/{len(YEARS)})", flush=True)
+            continue
+        print(f"== {name}: tile {bb} ({have}/{len(YEARS)} cached)", flush=True)
+        fetch_span(bb)
+
+
 if __name__ == "__main__":
     import argparse
     ap = argparse.ArgumentParser()
     ap.add_argument("--tile", nargs=2, type=float, metavar=("LAT", "LON"),
                     help="fetch the 6-degree tile containing this point")
+    ap.add_argument("--priority", action="store_true",
+                    help="work through PRIORITY_BASINS (resumable)")
     a = ap.parse_args()
+    if a.priority:
+        fetch_priority()
+        raise SystemExit(0)
     if a.tile:
         bb = tile_bbox(*a.tile)
         print(f"fetching {len(YEARS)} years for tile {bb}")
