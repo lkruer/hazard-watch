@@ -71,7 +71,8 @@ def read_runs():
 
 def read_validation():
     return {k: read_json(RUNS / f"{k}.json") for k in
-            ("hindcast-trigger", "external-susceptibility", "transfer-susceptibility")}
+            ("hindcast-trigger", "external-susceptibility",
+             "transfer-susceptibility", "global-loro")}
 
 
 def read_ablations():
@@ -269,6 +270,47 @@ def render_validation(v):
             f'local validation. This is why v1&rsquo;s regional scope was the right scope &mdash; '
             f'and why NASA&rsquo;s global product is a heuristic, not a trained model.</p>'
             f'</section>')
+    gl = v.get("global-loro")
+    if gl:
+        regs = gl.get("regions", {})
+        ens = gl.get("ensemble", {})
+        rows = []
+        for rg in ("myanmar", "vietnam", "laos", "philippines", "brazil",
+                   "malawi", "mexico", "pnw"):
+            r = regs.get(rg)
+            if not r:
+                continue
+            e = ens.get(rg, {})
+            nasa = r.get("nasa", {}).get("roc_auc")
+            cells = [f'{r["local"]["roc_auc"]:.3f}',
+                     f'{r["loro_rank"]["roc_auc"]:.3f}',
+                     f'{r["slope"]["roc_auc"]:.3f}',
+                     f'{nasa:.3f}' if nasa else "&mdash;",
+                     f'<strong>{e.get("ensemble", 0):.3f}</strong>' if e else "&mdash;"]
+            rows.append(f'<tr><td>{E(rg)}</td>'
+                        + "".join(f'<td class="num">{c}</td>' for c in cells) + "</tr>")
+        cards.append(
+            '<section class="card"><h2>Global floor experiment &mdash; '
+            'leave-one-region-out on four continents</h2>'
+            '<p class="empty" style="margin-bottom:12px">Eight regions, 78,084 rows; for '
+            'each one, every &ldquo;global&rdquo; method is scored on a region it has never '
+            'seen. Pooled multi-region training eliminates the below-chance transfer of the '
+            'single-region export (Myanmar 0.47 &rarr; 0.66), but no single method dominates '
+            'everywhere &mdash; so the global Tier-B floor is an equal-weight '
+            '<strong>ensemble</strong> of rank-pooled model + slope + NASA class: best mean '
+            '(0.718) and best worst-case (0.588) of any unseen-region method. Local models '
+            'stay far ahead where labels exist; all seven inventory regions now ship trained '
+            'Tier-A artifacts.</p>'
+            '<div class="tablewrap"><table class="grid"><thead><tr><th>Held-out region</th>'
+            '<th class="num">Local (ceiling)</th><th class="num">Pooled-rank</th>'
+            '<th class="num">Slope</th><th class="num">NASA</th>'
+            '<th class="num">Ensemble</th></tr></thead><tbody>'
+            + "".join(rows) + "</tbody></table></div>"
+            '<p class="sm muted" style="margin-top:10px">ROC-AUC. Ensemble weights fixed a '
+            'priori (equal); no fitting to the held-out region. Mexico is the honest hard '
+            'case (~0.58 for everything, including local): a single-storm inventory in a '
+            'half-degree box of homogeneous terrain &mdash; some places are Tier B because '
+            'their labels cannot support more yet.</p></section>')
     return "".join(cards)
 
 

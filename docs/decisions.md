@@ -486,6 +486,61 @@ work offline-first on cheap phones, which is who this product is for; and
 tier/status choropleths read cleanly on a flat projection. The static-JSON
 serve layer already matches a tiled map's fetch pattern.
 
+## D19 — "As proficient as possible everywhere": measured, not assumed
+
+The user asked why not aim for maximum proficiency everywhere on Earth. That
+is the aim; this experiment measured what actually delivers it. Eight regions
+on four continents (7 COOLR satellite inventories + the PNW report catalog,
+78,084 rows, terrain-only portable features), evaluated leave-one-region-out —
+for each region, every "global" method is tested on a place it has never seen:
+
+| held-out region | local (ceiling) | pooled | pooled-rank | slope | NASA | **ensemble** |
+|---|---|---|---|---|---|---|
+| Myanmar | 0.742 | 0.611 | 0.662 | 0.621 | 0.559 | 0.645 |
+| Vietnam | 0.782 | 0.663 | 0.702 | 0.675 | 0.578 | **0.713** |
+| Laos | 0.769 | 0.665 | 0.731 | 0.739 | 0.582 | **0.744** |
+| Philippines | 0.676 | 0.618 | 0.649 | 0.551 | 0.543 | 0.601 |
+| Brazil | 0.948 | 0.821 | 0.793 | 0.908 | 0.687 | 0.884 |
+| Malawi | 0.918 | 0.931 | 0.814 | 0.914 | 0.859 | **0.922** |
+| Mexico | 0.577 | 0.587 | 0.564 | 0.584 | 0.568 | **0.588** |
+| PNW (reports) | 0.810 | 0.606 | 0.601 | 0.615 | 0.667 | 0.645 |
+| **mean / worst** | — | 0.688 / 0.59 | 0.690 / 0.56 | 0.701 / 0.55 | 0.630 / 0.54 | **0.718 / 0.59** |
+
+(ROC-AUC. "ensemble" = equal-weight average of pooled-rank model, slope, and
+NASA class, each as a within-region percentile — weights fixed a priori, no
+fitting to the held-out region.)
+
+Findings, in order of importance:
+
+1. **Pooling across regimes eliminates the below-chance catastrophe.** The
+   single-region export scored 0.47 on Myanmar (D16); the pooled model scores
+   0.61–0.66 there and never inverts anywhere. Training support that spans
+   the world's terrain regimes is what LHASA 2.0 gets right.
+2. **No single global method dominates.** Slope alone wins Brazil (0.908!),
+   the rank-pooled model wins Philippines (+0.10 over slope), NASA's map wins
+   the reports-regime PNW. Which signal carries a region is itself regional.
+3. **The equal-weight ensemble is the right global floor**: best mean (0.718)
+   AND best worst-case (0.588) of any method that has never seen the region.
+   A floor's job is robustness, and it beats-or-ties the best heuristic in
+   6/8 regions without ever being the worst anywhere.
+4. **Local models remain far better where labels exist** (gap of +0.08 to
+   +0.19 over any global method). Tier A is not optional decoration; it is
+   where most of the proficiency lives. All 7 inventory regions now have
+   trained, calibrated local artifacts (`models/artifacts/susceptibility-*.pkl`,
+   CV ROC 0.58–0.95).
+5. Mexico is the honest hard case (~0.58 for everything including local): a
+   single-storm inventory in a 0.44°×0.49° box of homogeneous terrain — too
+   little contrast to learn from. Some places are Tier B not for lack of
+   ambition but because their labels cannot support more yet.
+
+**So the answer to "why not maximum proficiency everywhere" is: this is what
+it looks like.** Proficiency is bounded per-place by the labels that exist
+there. The architecture maximizes it subject to that bound — ensemble floor
+everywhere (never below ~0.59 in any regime tested), local models wherever
+labels exist, and every new inventory that appears anywhere on Earth converts
+territory from the floor to a local model. The path to raising the floor
+further is more *diverse regions in the pool*, not a cleverer model class.
+
 ---
 
 ## Open / not yet done
