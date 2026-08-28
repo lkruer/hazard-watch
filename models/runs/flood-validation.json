@@ -1,0 +1,52 @@
+{
+  "name": "flood-validation",
+  "layer": "flood",
+  "method": "GloFAS v5 seasonal flow percentiles vs USGS gauge percentiles, PNW pilot",
+  "gauges": [
+    {
+      "gauge": "Columbia @ The Dalles OR",
+      "site": "14105700",
+      "n_days": 7670,
+      "gauge_median_m3s": 4077.6,
+      "glofas_cell_median_m3s": 3668.3,
+      "pearson_raw_discharge": 0.899,
+      "spearman_seasonal_pctl": 0.592,
+      "n_gauge_flood_days": 116,
+      "glofas_extreme_hit_rate": 0.491
+    },
+    {
+      "gauge": "Willamette @ Portland OR",
+      "site": "14211720",
+      "n_days": 7670,
+      "gauge_median_m3s": 589.0,
+      "glofas_cell_median_m3s": 587.2,
+      "pearson_raw_discharge": 0.946,
+      "spearman_seasonal_pctl": 0.805,
+      "n_gauge_flood_days": 139,
+      "glofas_extreme_hit_rate": 0.849
+    },
+    {
+      "gauge": "Skagit @ Mount Vernon WA",
+      "site": "12200500",
+      "n_days": 7670,
+      "gauge_median_m3s": 396.4,
+      "glofas_cell_median_m3s": 316.1,
+      "pearson_raw_discharge": 0.787,
+      "spearman_seasonal_pctl": 0.82,
+      "n_gauge_flood_days": 134,
+      "glofas_extreme_hit_rate": 0.642
+    },
+    {
+      "gauge": "Nehalem @ Foss OR (small coastal)",
+      "site": "14301000",
+      "n_days": 7669,
+      "gauge_median_m3s": 34.0,
+      "glofas_cell_median_m3s": 29.0,
+      "pearson_raw_discharge": 0.905,
+      "spearman_seasonal_pctl": 0.842,
+      "n_gauge_flood_days": 128,
+      "glofas_extreme_hit_rate": 0.75
+    }
+  ],
+  "generated_at": "2026-08-28T13:02:24"
+}

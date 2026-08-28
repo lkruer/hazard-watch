@@ -73,7 +73,8 @@ def read_validation():
     return {k: read_json(RUNS / f"{k}.json") for k in
             ("hindcast-trigger", "external-susceptibility",
              "transfer-susceptibility", "global-loro",
-             "fire-trigger", "drought-validation", "case-studies")}
+             "fire-trigger", "drought-validation", "case-studies",
+             "flood-validation")}
 
 
 def read_ablations():
@@ -418,6 +419,34 @@ def render_validation(v):
             '<div class="tablewrap"><table class="grid"><thead><tr><th>Case</th>'
             '<th>Verdict</th><th>What happened</th></tr></thead><tbody>'
             + "".join(rows) + "</tbody></table></div></section>")
+    fv = v.get("flood-validation")
+    if fv:
+        rows = "".join(
+            f'<tr><td>{E(g["gauge"])}</td>'
+            f'<td class="num">{g["gauge_median_m3s"]:,.0f} / {g["glofas_cell_median_m3s"]:,.0f}</td>'
+            f'<td class="num">{g["pearson_raw_discharge"]:.2f}</td>'
+            f'<td class="num">{g["spearman_seasonal_pctl"]:.2f}</td>'
+            f'<td class="num">{g["glofas_extreme_hit_rate"]:.0%}</td></tr>'
+            for g in fv.get("gauges", []))
+        cards.append(
+            '<section class="card"><h2>Flood layer &mdash; GloFAS vs real river gauges</h2>'
+            '<p class="empty" style="margin-bottom:12px">Per the brief, flood is integration, '
+            'not modeling: Copernicus GloFAS v5 runs the hydrology; we express its discharge '
+            'as a percentile of each river cell&rsquo;s own 21-year seasonal record, and mask '
+            'cells with no real channel. Checked against four USGS gauges (public, no key) '
+            'spanning the Columbia (~4,000&nbsp;m&sup3;/s) down to a small coastal river '
+            '(~34&nbsp;m&sup3;/s):</p>'
+            '<div class="tablewrap"><table class="grid"><thead><tr><th>Gauge</th>'
+            '<th class="num">Median m&sup3;/s (gauge/cell)</th><th class="num">Discharge r</th>'
+            '<th class="num">Percentile &rho;</th><th class="num">Flood-day hit</th></tr>'
+            f'</thead><tbody>{rows}</tbody></table></div>'
+            '<p class="sm muted" style="margin-top:10px">Flood-day hit = share of days the '
+            'gauge sat above its own 98th percentile where GloFAS also read &ge;95th. The '
+            'Columbia&rsquo;s 49% is the documented dam-regulation caveat &mdash; hydropower '
+            'schedules are invisible to any natural-flow model. Historical replay: Chehalis '
+            'Dec 2007 (closed I-5) scores the 100.0th percentile, Nooksack Nov 2021 the '
+            '98.8th &mdash; both auto-alert with compound rain+river flags. Coverage grows '
+            'by 6&deg; tile on demand, cached forever.</p></section>')
     return "".join(cards)
 
 
@@ -740,7 +769,7 @@ td.drop { color:var(--crit); font-weight:600; }
 <div class="wrap">
   <header class="hd">
     <div>
-      <div class="hd__eyebrow">Multi-hazard risk platform &middot; Landslide &middot; Fire &middot; Drought</div>
+      <div class="hd__eyebrow">Multi-hazard risk platform &middot; Landslide &middot; Fire &middot; Drought &middot; Flood</div>
       <h1>Hazard model telemetry</h1>
     </div>
     <div class="hd__meta">Generated __NOW__<br><code>__ROOT__</code></div>

@@ -324,10 +324,43 @@ def drought_block(lat: float, lon: float, date: str) -> dict:
     return out
 
 
+def flood_block(lat: float, lon: float, date: str) -> dict:
+    """GloFAS flow percentile at the nearest river cell -- integration, not
+    modeling, per the brief. Tier B where a >=15-year record is cached;
+    honest not-a-river / no-record answers otherwise."""
+    try:
+        from pipelines.glofas import stack_for
+        stack, why = stack_for(lat, lon)
+    except Exception as e:                                  # noqa: BLE001
+        return {"hazard": "flood", "tier": "C", "flow_pctl_seasonal": None,
+                "caveats": [f"discharge stack unavailable: {e}"]}
+    if stack is None:
+        return {"hazard": "flood", "tier": "C", "flow_pctl_seasonal": None,
+                "caveats": [why]}
+    r = stack.percentile_at(lat, lon, date)
+    if r is None:
+        return {"hazard": "flood", "tier": "C", "flow_pctl_seasonal": None,
+                "caveats": ["date outside the cached discharge record"]}
+    if not r.get("is_river"):
+        return {"hazard": "flood", "tier": "B", "is_river": False,
+                "flow_pctl_seasonal": None,
+                "caveats": ["no river channel at this grid cell (GloFAS 0.05deg); "
+                            "flood risk here is pluvial/flash, not riverine"]}
+    return {"hazard": "flood", "tier": "B", "is_river": True,
+            "flow_pctl_seasonal": r["flow_pctl_seasonal"],
+            "discharge_m3s": r["discharge_m3s"],
+            "median_here_m3s": r["median_here_m3s"],
+            "alert": bool(r["flow_pctl_seasonal"] >= 0.98),
+            "caveats": ["GloFAS v5 modeled discharge (Copernicus CEMS), "
+                        "expressed against this cell's own 2004-2024 record; "
+                        "validated against USGS gauges (see flood-validation)"]}
+
+
 def score(lat: float, lon: float, date: str) -> dict:
     blocks = [landslide_block(lat, lon, date),
               fire_block(lat, lon, date),
-              drought_block(lat, lon, date)]
+              drought_block(lat, lon, date),
+              flood_block(lat, lon, date)]
     hz = {b["hazard"]: b for b in blocks}
     # Compound-extremes summary: which signals sit in their local tail today.
     # Compound events (hot+dry+windy; saturated+steep) drive outsized losses,
@@ -346,6 +379,9 @@ def score(lat: float, lon: float, date: str) -> dict:
         flags.append("3-month_precipitation_deficit_severe")
     if dr.get("spi180") is not None and dr["spi180"] <= 0.05:
         flags.append("6-month_precipitation_deficit_severe")
+    fl = hz.get("flood", {})
+    if (fl.get("flow_pctl_seasonal") or 0) >= 0.98:
+        flags.append("river_flow_extreme_for_season")
     return {"lat": lat, "lon": lon, "date": date,
             "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
             "hazards": blocks,
@@ -387,5 +423,9 @@ if __name__ == "__main__":
               f"kbdi={fr.get('kbdi')} dsr={fr.get('days_since_rain')}")
         print(f"  drought  [{dr['tier']}] spi90={dr.get('spi90')} "
               f"p_severe={dr.get('p_severe_drought')}")
+        fl = hz.get("flood", {})
+        print(f"  flood    [{fl.get('tier')}] "
+              f"flow_pctl={fl.get('flow_pctl_seasonal')} "
+              f"q={fl.get('discharge_m3s')}")
     terrain.close_all()
     print(f"\nwrote {out_dir}")

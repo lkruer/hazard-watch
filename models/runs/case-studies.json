@@ -617,5 +617,45 @@
       }
     },
     "oso_verdict": "trigger side fixed (30d pctl 0.962 now gates); susceptibility side remains a documented miss -- deep-seated failure in glacial outwash is invisible to surface slope; needs geology (GLiM) / LiDAR scarp features, already on the roadmap"
+  },
+  "flood_cases": {
+    "chehalis-flood-2007": {
+      "note": "I-5 closed 4 days; Chehalis basin record flood after an atmospheric river",
+      "flood": {
+        "hazard": "flood",
+        "tier": "B",
+        "is_river": true,
+        "flow_pctl_seasonal": 1.0,
+        "discharge_m3s": 819.9,
+        "median_here_m3s": 91.5,
+        "alert": true,
+        "caveats": [
+          "GloFAS v5 modeled discharge (Copernicus CEMS), expressed against this cell's own 2004-2024 record; validated against USGS gauges (see flood-validation)"
+        ]
+      },
+      "compound": [
+        "rainfall_3d_extreme_for_season",
+        "river_flow_extreme_for_season"
+      ]
+    },
+    "nooksack-flood-2021": {
+      "note": "Nov 2021 BC/WA atmospheric river; Nooksack overwhelmed, Sumas flooded",
+      "flood": {
+        "hazard": "flood",
+        "tier": "B",
+        "is_river": true,
+        "flow_pctl_seasonal": 0.988,
+        "discharge_m3s": 497.4,
+        "median_here_m3s": 112.1,
+        "alert": true,
+        "caveats": [
+          "GloFAS v5 modeled discharge (Copernicus CEMS), expressed against this cell's own 2004-2024 record; validated against USGS gauges (see flood-validation)"
+        ]
+      },
+      "compound": [
+        "rainfall_3d_extreme_for_season",
+        "river_flow_extreme_for_season"
+      ]
+    }
   }
 }

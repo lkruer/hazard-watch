@@ -678,6 +678,52 @@ Also deployment-priced this session: fire alarm thresholds computed on the
 real distribution of days (weekly-sampled 541-cell grid; 5% budget threshold
 0.4028), same D14 discipline as the landslide trigger.
 
+## D25 — Flood layer: GloFAS integration, gauge-validated, all four hazards live
+
+The user created the ECMWF/EWDS account (the one credential the platform
+needed); everything else stayed public/keyless. Exactly per the brief — no
+discharge modeling from scratch — `pipelines/glofas.py` consumes
+`cems-glofas-historical` v5 (LISFLOOD, 0.05°, daily mean discharge) and
+expresses each river cell's flow as a percentile of its own 21-year seasonal
+record. River mask: median ≥ 5 m³/s, with channel-snapping to the largest
+river cell within ~10 km (a 0.05° channel rarely sits under the queried
+point — Oso's lesson applied to rivers).
+
+Integration traps found and fixed, for the record: EWDS request costs are per
+*product-type × days* (asking consolidated+intermediate together doubled cost
+and tripped the cap — one type per request); the NetCDF longitude arrives on
+0–360 (every western-hemisphere query silently missed the grid until
+normalized); `open_mfdataset` wants dask (plain per-year concat avoids the
+dependency).
+
+Validation against four USGS gauges (NWIS, public, no key), 7,670 shared days
+each, spanning three orders of magnitude of river:
+
+| gauge | median m³/s (gauge/GloFAS) | discharge r | percentile ρ | flood-day hit |
+|---|---|---|---|---|
+| Columbia @ The Dalles | 4,078 / 3,668 | 0.90 | 0.59 | 49% |
+| Willamette @ Portland | 589 / 587 | 0.95 | 0.81 | 85% |
+| Skagit @ Mount Vernon | 396 / 316 | 0.79 | 0.82 | 64% |
+| Nehalem @ Foss (small coastal) | 34 / 29 | 0.91 | 0.84 | 75% |
+
+Flood-day hit = when the gauge sits above its own 98th percentile, GloFAS
+also reads ≥95th. The Columbia's 49% is the dam-regulation caveat — The
+Dalles is hydropower-scheduled, and no natural-flow model tracks turbines;
+free-flowing rivers validate at 64–85%.
+
+Historical replay through the full stack: **Chehalis Dec 2007** (the flood
+that closed I-5 for four days) scores the **100.0th** seasonal percentile
+(820 m³/s against a 92 m³/s median) and **Nooksack Nov 2021** the **98.8th**
+— both auto-alert, both with compound rain+river extreme flags.
+
+Global coverage grows by fixed 6° tiles fetched on demand
+(`python pipelines/glofas.py --tile <lat> <lon>`, ~21 queued requests ≈ an
+hour per new basin, cached forever). Scoring never blocks on a fetch: an
+uncached basin reports Tier C with "no discharge record cached yet", honestly.
+
+**All four of the brief's Tier-1 hazards are now live in the global scorer,
+each with its own independent public-data validation.**
+
 ---
 
 ## Open / not yet done
