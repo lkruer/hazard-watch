@@ -1,0 +1,21 @@
+{
+  "computed_at": "2026-08-28T00:34:04",
+  "grid_cell_days": 702972,
+  "note": "score quantiles of the production trigger model over the full 2004-2024 daily grid; 'alarm budget' 0.05 = alarm on the wettest 5% of days at these cells",
+  "budgets": {
+    "0.02": {
+      "threshold": 0.6439393939393939,
+      "expected_alarm_days_per_cell_year": 7.3
+    },
+    "0.05": {
+      "threshold": 0.4019607843137255,
+      "expected_alarm_days_per_cell_year": 18.3
+    },
+    "0.10": {
+      "threshold": 0.2765273311897107,
+      "expected_alarm_days_per_cell_year": 36.5
+    }
+  },
+  "recommended_budget": 0.05,
+  "trigger_threshold": 0.4019607843137255
+}

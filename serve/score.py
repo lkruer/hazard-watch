@@ -68,7 +68,21 @@ def load_layer(layer: str):
 
 
 def operating_point(layer: str) -> float:
-    """Recall-tuned threshold from the most recent run for this layer."""
+    """Deployment threshold for a layer.
+
+    For the trigger, prefer serve/thresholds.json -- score quantiles computed
+    over the full 2004-2024 daily grid. The hindcast showed why: a threshold
+    tuned on the case-control training set (events enriched ~500x over
+    reality) alarmed on 39% of all real days. Only the deployment
+    distribution can price an alarm budget honestly.
+    """
+    if layer == "trigger":
+        tj = ROOT / "serve" / "thresholds.json"
+        if tj.exists():
+            try:
+                return float(json.loads(tj.read_text(encoding="utf-8"))["trigger_threshold"])
+            except (json.JSONDecodeError, KeyError, TypeError, ValueError):
+                pass
     best, best_time = None, ""
     for f in RUNS.glob("*.json"):
         try:
@@ -132,6 +146,15 @@ def status_for(susc: float | None, trig: float | None,
 def score_location(loc_id: str, lat: float, lon: float, date: str,
                    susc_b, trig_b, s_thr: float, t_thr: float, wx=None) -> dict:
     t = terrain.derive(lat, lon) if susc_b else None
+    # The regional model carries road_dist_m (D17). Feed it when the bundle
+    # expects it and the OSM cache exists; a missing value falls back to NaN,
+    # which LightGBM routes down default branches rather than erroring.
+    if t is not None and susc_b and "road_dist_m" in susc_b.get("features", ()):
+        try:
+            from pipelines.osm_roads import road_dist_m
+            t = {**t, "road_dist_m": float(road_dist_m([lat], [lon])[0])}
+        except Exception:                                   # noqa: BLE001
+            t = {**t, "road_dist_m": float("nan")}
     # Don't touch the weather API at all if there is no trigger model to feed --
     # a partial deployment should degrade, not do pointless network work.
     w = wx.features_at(lat, lon, date) if (trig_b and wx) else None

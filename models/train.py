@@ -52,8 +52,11 @@ ARTIFACTS = ROOT / "models" / "artifacts"
 ARTIFACTS.mkdir(parents=True, exist_ok=True)
 
 LAYERS = {
+    # road_dist_m (OSM arterials) rides along when present: reported positives
+    # sit a median 20 m from a road vs 887 m for background, and making that
+    # accessibility artifact explicit stops elevation from proxying it (D17)
     "susceptibility": {"csv": "susceptibility.csv", "features": terrain.FEATURES,
-                       "group": "block_id"},
+                       "optional": ["road_dist_m"], "group": "block_id"},
     # grouped on the weather cell, not the 0.25deg block: every row in a cell
     # shares one rainfall series, so a finer group would leak across folds
     "trigger": {"csv": "trigger.csv", "features": list(openmeteo.FEATURES),
@@ -84,7 +87,8 @@ def load(layer: str):
     if not p.exists():
         raise SystemExit(f"missing {p}. Run features/build_dataset.py --stage {layer} first.")
     df = pd.read_csv(p)
-    feats = [f for f in cfg["features"] if f in df.columns]
+    feats = [f for f in list(cfg["features"]) + list(cfg.get("optional", []))
+             if f in df.columns]
     # drop all-NaN and zero-variance columns, they only add noise
     keep = [f for f in feats if df[f].notna().any() and df[f].nunique(dropna=True) > 1]
     dropped = sorted(set(feats) - set(keep))

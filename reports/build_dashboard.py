@@ -69,6 +69,11 @@ def read_runs():
     return out
 
 
+def read_validation():
+    return {k: read_json(RUNS / f"{k}.json") for k in
+            ("hindcast-trigger", "external-susceptibility", "transfer-susceptibility")}
+
+
 def read_ablations():
     if not RUNS.exists():
         return []
@@ -146,7 +151,128 @@ def svg_folds(folds, key="pr_auc", baseline=None):
             + "".join(parts) + "</svg>")
 
 
-def render(ev, rp, region, feats, runs, blockers, ablations):
+def svg_curves(series, x_max=0.125, w=430, h=178, pad=32):
+    """POD-vs-alarm-rate polylines. series = [(label, cls, [(x,y),...])]."""
+    parts = []
+    for frac in (0.25, 0.5, 0.75, 1.0):
+        yy = h - pad - (h - pad * 2) * frac
+        parts.append(f'<line x1="{pad}" y1="{yy:.0f}" x2="{w-pad}" y2="{yy:.0f}" class="sv-gridln"/>')
+        parts.append(f'<text x="{pad-4}" y="{yy+3:.0f}" class="sv-ylbl">{frac:.2f}</text>')
+    for xv in (0.02, 0.05, 0.10):
+        xx = pad + (w - pad * 2) * (xv / x_max)
+        parts.append(f'<text x="{xx:.0f}" y="{h-pad+11}" class="sv-lbl">{xv:.0%}</text>')
+    for label, cls, pts in series:
+        pts = sorted((x, y) for x, y in pts if x <= x_max and y is not None)
+        if not pts:
+            continue
+        d = " ".join(f"{pad + (w-pad*2)*(x/x_max):.1f},{h - pad - (h-pad*2)*y:.1f}"
+                     for x, y in pts)
+        parts.append(f'<polyline points="{d}" class="{cls}"/>')
+        lx, ly = pts[-1]
+        parts.append(f'<text x="{pad + (w-pad*2)*(lx/x_max)-2:.0f}" '
+                     f'y="{h - pad - (h-pad*2)*ly - 5:.0f}" class="sv-serieslbl">{E(label)}</text>')
+    parts.append(f'<line x1="{pad}" y1="{h-pad}" x2="{w-pad}" y2="{h-pad}" class="sv-axis"/>')
+    parts.append(f'<text x="{w/2:.0f}" y="{h-3}" class="sv-lbl">alarm days (share of all days)</text>')
+    return (f'<svg viewBox="0 0 {w} {h}" class="foldchart" role="img" '
+            f'aria-label="events caught vs alarm budget">{"".join(parts)}</svg>')
+
+
+def render_validation(v):
+    cards = []
+    hc = v.get("hindcast-trigger")
+    if hc:
+        op = hc["at_operating_point"]
+        g = hc["grid"]
+        rows = "".join(
+            f'<tr><td>~{m["target_alarm_rate"]:.0%} of days '
+            f'({m["target_alarm_rate"]*365.25:.0f}/yr)</td>'
+            f'<td class="num">{m["model_pod_1d"]:.0%}</td>'
+            f'<td class="num">{m["rule_pod_1d"]:.0%}</td></tr>'
+            for m in hc["matched_alarm_rate"])
+        curve = svg_curves([
+            ("model", "sv-line",
+             [(c["alarm_rate"], c["pod_1d"]) for c in hc["curve_model"]]),
+            ("rain rule", "sv-line2",
+             [(c["alarm_rate"], c["pod_1d"]) for c in hc["curve_rule"]]),
+        ])
+        cards.append(
+            '<section class="card"><h2>Prospective hindcast &mdash; replaying 2016&ndash;2024</h2>'
+            f'<p class="empty" style="margin-bottom:12px">Model frozen on data through 2015 '
+            f'(training, tuning, calibration, threshold), then run over every day at every cell: '
+            f'{g["cell_days"]:,} cell-days, {g["event_days"]} reported event-days &mdash; base rate '
+            f'{g["base_rate"]:.5f}, the number the 1:4 training set hides. The training-set '
+            f'operating threshold alarmed on {op["alarm_rate"]:.0%} of ALL days (a ~500&times; '
+            f'base-rate trap); production thresholds now come from the daily grid itself '
+            f'(<code>serve/thresholds.json</code>: alarm budgets of 2/5/10% of days).</p>'
+            f'<div class="cols"><div>{curve}<div class="sm muted" style="margin-top:4px">'
+            f'Reported events caught (&plusmn;1 day) vs alarm budget, 2016&ndash;2024. The rain '
+            f'rule is one feature &mdash; <code>precip_3d_pctl_seasonal</code> &mdash; with a '
+            f'threshold.</div></div>'
+            f'<div><div class="tablewrap"><table class="grid"><thead><tr><th>Alarm budget</th>'
+            f'<th class="num">Model</th><th class="num">Rain rule</th></tr></thead>'
+            f'<tbody>{rows}</tbody></table></div>'
+            f'<p class="sm muted" style="margin-top:10px">The curve flattens near 55&ndash;60%: '
+            f'roughly a third of reported slides fall on unremarkable-rain days (human-triggered, '
+            f'snowmelt, mis-dated) &mdash; a ceiling for any rainfall-only trigger. FAR stays '
+            f'&gt;99% at these budgets because reported events are rare-in-time: an alarm means '
+            f'&ldquo;conditions dangerous&rdquo;, not &ldquo;a slide will be reported&rdquo;.</p>'
+            f'</div></div></section>')
+    ec = v.get("external-susceptibility")
+    if ec:
+        mono = ec.get("mean_our_score_by_nasa_class", {})
+        mono_s = " &rarr; ".join(f"{val:.2f}" for _, val in sorted(mono.items()))
+        cards.append(
+            '<section class="card"><h2>External check &mdash; NASA global susceptibility map</h2>'
+            f'<p class="empty">Sampled Stanley &amp; Kirschbaum&rsquo;s global map (~1&nbsp;km, '
+            f'classes 1&ndash;5, live on the same NASA server) at all {ec["n"]:,} of our points. '
+            f'On identical labels: ours PR-AUC <strong>{ec["ours"]["pr_auc"]:.3f}</strong> '
+            f'(ROC {ec["ours"]["roc_auc"]:.3f}) vs global map '
+            f'<strong>{ec["nasa_global"]["pr_auc"]:.3f}</strong> '
+            f'(ROC {ec["nasa_global"]["roc_auc"]:.3f}). Our mean score rises monotonically with '
+            f'their class ({mono_s}) &mdash; the two maps agree about which terrain is dangerous; '
+            f'ours adds 30&nbsp;m resolution. Caveat: our labels share the reporting process our '
+            f'model was fit to, so read this as &ldquo;sane and locally sharper&rdquo;, not '
+            f'&ldquo;beats NASA globally&rdquo;.</p></section>')
+    tr = v.get("transfer-susceptibility")
+    if tr:
+        rows = "".join(
+            f'<tr><td>{lbl}</td><td class="num">{tr[k]["roc_auc"]:.3f}</td>'
+            f'<td class="num">{tr[k]["pr_auc"]:.3f}</td></tr>'
+            for k, lbl in (("transfer", "PNW model, frozen (transfer)"),
+                           ("local", "Trained on Myanmar (ceiling)"),
+                           ("slope_only", "Slope alone (floor)")))
+        resc = tr.get("rescue_attempts", {})
+        resc_rows = "".join(
+            f'<tr><td>{E(d.get("note", k))}</td>'
+            f'<td class="num">{d["roc_auc"]:.3f}</td><td class="num sm muted">failed</td></tr>'
+            for k, d in resc.items())
+        cards.append(
+            '<section class="card"><h2>Transfer test &mdash; Myanmar satellite inventory '
+            '(bias-free labels)</h2>'
+            f'<p class="empty" style="margin-bottom:12px">The Chin/Rakhine inventory is '
+            f'satellite-mapped &mdash; every visible failure digitised, no roads-and-reporters '
+            f'filter. Scoring {tr["n"]:,} Myanmar points with the terrain model trained only in '
+            f'the Pacific Northwest went badly &mdash; and every rescue failed:</p>'
+            f'<div class="cols"><div class="tablewrap"><table class="grid"><thead><tr>'
+            f'<th>Predictor</th><th class="num">ROC-AUC</th><th class="num">PR-AUC</th></tr>'
+            f'</thead><tbody>{rows}</tbody></table></div>'
+            f'<div class="tablewrap"><table class="grid"><thead><tr><th>Rescue attempt</th>'
+            f'<th class="num">ROC-AUC</th><th></th></tr></thead><tbody>{resc_rows}</tbody>'
+            f'</table></div></div>'
+            f'<p class="empty" style="margin-top:14px"><strong>Why:</strong> 57&ndash;63% of '
+            f'Myanmar terrain lies beyond the PNW&rsquo;s 90th percentile in roughness, relief '
+            f'and elevation &mdash; the trees saturate outside their training support, and the '
+            f'discriminating relationships are regime-specific. The features work there (local '
+            f'model 0.742) but the learned weighting does not carry. <strong>Conclusion:</strong> '
+            f'regional models where labels exist; slope-heuristic or NASA&rsquo;s global map '
+            f'elsewhere; never ship a trained susceptibility model outside its region without '
+            f'local validation. This is why v1&rsquo;s regional scope was the right scope &mdash; '
+            f'and why NASA&rsquo;s global product is a heuristic, not a trained model.</p>'
+            f'</section>')
+    return "".join(cards)
+
+
+def render(ev, rp, region, feats, runs, blockers, ablations, validation):
     st = stage_states(ev, rp, region, feats, runs)
 
     rail = "".join(
@@ -322,6 +448,7 @@ def render(ev, rp, region, feats, runs, blockers, ablations):
                  ("__SOURCES__", sources), ("__REGION__", region_html),
                  ("__FEATS__", feats_html), ("__RUNS__", runs_html),
                  ("__ABLATION__", ablation_html),
+                 ("__VALIDATION__", render_validation(validation or {})),
                  ("__BLOCKERS__", blockers_html)):
         out = out.replace(k, v)
     return out
@@ -446,6 +573,11 @@ table.grid tr:last-child td { border-bottom:none; }
 .sv-axis { stroke:var(--border); stroke-width:1; }
 td.drop { color:var(--crit); font-weight:600; }
 .sv-base { stroke:var(--warn); stroke-width:1; stroke-dasharray:3 3; }
+.sv-line { fill:none; stroke:var(--accent); stroke-width:2; }
+.sv-line2 { fill:none; stroke:var(--warn); stroke-width:1.6; stroke-dasharray:5 3; }
+.sv-gridln { stroke:var(--border); stroke-width:.6; }
+.sv-ylbl { fill:var(--faint); font-size:8.5px; text-anchor:end; font-family:"IBM Plex Mono",monospace; }
+.sv-serieslbl { fill:var(--dim); font-size:9.5px; text-anchor:end; font-family:"IBM Plex Mono",monospace; }
 .blks { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:12px; }
 .blk { border:1px solid var(--border); border-left:3px solid var(--idle); border-radius:6px;
        padding:12px 14px; background:var(--surface2); }
@@ -473,6 +605,7 @@ td.drop { color:var(--crit); font-weight:600; }
   </div>
   <section class="card"><h2>Training runs &amp; held-out performance</h2>__RUNS__</section>
   __ABLATION__
+  __VALIDATION__
   __BLOCKERS__
   <p class="foot">Regenerate with <code>python reports/build_dashboard.py</code>. Every value is read
   from disk &mdash; stages with no artifact render as empty rather than estimated.</p>
@@ -489,7 +622,8 @@ def main():
                read_json(PROCESSED / "features_manifest.json"),
                read_runs(),
                read_json(PROCESSED / "blockers.json"),
-               read_ablations()),
+               read_ablations(),
+               read_validation()),
         encoding="utf-8")
     print(f"wrote {out}  ({out.stat().st_size / 1024:.1f} KB)")
 

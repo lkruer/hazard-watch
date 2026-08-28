@@ -5,6 +5,26 @@
   "results": [
     {
       "set": "all",
+      "n_features": 10,
+      "features": [
+        "elev_m",
+        "slope_deg",
+        "aspect_sin",
+        "aspect_cos",
+        "curvature",
+        "tri",
+        "roughness_std",
+        "relief_range",
+        "tpi",
+        "road_dist_m"
+      ],
+      "pr_auc": 0.8391257988700126,
+      "pr_auc_sd": 0.011810380853132118,
+      "lift": 5.034754793220076,
+      "roc_auc": 0.9399715246544081
+    },
+    {
+      "set": "no_road",
       "n_features": 9,
       "features": [
         "elev_m",
@@ -24,6 +44,25 @@
     },
     {
       "set": "no_elevation",
+      "n_features": 9,
+      "features": [
+        "slope_deg",
+        "aspect_sin",
+        "aspect_cos",
+        "curvature",
+        "tri",
+        "roughness_std",
+        "relief_range",
+        "tpi",
+        "road_dist_m"
+      ],
+      "pr_auc": 0.8240914637898318,
+      "pr_auc_sd": 0.018946744416026482,
+      "lift": 4.944548782738991,
+      "roc_auc": 0.9346177786811249
+    },
+    {
+      "set": "no_elevation_no_tpi",
       "n_features": 8,
       "features": [
         "slope_deg",
@@ -33,29 +72,28 @@
         "tri",
         "roughness_std",
         "relief_range",
-        "tpi"
+        "road_dist_m"
       ],
-      "pr_auc": 0.4763479458934222,
-      "pr_auc_sd": 0.04560911206678176,
-      "lift": 2.8580876753605335,
-      "roc_auc": 0.7841682240920073
+      "pr_auc": 0.8216445745052685,
+      "pr_auc_sd": 0.01638705282900837,
+      "lift": 4.9298674470316115,
+      "roc_auc": 0.9334123202898603
     },
     {
-      "set": "no_elevation_no_tpi",
-      "n_features": 7,
+      "set": "shape_plus_road",
+      "n_features": 6,
       "features": [
         "slope_deg",
-        "aspect_sin",
-        "aspect_cos",
         "curvature",
         "tri",
         "roughness_std",
-        "relief_range"
+        "relief_range",
+        "road_dist_m"
       ],
-      "pr_auc": 0.38500008551057996,
-      "pr_auc_sd": 0.033712002258326344,
-      "lift": 2.3100005130634798,
-      "roc_auc": 0.7190535534450303
+      "pr_auc": 0.8165011574786355,
+      "pr_auc_sd": 0.01207731613067497,
+      "lift": 4.899006944871814,
+      "roc_auc": 0.9344720801638073
     },
     {
       "set": "shape_only",

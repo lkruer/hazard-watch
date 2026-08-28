@@ -35,10 +35,12 @@ from models.train import BASE_PARAMS, LAYERS, make_fit_predict  # noqa: E402
 
 SETS = {
     "susceptibility": {
-        "all": None,                                    # every feature
-        "no_elevation": ["elev_m"],                     # drop the suspect one
-        "no_elevation_no_tpi": ["elev_m", "tpi"],       # drop position-in-landscape too
-        "shape_only": ["elev_m", "tpi", "aspect_sin", "aspect_cos"],
+        "all": None,                                    # every feature (incl. road)
+        "no_road": ["road_dist_m"],                     # how much does road explain
+        "no_elevation": ["elev_m"],
+        "no_elevation_no_tpi": ["elev_m", "tpi"],       # keep road: does it substitute?
+        "shape_plus_road": ["elev_m", "tpi", "aspect_sin", "aspect_cos"],
+        "shape_only": ["elev_m", "tpi", "aspect_sin", "aspect_cos", "road_dist_m"],
     },
     "trigger": {
         "all": None,
@@ -73,7 +75,8 @@ def main():
     if not csv.exists():
         raise SystemExit(f"missing {csv}")
     df = pd.read_csv(csv)
-    feats = [f for f in LAYERS[a.layer]["features"]
+    feats = [f for f in (list(LAYERS[a.layer]["features"])
+                         + list(LAYERS[a.layer].get("optional", [])))
              if f in df.columns and df[f].notna().any() and df[f].nunique(dropna=True) > 1]
 
     y = df["label"].to_numpy()

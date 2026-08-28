@@ -332,6 +332,160 @@ Verified across three dates:
 | 2016-10-14 (storm) | 4 red, 1 amber — trigger 0.64–0.88 |
 | 2015-07-15 (dry) | 5 green — trigger 0.06–0.07 |
 
+## D14 — Prospective hindcast: the base-rate trap, and the model vs a one-line rule
+
+Everything so far was measured on constructed datasets. The hindcast froze the
+trigger model on data through 2015 (training, tuning, calibration **and
+threshold**), then replayed 2016–2024 over every day at every cell: 302,496
+cell-days, 196 reported event-days — deployment base rate **6.5×10⁻⁴**, versus
+0.20 in the training set.
+
+**Finding 1 — the threshold trap.** The 80%-recall threshold tuned on the
+case-control set alarmed on **39% of all real days**. A threshold only means
+something on the distribution it will score; thresholds now come from the
+daily grid itself (`serve/calibrate_threshold.py` → `serve/thresholds.json`,
+alarm budgets of 2/5/10% of days; the trained threshold 0.138 became 0.402 at
+the 5% budget).
+
+**Finding 2 — the honest operating menu** (POD at ±1 day, prospective):
+
+| alarm budget | days/yr/cell | events caught | rain-rule alone |
+|---|---|---|---|
+| 1% | ~4 | 20% | 13% |
+| 2% | ~7 | 22% | 23% |
+| 5% | ~18 | 45% | 40% |
+| 10% | ~37 | 54% | 55% |
+
+**Finding 3 — the ML barely beats a spreadsheet rule.** The one-line rule
+"alarm when `precip_3d_pctl_seasonal` crosses a threshold" matches the
+16-feature LightGBM nearly everywhere (the model wins clearly only at the 1%
+budget). The skill lives in the *feature framing* — relative-to-own-climatology
+— not in the model class. This validates LHASA v1's design (exactly such a
+percentile rule) and keeps the trained model only because it is never worse
+and calibrates better.
+
+**Finding 4 — a ceiling.** The POD curve flattens near 55–60%: roughly a third
+of reported slides fall on unremarkable-rain days (human-triggered, snowmelt,
+mis-dated or mis-located reports). No rainfall-only trigger can catch those.
+
+FAR stays >99% at all sane budgets — with a 6.5×10⁻⁴ base rate even a perfect
+ranker would. An alarm means "conditions dangerous", not "a slide will be
+reported"; every operational warning system carries the same caveat.
+
+## D15 — External check against NASA's global susceptibility map
+
+Sampled Stanley & Kirschbaum's global map (~1 km, classes 1–5, live on the
+same gis01 server) at all 5,352 of our points. On identical labels: ours
+PR-AUC 0.576 / ROC 0.823; global map 0.258 / 0.667. Our mean score rises
+monotonically with their class (0.055 → 0.23 for classes 1→4): the maps agree
+about which terrain is dangerous, ours adds 30 m resolution. Stated fairly:
+our labels share the reporting process our model was fit to, so this reads as
+"sane and locally sharper", not "beats NASA globally" — see D16 for why that
+distinction matters.
+
+## D16 — Transfer test: regional terrain models do not travel
+
+The Myanmar (Chin/Rakhine) inventory is satellite-mapped — every visible
+failure digitised, no roads-and-reporters filter. The one label source that
+cannot share the PNW's observation bias, scored with the PNW-trained terrain
+model on 12,000 points (3,000 slide sites, 9,000 target-group background):
+
+| predictor | ROC-AUC |
+|---|---|
+| PNW model, frozen (transfer) | **0.471** — below chance |
+| slope alone (floor) | 0.620 |
+| trained on Myanmar (ceiling, same features) | 0.742 |
+
+Four rescue attempts, all failed: drop elevation/TPI (0.484), shape-only
+features (0.466), monotone constraints on slope/roughness/relief (0.537),
+rank-normalising features within each region (0.522; with constraints 0.544).
+
+Diagnosis: **57–63% of Myanmar terrain lies beyond the PNW's 90th percentile**
+in roughness, relief and elevation — most of the country is outside the
+model's training support, the trees saturate, and what discrimination remains
+comes from regime-specific relationships that do not carry. The features work
+there (local model 0.742); the learned *weighting* does not. Notably the PNW
+slope response itself is clean — monotone from 0.117 (0–10°) to 0.455
+(40–66°) — so this is covariate shift plus regime difference, not simply
+leftover reporting bias.
+
+**Consequences.** (a) v1's regional scope was not a limitation to apologise
+for — it is the correct scope, now demonstrated rather than assumed. (b) NASA's
+choice of a *heuristic* for their global product stops looking conservative
+and starts looking wise. (c) The trigger layer, by contrast, passed its own
+out-of-distribution test (forward in time, D14) — because its features are
+percentiles against local climatology *by construction*. The symmetric lesson:
+absolute feature values do not travel, in time or in space.
+
+## D17 — Road distance: the reporting artifact, measured directly
+
+OSM arterial network (motorway→tertiary) for the box via Overpass,
+~1.2M+ vertices, nearest-distance via cKDTree on ECEF unit vectors. Median
+distance to an arterial road: **positives 23 m, background 1,575 m**. Reported
+landslides are literally roadside — partly because slides that block roads get
+reported, partly because geocoders snap reports to road features. `road_dist_m`
+now rides along in the susceptibility matrix so the model can attribute the
+accessibility artifact to accessibility, instead of smuggling it through
+elevation.
+
+Retrained results (tuned, spatial CV): PR-AUC **0.839–0.855**, lift ~5.1×,
+`road_dist_m` alone carrying 60.7% of gain; elevation's share collapsed from
+22.7% to 7.4%. The ablation is the clean part:
+
+| feature set | PR-AUC | vs all |
+|---|---|---|
+| all 10 (with road) | 0.839 | — |
+| no road | 0.566 | −32.6% |
+| **no elevation, no TPI (road kept)** | **0.822** | **−2.1%** |
+| shape + road only | 0.817 | −2.7% |
+| shape only | 0.390 | −53.6% |
+
+Without road, removing elevation+TPI had cost 32%; with road explicit it costs
+2%. **Elevation was almost pure road-proxy**, as suspected in D10/D11 and now
+demonstrated.
+
+Reading it honestly: the road-aware model predicts *reported/impactful*
+landslides — "steep rough ground near roads and people". For a warning product
+that is arguably the right target (a slide in trackless wilderness endangers
+nobody), and the demo scoring reflects it: Portland's West Hills (its real
+chronic slide zone) now scores 0.385 while remote steep terrain scores low.
+For land-use planning it would be the wrong target. Two artifacts are kept and
+labelled: `susceptibility.pkl` (road-aware, impact-weighted, regional product)
+and `susceptibility-terrain-only.pkl` (physics-ish, used by the transfer test).
+
+## D18 — Global scope: tiered confidence, not one global model (user decision)
+
+The user set the target scope to global, explicitly including "warning for
+places with possibly low or faulty info". D14/D16 dictate the shape a global
+version must take — a naive "train once, score everywhere" model is *proven*
+wrong (below-chance transfer), but a tiered system is genuinely buildable:
+
+- **Tier A — regionally modelled.** Where labels support training and
+  validation (PNW today; Myanmar could be trained locally at 0.74 tomorrow):
+  trained susceptibility + trained trigger, hindcast-verified thresholds.
+- **Tier B — global heuristics, real but weaker skill.** Everywhere else:
+  NASA's global susceptibility map (or a slope heuristic) for the standing
+  layer, and the rain-percentile rule for the trigger. Crucially the trigger
+  needs **no labels anywhere** — NASA POWER is global and "3-day rain above
+  the 98th percentile for this place and season" is computable for any point
+  on Earth — and D14 showed that rule captures most of the trained model's
+  skill.
+- **Tier C — degraded/unknown inputs.** Where rainfall data quality is poor,
+  DEM coverage fails, or nothing is mapped: still render the location, but
+  say so — wide uncertainty, no red alerts issued on data that cannot support
+  them, an explicit "low confidence" badge instead of silence.
+
+Every scored cell carries its tier; the tier is part of the product, not
+metadata. This is also how the "faulty info" requirement is met honestly: the
+system warns *and* tells you how much to trust the warning.
+
+Map presentation (decided, not yet built — UI explicitly deferred by user):
+**2D map, not a 3D globe.** Landslide risk is consumed at neighbourhood zoom,
+where a globe adds nothing but rendering cost and low-bandwidth pain; 2D tiles
+work offline-first on cheap phones, which is who this product is for; and
+tier/status choropleths read cleanly on a flat projection. The static-JSON
+serve layer already matches a tiled map's fetch pattern.
+
 ---
 
 ## Open / not yet done

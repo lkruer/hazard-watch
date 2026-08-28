@@ -98,6 +98,31 @@ product serves a probability, not a ranking.
 - ERA5 underestimates short convective rainfall extremes; mitigated by using
   percentiles against each cell's own record rather than absolute thresholds.
 
+## Validation status (2026-08-28)
+
+- **Prospective hindcast** (`eval/hindcast.py`): trigger frozen on ≤2015,
+  replayed 2016–2024. At a 5%-of-days alarm budget it catches ~45% of reported
+  events (±1 day). Thresholds are now set on the deployment distribution
+  (`serve/calibrate_threshold.py`) after the training-set threshold proved to
+  alarm on 39% of all days. A one-feature rain-percentile rule captures most
+  of the model's skill — kept as the documented fallback.
+- **External check** (`eval/external_check.py`): monotone agreement with
+  NASA's global susceptibility map; ours is locally sharper on our labels.
+- **Transfer test** (`eval/transfer.py`): the PNW terrain model scores
+  *below chance* on Myanmar's bias-free satellite inventory, and four rescue
+  attempts failed — regional susceptibility models do not travel. See
+  `docs/decisions.md` D16.
+
+## Target architecture: global, tiered by confidence
+
+Global scope is reached by tiering, not by one world-model (D18):
+**Tier A** regionally trained + hindcast-verified (PNW now);
+**Tier B** global heuristics — NASA susceptibility map + the label-free
+rain-percentile trigger (computable anywhere NASA POWER covers);
+**Tier C** degraded inputs — still rendered, explicitly badged low-confidence,
+never issuing red on data that cannot support it. Presentation: 2D map
+(deferred; no UI yet).
+
 ## Not in scope, deliberately
 
 No earthquake or tsunami prediction — no precursor signal exists for either,

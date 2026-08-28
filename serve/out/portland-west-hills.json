@@ -2,25 +2,25 @@
   "location_id": "portland-west-hills",
   "lat": 45.52,
   "lon": -122.72,
-  "date": "2016-10-14",
-  "status": "red",
-  "message": "Rain here is well above normal for this time of year, and this is the kind of slope that fails. Take care on and below steep ground today.",
-  "susceptibility": 0.1441,
-  "trigger": 0.875,
+  "date": "2015-07-15",
+  "status": "green",
+  "message": "Rainfall here is normal for this time of year. Nothing unusual today.",
+  "susceptibility": 0.3846,
+  "trigger": 0.0702,
   "thresholds": {
-    "susceptibility": 0.1068,
-    "trigger": 0.1382
+    "susceptibility": 0.3026,
+    "trigger": 0.402
   },
   "drivers": {
-    "precip_3d_mm": 86.4,
-    "precip_3d_pctl_seasonal": 0.992,
-    "precip_30d_over_normal": 1.78
+    "precip_3d_mm": 0.2,
+    "precip_3d_pctl_seasonal": 0.633,
+    "precip_30d_over_normal": 0.03
   },
   "terrain": {
     "slope_deg": 16.5,
     "relief_m": 141.0,
     "elevation_m": 242.0
   },
-  "generated_at": "2026-08-27T23:45:15",
+  "generated_at": "2026-08-28T00:50:54",
   "caveat": "Relative risk within this study region, not an absolute probability. Not an official warning; consult local authorities."
 }

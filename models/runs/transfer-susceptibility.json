@@ -1,0 +1,89 @@
+{
+  "name": "transfer-susceptibility",
+  "layer": "susceptibility",
+  "region": "Myanmar (Chin/Rakhine)",
+  "bbox": [
+    92.0,
+    21.75,
+    94.0,
+    23.75
+  ],
+  "n": 12000,
+  "base_rate": 0.25,
+  "transfer": {
+    "roc_auc": 0.4706538703703703,
+    "pr_auc": 0.23057703819923864
+  },
+  "local": {
+    "roc_auc": 0.7415357777777779,
+    "pr_auc": 0.4832225459228133
+  },
+  "slope_only": {
+    "roc_auc": 0.6205433703703703,
+    "pr_auc": 0.31154834725643155
+  },
+  "pnw_shape_only": {
+    "features": [
+      "slope_deg",
+      "curvature",
+      "tri",
+      "roughness_std",
+      "relief_range"
+    ],
+    "roc_auc": 0.46634101851851856,
+    "pr_auc": 0.2439167202885513
+  },
+  "pnw_no_elev_tpi": {
+    "features": [
+      "slope_deg",
+      "aspect_sin",
+      "aspect_cos",
+      "curvature",
+      "tri",
+      "roughness_std",
+      "relief_range"
+    ],
+    "roc_auc": 0.4843396296296296,
+    "pr_auc": 0.24929291730145786
+  },
+  "pnw_elev_tpi_only": {
+    "features": [
+      "elev_m",
+      "tpi"
+    ],
+    "roc_auc": 0.45376455555555556,
+    "pr_auc": 0.21810414167241296
+  },
+  "rescue_attempts": {
+    "drop_elevation": {
+      "roc_auc": 0.4843,
+      "note": "no elev_m/tpi"
+    },
+    "shape_only": {
+      "roc_auc": 0.4663,
+      "note": "slope/curv/tri/roughness/relief only"
+    },
+    "monotone_constraints": {
+      "roc_auc": 0.5374,
+      "note": "risk forced non-decreasing in slope etc."
+    },
+    "rank_normalized": {
+      "roc_auc": 0.5224,
+      "note": "features as within-region percentiles"
+    },
+    "rank_plus_monotone": {
+      "roc_auc": 0.5442,
+      "note": "both combined"
+    }
+  },
+  "covariate_shift": {
+    "frac_myanmar_beyond_pnw_p90": {
+      "roughness_std": 0.57,
+      "relief_range": 0.63,
+      "elev_m": 0.58,
+      "tri": 0.34,
+      "slope_deg": 0.22
+    }
+  },
+  "conclusion": "Terrain susceptibility does not transfer across physiographic regimes with this feature set: most Myanmar terrain lies outside PNW training support and the discriminating relationships are regime-specific. Regional models where labels exist; slope-heuristic or the NASA global map elsewhere."
+}
