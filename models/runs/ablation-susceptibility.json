@@ -1,0 +1,76 @@
+{
+  "layer": "susceptibility",
+  "base_rate": 0.16666666666666666,
+  "n_rows": 5352,
+  "results": [
+    {
+      "set": "all",
+      "n_features": 9,
+      "features": [
+        "elev_m",
+        "slope_deg",
+        "aspect_sin",
+        "aspect_cos",
+        "curvature",
+        "tri",
+        "roughness_std",
+        "relief_range",
+        "tpi"
+      ],
+      "pr_auc": 0.5656852474415528,
+      "pr_auc_sd": 0.05632100371287593,
+      "lift": 3.394111484649317,
+      "roc_auc": 0.8102195584715515
+    },
+    {
+      "set": "no_elevation",
+      "n_features": 8,
+      "features": [
+        "slope_deg",
+        "aspect_sin",
+        "aspect_cos",
+        "curvature",
+        "tri",
+        "roughness_std",
+        "relief_range",
+        "tpi"
+      ],
+      "pr_auc": 0.4763479458934222,
+      "pr_auc_sd": 0.04560911206678176,
+      "lift": 2.8580876753605335,
+      "roc_auc": 0.7841682240920073
+    },
+    {
+      "set": "no_elevation_no_tpi",
+      "n_features": 7,
+      "features": [
+        "slope_deg",
+        "aspect_sin",
+        "aspect_cos",
+        "curvature",
+        "tri",
+        "roughness_std",
+        "relief_range"
+      ],
+      "pr_auc": 0.38500008551057996,
+      "pr_auc_sd": 0.033712002258326344,
+      "lift": 2.3100005130634798,
+      "roc_auc": 0.7190535534450303
+    },
+    {
+      "set": "shape_only",
+      "n_features": 5,
+      "features": [
+        "slope_deg",
+        "curvature",
+        "tri",
+        "roughness_std",
+        "relief_range"
+      ],
+      "pr_auc": 0.3896716708178512,
+      "pr_auc_sd": 0.041792694575326604,
+      "lift": 2.3380300249071073,
+      "roc_auc": 0.7149740888281709
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "location_id": "or-coast-range",
+  "lat": 45.5,
+  "lon": -123.5,
+  "date": "2016-10-14",
+  "status": "amber",
+  "message": "Rain here is above normal for this time of year. The ground here is less prone to sliding, but stay aware.",
+  "susceptibility": 0.0468,
+  "trigger": 0.7979,
+  "thresholds": {
+    "susceptibility": 0.1068,
+    "trigger": 0.1382
+  },
+  "drivers": {
+    "precip_3d_mm": 119.6,
+    "precip_3d_pctl_seasonal": 0.992,
+    "precip_30d_over_normal": 1.85
+  },
+  "terrain": {
+    "slope_deg": 36.5,
+    "relief_m": 346.0,
+    "elevation_m": 663.0
+  },
+  "generated_at": "2026-08-27T23:45:15",
+  "caveat": "Relative risk within this study region, not an absolute probability. Not an official warning; consult local authorities."
+}

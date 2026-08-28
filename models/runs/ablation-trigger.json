@@ -1,0 +1,68 @@
+{
+  "layer": "trigger",
+  "base_rate": 0.2,
+  "n_rows": 6355,
+  "results": [
+    {
+      "set": "all",
+      "n_features": 16,
+      "features": [
+        "precip_1d",
+        "precip_3d",
+        "precip_7d",
+        "precip_14d",
+        "precip_30d",
+        "precip_1d_pctl",
+        "precip_3d_pctl",
+        "precip_7d_pctl",
+        "precip_14d_pctl",
+        "precip_30d_pctl",
+        "precip_1d_pctl_seasonal",
+        "precip_3d_pctl_seasonal",
+        "precip_7d_pctl_seasonal",
+        "precip_14d_pctl_seasonal",
+        "precip_30d_pctl_seasonal",
+        "precip_30d_over_climo_mean"
+      ],
+      "pr_auc": 0.6537178648931976,
+      "pr_auc_sd": 0.038062399341811104,
+      "lift": 3.268589324465988,
+      "roc_auc": 0.8255965407959266
+    },
+    {
+      "set": "percentiles_only",
+      "n_features": 10,
+      "features": [
+        "precip_1d_pctl",
+        "precip_3d_pctl",
+        "precip_7d_pctl",
+        "precip_14d_pctl",
+        "precip_30d_pctl",
+        "precip_1d_pctl_seasonal",
+        "precip_3d_pctl_seasonal",
+        "precip_7d_pctl_seasonal",
+        "precip_14d_pctl_seasonal",
+        "precip_30d_pctl_seasonal"
+      ],
+      "pr_auc": 0.6443593050059082,
+      "pr_auc_sd": 0.03571651364500745,
+      "lift": 3.221796525029541,
+      "roc_auc": 0.8276399636113382
+    },
+    {
+      "set": "absolute_mm_only",
+      "n_features": 5,
+      "features": [
+        "precip_1d",
+        "precip_3d",
+        "precip_7d",
+        "precip_14d",
+        "precip_30d"
+      ],
+      "pr_auc": 0.5942596308054896,
+      "pr_auc_sd": 0.04103491893771261,
+      "lift": 2.9712981540274477,
+      "roc_auc": 0.7854732830834366
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "date": "2016-10-14",
+  "locations": [
+    {
+      "location_id": "or-coast-range",
+      "lat": 45.5,
+      "lon": -123.5,
+      "status": "amber",
+      "susceptibility": 0.0468,
+      "trigger": 0.7979
+    },
+    {
+      "location_id": "portland-west-hills",
+      "lat": 45.52,
+      "lon": -122.72,
+      "status": "red",
+      "susceptibility": 0.1441,
+      "trigger": 0.875
+    },
+    {
+      "location_id": "columbia-gorge",
+      "lat": 45.6,
+      "lon": -121.95,
+      "status": "red",
+      "susceptibility": 0.155,
+      "trigger": 0.6522
+    },
+    {
+      "location_id": "willamette-floor",
+      "lat": 45.2,
+      "lon": -123.1,
+      "status": "red",
+      "susceptibility": 0.1441,
+      "trigger": 0.8762
+    },
+    {
+      "location_id": "olympic-foothills",
+      "lat": 47.6,
+      "lon": -123.4,
+      "status": "red",
+      "susceptibility": 0.2581,
+      "trigger": 0.6439
+    }
+  ],
+  "generated_at": "2026-08-27T23:45:16"
+}

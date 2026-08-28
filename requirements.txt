@@ -1,0 +1,12 @@
+numpy
+pandas
+pyarrow
+requests
+tqdm
+rasterio
+shapely
+pyproj
+geopandas
+scikit-learn
+lightgbm
+matplotlib

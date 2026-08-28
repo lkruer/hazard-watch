@@ -1,0 +1,26 @@
+{
+  "location_id": "willamette-floor",
+  "lat": 45.2,
+  "lon": -123.1,
+  "date": "2016-10-14",
+  "status": "red",
+  "message": "Rain here is well above normal for this time of year, and this is the kind of slope that fails. Take care on and below steep ground today.",
+  "susceptibility": 0.1441,
+  "trigger": 0.8762,
+  "thresholds": {
+    "susceptibility": 0.1068,
+    "trigger": 0.1382
+  },
+  "drivers": {
+    "precip_3d_mm": 90.5,
+    "precip_3d_pctl_seasonal": 0.992,
+    "precip_30d_over_normal": 1.92
+  },
+  "terrain": {
+    "slope_deg": 16.7,
+    "relief_m": 53.0,
+    "elevation_m": 64.0
+  },
+  "generated_at": "2026-08-27T23:45:16",
+  "caveat": "Relative risk within this study region, not an absolute probability. Not an official warning; consult local authorities."
+}
