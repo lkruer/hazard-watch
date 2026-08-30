@@ -36,16 +36,35 @@ ALERT = {
 }
 
 
+def _fort_shift(f: int, k: int) -> int:
+    return int((f + k) % N_FORT)
+
+
 def _fortnight_of(date: str) -> int:
     d = dt.date.fromisoformat(date)
     return min((d.timetuple().tm_yday - 1) // 14, N_FORT - 1)
 
 
 def _rank(value: np.ndarray, ladder: np.ndarray) -> np.ndarray:
-    """Percentile of value within a (21, lat, lon) quantile ladder."""
-    v = value[None, ...]
-    below = np.sum(ladder <= v, axis=0).astype("float32")
-    out = below / float(len(QS))
+    """Percentile of value within a (21, lat, lon) quantile ladder,
+    LINEARLY INTERPOLATED between rungs.
+
+    Counting rungs alone quantizes to steps of 1/21 ~ 0.048, so the highest
+    rank below "ties the all-time max" is 0.952 -- which silently made the
+    >=0.98 rain-alert gate unreachable (Sindh read 0.95 at the peak of the
+    2022 Pakistan floods and did not flag). Interpolation restores continuous
+    percentiles and the gate's intended meaning."""
+    k = np.sum(ladder <= value[None, ...], axis=0)          # rungs at/below v
+    kc = np.clip(k, 1, len(QS) - 1)
+    idx_lo = (kc - 1)[None, ...]
+    lo = np.take_along_axis(ladder, idx_lo, axis=0)[0]
+    hi = np.take_along_axis(ladder, idx_lo + 1, axis=0)[0]
+    span = hi - lo
+    frac = np.where(span > 0, (value - lo) / np.where(span > 0, span, 1.0), 1.0)
+    q_step = 1.0 / (len(QS) - 1)
+    out = (QS[kc - 1] + np.clip(frac, 0.0, 1.0) * q_step).astype("float32")
+    out = np.where(k == 0, 0.0, out)
+    out = np.where(k >= len(QS), 1.0, out)
     out[~np.isfinite(value)] = np.nan
     out[~np.isfinite(ladder).all(axis=0)] = np.nan
     return out
@@ -59,15 +78,24 @@ def main(date: str) -> None:
     print(f"ladders loaded (clim {z['clim_start']}..{z['clim_end']}), "
           f"fortnight {f}")
 
-    ds = xr.open_zarr(ZARR, consolidated=True, storage_options={"anon": True})
-    t1 = np.datetime64(date)
-    t0 = t1 - np.timedelta64(400, "D")
-    win = ds.sel(time=slice(str(t0), date))
-    print(f"pulling trailing window {str(t0)[:10]}..{date} from S3 ...")
-    P = win["PRECTOTCORR"].values.astype("float32")
-    TX = win["T2M_MAX"].values.astype("float32")
-    RH = win["RH2M"].values.astype("float32")
-    WS = win["WS2M"].values.astype("float32")
+    cache = PROCESSED / "world" / f"window_{date}.npz"
+    if cache.exists():
+        w = np.load(cache)
+        P, TX, RH, WS = w["P"], w["TX"], w["RH"], w["WS"]
+        print(f"trailing window from cache ({cache.name})")
+    else:
+        ds = xr.open_zarr(ZARR, consolidated=True,
+                          storage_options={"anon": True})
+        t1 = np.datetime64(date)
+        t0 = t1 - np.timedelta64(400, "D")
+        win = ds.sel(time=slice(str(t0), date))
+        print(f"pulling trailing window {str(t0)[:10]}..{date} from S3 ...")
+        P = win["PRECTOTCORR"].values.astype("float32")
+        TX = win["T2M_MAX"].values.astype("float32")
+        RH = win["RH2M"].values.astype("float32")
+        WS = win["WS2M"].values.astype("float32")
+        cache.parent.mkdir(parents=True, exist_ok=True)
+        np.savez(cache, P=P, TX=TX, RH=RH, WS=WS)   # uncompressed: the 1.3GB compressed write failed silently
     if not np.isfinite(P[-1]).any():
         raise SystemExit(f"{date} beyond the archive's real data")
 
@@ -79,7 +107,14 @@ def main(date: str) -> None:
         "spi90": _rolling_sum(P, 90)[-1],
         "spi180": _rolling_sum(P, 180)[-1],
         "spi365": _rolling_sum(P, 365)[-1],
-        "kbdi": _kbdi_band(TX, P)[-1],
+        # seed the short-window recursion at each cell's climatological
+        # median KBDI for the window-START fortnight (ladder q-index 10)
+        # climatological mean-annual precip per cell from the spi365 ladder
+        # median, averaged over fortnights -- already on disk, no rebuild
+        "kbdi": _kbdi_band(
+            TX, P,
+            q0=z["kbdi"][_fort_shift(f, -(P.shape[0] // 14)), 10],
+            r_annual_mm=np.nanmean(z["spi365"][:, 10], axis=0))[-1],
         "vpd": vpd[-1],
         "tmax": TX[-1],
         "ws": WS[-1],
@@ -112,7 +147,12 @@ def main(date: str) -> None:
         if n:
             sig = {"landslide_rain": "rain3d", "fire": "vpd",
                    "drought": "spi90"}[k]
-            fld = np.where(m, pct[sig], np.nan)
+            # highlight the most extreme POPULATED cell -- POWER covers ocean,
+            # and an empty Southern Ocean cell is not a useful example
+            keep = m if pop is None else (m & (pop > 1000))
+            if not keep.any():
+                keep = m
+            fld = np.where(keep, pct[sig], np.nan)
             idx = np.unravel_index(np.nanargmax(
                 fld if k != "drought" else -fld), fld.shape)
             summary[k]["most_extreme"] = {
@@ -144,11 +184,19 @@ def parity(date: str) -> None:
     fields = {s: np.load(src / f"{s}_pctl.npy").astype("float32")
               for s in ("rain3d", "rain30d", "spi90", "kbdi", "vpd")}
 
-    POINTS = [("pnw-coast-range", 45.5, -123.5),
-              ("kathmandu", 27.75, 85.40),
-              ("paradise-CA", 39.75, -121.60),
-              ("okavango", -19.5, 23.0),
-              ("iowa", 41.9, -93.6)]
+    # snapped onto the zarr grid so world and point pipelines sample the SAME
+    # physical cell -- off-grid points differ by up to ~35 km, which across a
+    # Sierra or Himalayan gradient is a different climate (parity noise, not
+    # method error; flat Iowa agreed to +/-0.03 even unsnapped)
+    def snap(la, lo):
+        return (float(lat[np.argmin(np.abs(lat - la))]),
+                float(lon[np.argmin(np.abs(lon - lo))]))
+    POINTS = [(n, *snap(la, lo)) for n, la, lo in
+              [("pnw-coast-range", 45.5, -123.5),
+               ("kathmandu", 27.75, 85.40),
+               ("paradise-CA", 39.75, -121.60),
+               ("okavango", -19.5, 23.0),
+               ("iowa", 41.9, -93.6)]]
     diffs = []
     print(f"{'point':<18}{'signal':<10}{'world':>7}{'point':>7}{'diff':>7}")
     for name, la, lo in POINTS:

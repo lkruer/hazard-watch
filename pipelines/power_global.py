@@ -67,17 +67,33 @@ def _rolling_sum(a: np.ndarray, w: int) -> np.ndarray:
     return out
 
 
-def _kbdi_band(tmax_c: np.ndarray, precip: np.ndarray) -> np.ndarray:
+def _kbdi_band(tmax_c: np.ndarray, precip: np.ndarray,
+               q0: np.ndarray | None = None,
+               r_annual_mm: np.ndarray | None = None) -> np.ndarray:
     """Vectorized KBDI over a (time, rows, cols) band -- same recursion as
-    pipelines/fireweather.kbdi_series, applied to all cells at once."""
+    pipelines/fireweather.kbdi_series, applied to all cells at once.
+
+    q0: initial moisture deficiency per cell. The default 0 (saturated) is fine
+    when the series spans years (ladder builds), but a SHORT window started at
+    0 never dries out to a desert's equilibrium -- score_world seeds q0 from
+    each cell's own climatology instead (parity caught this: Paradise KBDI
+    percentile read 0.10 world vs 0.76 point before seeding)."""
     t_f = np.nan_to_num(tmax_c, nan=15.0) * 9.0 / 5.0 + 32.0
     rain_in = np.nan_to_num(precip, nan=0.0) / 25.4
     n = rain_in.shape[0]
-    years = max(1.0, n / 365.25)
-    r_annual = rain_in.sum(axis=0) / years
+    if r_annual_mm is not None:
+        # KBDI's drying denominator must be CLIMATOLOGICAL mean annual rain.
+        # Deriving it from a short scoring window bakes that year's anomaly
+        # into the normalizer -- a dry year then dries SLOWER in the formula,
+        # exactly backwards (parity caught it: Paradise Q ~500 vs truth 733).
+        r_annual = np.nan_to_num(r_annual_mm, nan=0.0) / 25.4
+    else:
+        years = max(1.0, n / 365.25)
+        r_annual = rain_in.sum(axis=0) / years
     dry_denom = 1.0 + 10.88 * np.exp(-0.0441 * r_annual)
 
-    q = np.zeros(rain_in.shape[1:], dtype="float64")
+    q = (np.zeros(rain_in.shape[1:], dtype="float64") if q0 is None
+         else np.nan_to_num(q0, nan=0.0).astype("float64").copy())
     spell = np.zeros_like(q)
     out = np.empty_like(rain_in, dtype="float32")
     for i in range(n):

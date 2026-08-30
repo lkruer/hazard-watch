@@ -5,12 +5,14 @@ case-control training set (events enriched ~500x over reality) alarmed on 39%
 of all real days. A threshold only means something on the distribution it will
 actually score -- so this script replays the FULL daily grid (every day
 2004-2024 at every weather cell) through the production trigger model and
-records the score quantiles that correspond to chosen alarm budgets.
+records tie-safe thresholds for the chosen alarm budgets (the naive quantile
+is kept for reference; D27 showed why it overspends).
 
 "Alarm on the top 5% of days" is a statement a person can sanity-check
 (~18 alarm days per year per cell, concentrated in the wet season); per the
-2016-2024 prospective hindcast it catches ~45% of reported events. The 10%
-budget (~37 days/yr) catches ~54%.
+2016-2024 prospective hindcast it catches ~45% of reported events. Isotonic
+steps are coarse, so a budget can undershoot: the "10%" budget actually
+achieves ~7.5% (~28 days/yr) for ~54% of events.
 
 Writes serve/thresholds.json, which serve/score.py prefers over the
 training-set operating point.
@@ -85,21 +87,25 @@ def main():
     out = {
         "computed_at": dt.datetime.now().isoformat(timespec="seconds"),
         "grid_cell_days": int(len(all_p)),
-        "note": ("score quantiles of the production trigger model over the full "
-                 "2004-2024 daily grid; 'alarm budget' 0.05 = alarm on the wettest "
-                 "5% of days at these cells"),
+        "note": ("tie-safe alarm thresholds of the production trigger model over "
+                 "the full 2004-2024 daily grid; 'alarm budget' 0.05 = alarm on at "
+                 "most the wettest 5% of days at these cells; naive_quantile is "
+                 "the uncorrected np.quantile, kept for reference"),
         "budgets": {},
         "recommended_budget": RECOMMENDED,
     }
     for bud in BUDGETS:
         thr, achieved = tie_safe_threshold(all_p, bud)
+        naive = float(np.quantile(all_p, 1 - bud))
         out["budgets"][f"{bud:.2f}"] = {
             "threshold": thr,
+            "naive_quantile": naive,
             "achieved_alarm_rate": round(achieved, 5),
             "achieved_alarm_days_per_cell_year": round(achieved * 365.25, 1),
         }
         print(f"  budget {bud:.0%}: tie-safe threshold {thr:.4f} "
-              f"achieves {achieved:.2%} ({achieved*365.25:.0f} days/cell/yr)")
+              f"achieves {achieved:.2%} ({achieved*365.25:.0f} days/cell/yr, "
+              f"naive quantile {naive:.4f})")
     out["trigger_threshold"] = out["budgets"][f"{RECOMMENDED:.2f}"]["threshold"]
 
     p = ROOT / "serve" / "thresholds.json"

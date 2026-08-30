@@ -1,20 +1,23 @@
 {
-  "computed_at": "2026-08-29T22:05:54",
+  "computed_at": "2026-08-29T22:16:57",
   "grid_cell_days": 702972,
-  "note": "score quantiles of the production trigger model over the full 2004-2024 daily grid; 'alarm budget' 0.05 = alarm on the wettest 5% of days at these cells",
+  "note": "tie-safe alarm thresholds of the production trigger model over the full 2004-2024 daily grid; 'alarm budget' 0.05 = alarm on at most the wettest 5% of days at these cells; naive_quantile is the uncorrected np.quantile, kept for reference",
   "budgets": {
     "0.02": {
       "threshold": 0.6441092278657901,
+      "naive_quantile": 0.6439393939393939,
       "achieved_alarm_rate": 0.01149,
       "achieved_alarm_days_per_cell_year": 4.2
     },
     "0.05": {
       "threshold": 0.4040260114158079,
+      "naive_quantile": 0.4019607843137255,
       "achieved_alarm_rate": 0.04949,
       "achieved_alarm_days_per_cell_year": 18.1
     },
     "0.10": {
       "threshold": 0.27683251062816827,
+      "naive_quantile": 0.2765273311897107,
       "achieved_alarm_rate": 0.07528,
       "achieved_alarm_days_per_cell_year": 27.5
     }
@@ -22,21 +25,24 @@
   "recommended_budget": 0.05,
   "trigger_threshold": 0.4040260114158079,
   "fire": {
-    "computed_at": "2026-08-29T22:07:57",
+    "computed_at": "2026-08-29T22:18:34",
     "samples": 550996,
     "budgets": {
       "0.02": {
         "threshold": 0.5076157478222337,
+        "naive_quantile": 0.5065616797900261,
         "achieved_alarm_rate": 0.01049,
         "achieved_alarm_days_per_cell_year": 3.8
       },
       "0.05": {
         "threshold": 0.4066666666666667,
+        "naive_quantile": 0.4027777777777778,
         "achieved_alarm_rate": 0.0486,
         "achieved_alarm_days_per_cell_year": 17.8
       },
       "0.10": {
         "threshold": 0.30510045705033606,
+        "naive_quantile": 0.3048780487804878,
         "achieved_alarm_rate": 0.09122,
         "achieved_alarm_days_per_cell_year": 33.3
       }

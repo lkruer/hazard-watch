@@ -4,9 +4,10 @@ D14's lesson applied to fire before it can bite: the fire model was trained at
 a 1-case-per-5-rows base rate, so its scores mean nothing as alarms until
 they are priced on the real distribution of days. This scores the 541 cached
 North-American fire-weather cells on a weekly-sampled grid (every 7th day,
-2006-2024 -- quantiles don't need every day) and records the score quantiles
-for 2/5/10% alarm budgets, written to serve/thresholds.json alongside the
-landslide trigger's.
+2006-2024 -- quantiles don't need every day) and records tie-safe thresholds
+for 2/5/10% alarm budgets (the naive quantile kept for reference; D27 showed
+it overspends), written to serve/thresholds.json alongside the landslide
+trigger's.
 """
 from __future__ import annotations
 
@@ -87,12 +88,14 @@ def main():
             "samples": int(len(all_p)), "budgets": {}}
     for bud in BUDGETS:
         thr, achieved = tie_safe_threshold(all_p, bud)
+        naive = float(np.quantile(all_p, 1 - bud))
         fire["budgets"][f"{bud:.2f}"] = {
             "threshold": thr,
+            "naive_quantile": naive,
             "achieved_alarm_rate": round(achieved, 5),
             "achieved_alarm_days_per_cell_year": round(achieved * 365.25, 1)}
         print(f"  budget {bud:.0%}: tie-safe threshold {thr:.4f} "
-              f"achieves {achieved:.2%}")
+              f"achieves {achieved:.2%} (naive quantile {naive:.4f})")
     fire["threshold"] = fire["budgets"][f"{RECOMMENDED:.2f}"]["threshold"]
     cur["fire"] = fire
     tj.write_text(json.dumps(cur, indent=2), encoding="utf-8")
