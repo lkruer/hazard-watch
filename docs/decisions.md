@@ -804,6 +804,37 @@ weather. Guards added to both label loaders; effect on D20's numbers is
 negligible (4/2160) but the class of bug is now fenced. FAR stays >97% at
 every budget; at this base rate it must.
 
+## D28 — Population exposure: alerts denominated in people, not cells
+
+*(Delegated agent workstream; reviewed and wired into the world scorer by the
+manager.)*
+
+`pipelines/population.py` gives every hazard field its missing denominator.
+Source: GHS-POP R2023A, epoch 2025, 30 arcsec, EPSG:4326 (EU JRC), CC BY 4.0 —
+licence read from the product directory's own copyright.txt rather than from
+memory and archived beside the raster; "reuse allowed provided credit is given
+and changes are indicated" covers redistributing the aggregate. WorldPop stayed
+the unused fallback (its 1 km mosaic path 404s); GHSL needs no reprojection.
+
+The file is not the grid one would assume, and each surprise changed the code:
+43202 × 21384, origin −180.00792 (POWER edges fall mid-pixel, so pixels are
+assigned by centre and the global total stays exact), and a 360.017° span —
+two columns MORE than the globe, holding 284 vs 1,456 people over the same
+ground. Summing all 43202 double-counts that strip, so the build reads a
+contiguous 43200-column window, after which the fold is exact (75 px per POWER
+lon cell) and is proved against a brute-force bincount before use.
+
+Global total 8.192B (sanity band 7.5–8.5B); Cairo 24.9M, Mumbai 22.4M,
+Kolkata 22.0M, Seoul 21.5M, Delhi 20.5M lead; Sahara and mid-Pacific read 0;
+per-cell windowed reads reproduce the built grid bit-exactly. Recorded limits:
+GHS-POP under-maps the high Arctic (a sub-Arctic zero means unmapped, not
+empty), and epoch 2025 is GHSL's *projected* surface disaggregated from the
+2020 observation base — chosen because exposure should answer "who is there
+now"; switching to observed E2020 is a one-line change.
+
+`serve/score_world.py` now reports `people` beside `cells` for every alert
+mask: "this alert covers 2.3M people" instead of "417 cells flagged".
+
 ---
 
 ## Open / not yet done

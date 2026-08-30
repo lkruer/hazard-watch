@@ -99,10 +99,16 @@ def main(date: str) -> None:
     }
     np.savez_compressed(out_dir / "alerts.npz", **alerts)
 
+    # exposure denominator (D28): people per POWER cell, GHS-POP CC-BY 4.0
+    pop_path = PROCESSED / "population_power_grid.npy"
+    pop = np.load(pop_path) if pop_path.exists() else None
+
     summary = {"date": date, "grid": [int(len(lat)), int(len(lon))]}
     for k, m in alerts.items():
         n = int(np.nansum(m))
         summary[k] = {"cells": n}
+        if pop is not None:
+            summary[k]["people"] = int(np.nansum(np.where(m, pop, 0.0)))
         if n:
             sig = {"landslide_rain": "rain3d", "fire": "vpd",
                    "drought": "spi90"}[k]

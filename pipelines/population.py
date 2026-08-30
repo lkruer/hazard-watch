@@ -109,6 +109,15 @@ SOURCE = {
         "observation base. Used because the platform scores today and "
         "exposure should answer 'who is there now'."
     ),
+    "known_limitations": (
+        "Coverage stops at +/-89.1 deg, so POWER rows 0-1 and 359-360 are "
+        "empty. Extreme-latitude settlements are under-mapped: a 2-deg box "
+        "around Longyearbyen, Svalbard (~2,900 residents) holds a single "
+        "4.3-person pixel, so people_near there returns ~0. Mid-latitude "
+        "towns are accurate -- Tromso, Norway reads 77,751 against ~77,000 "
+        "actual. Treat sub-Arctic zero-population reads as unmapped, not "
+        "as evidence nobody is there."
+    ),
 }
 
 # NASA POWER / MERRA-2 grid, matching pipelines/power_global.py.

@@ -3,7 +3,7 @@
   "layer": "susceptibility",
   "model": "LightGBM (BASE_PARAMS, untuned)",
   "status": "complete",
-  "trained_at": "2026-08-29T22:07:32",
+  "trained_at": "2026-08-29T22:10:40",
   "question": "do soil-texture and lithology features improve regional susceptibility models, cross-region transfer (D16), and the Oso deep-seated miss (D24)",
   "regions": [
     "pnw",
@@ -104,7 +104,15 @@
         "pa": 19
       },
       "clay_pct_mean": 23.861718615635766,
-      "sand_pct_mean": 33.86529395079935
+      "sand_pct_mean": 33.86529395079935,
+      "missingness_confound": {
+        "missing_rate": 0.1969357249626308,
+        "missing_rate_positives": 0.23542600896860988,
+        "missing_rate_background": 0.18923766816143497,
+        "roc_of_missingness_alone": 0.5230941704035874,
+        "mean_elev_missing": 80.34785246693545,
+        "mean_elev_present": 377.0202927873533
+      }
     },
     "myanmar": {
       "coverage": {
@@ -122,7 +130,15 @@
         "wb": 19
       },
       "clay_pct_mean": 31.02045990918864,
-      "sand_pct_mean": 32.3735181268626
+      "sand_pct_mean": 32.3735181268626,
+      "missingness_confound": {
+        "missing_rate": 0.0004166666666666667,
+        "missing_rate_positives": 0.0,
+        "missing_rate_background": 0.0005555555555555556,
+        "roc_of_missingness_alone": 0.49972222222222223,
+        "mean_elev_missing": 756.8773330688476,
+        "mean_elev_present": 961.4972300216226
+      }
     },
     "brazil": {
       "coverage": {
@@ -143,7 +159,15 @@
         "pa": 49
       },
       "clay_pct_mean": 40.05045270968523,
-      "sand_pct_mean": 25.87864158093442
+      "sand_pct_mean": 25.87864158093442,
+      "missingness_confound": {
+        "missing_rate": 0.021333333333333333,
+        "missing_rate_positives": 0.014333333333333333,
+        "missing_rate_background": 0.023666666666666666,
+        "roc_of_missingness_alone": 0.49533333333333335,
+        "mean_elev_missing": 233.46801025466993,
+        "mean_elev_present": 411.3718630206703
+      }
     }
   },
   "data_sources": [
@@ -1039,7 +1063,53 @@
       "slope_only_roc": 0.6205433703703703,
       "local_ceiling_roc": 0.7575001698997041,
       "delta_roc": -0.030764074074074,
-      "delta_roc_lith_marginal": 0.002252666666666736
+      "delta_roc_lith_marginal": 0.002252666666666736,
+      "diagnosis": {
+        "clay_pct": {
+          "train_mean": 35.71313946094912,
+          "test_mean": 31.02045990918864,
+          "frac_test_outside_train_5_95": 0.0
+        },
+        "silt_pct": {
+          "train_mean": 36.268421441089956,
+          "test_mean": 36.60602193437253,
+          "frac_test_outside_train_5_95": 0.0009170487703209671
+        },
+        "sand_pct": {
+          "train_mean": 28.018439105287957,
+          "test_mean": 32.3735181268626,
+          "frac_test_outside_train_5_95": 0.0
+        },
+        "bdod_g_cm3": {
+          "train_mean": 1.0767182979169383,
+          "test_mean": 1.157065726762615,
+          "frac_test_outside_train_5_95": 0.22300958732805334
+        },
+        "cfvo_pct": {
+          "train_mean": 10.895627107729922,
+          "test_mean": 19.493837709534212,
+          "frac_test_outside_train_5_95": 0.8330137557315548
+        },
+        "lithology": {
+          "train_classes": [
+            "mt",
+            "pa",
+            "pb",
+            "py",
+            "sm",
+            "ss",
+            "su",
+            "va",
+            "vb",
+            "vi",
+            "wb"
+          ],
+          "frac_test_rows_in_unseen_class": 0.7209166666666667,
+          "unseen_classes_in_test": [
+            "sc"
+          ]
+        }
+      }
     },
     "pnw+myanmar->brazil": {
       "train_regions": [
@@ -1111,7 +1181,53 @@
       "slope_only_roc": 0.9082824814814815,
       "local_ceiling_roc": 0.9527842877777897,
       "delta_roc": -0.045245037037037195,
-      "delta_roc_lith_marginal": 0.01024614814814806
+      "delta_roc_lith_marginal": 0.01024614814814806,
+      "diagnosis": {
+        "clay_pct": {
+          "train_mean": 29.132024993599725,
+          "test_mean": 40.05045270968523,
+          "frac_test_outside_train_5_95": 0.7912976839237057
+        },
+        "silt_pct": {
+          "train_mean": 38.10093494483883,
+          "test_mean": 34.07090572245439,
+          "frac_test_outside_train_5_95": 0.1278099455040872
+        },
+        "sand_pct": {
+          "train_mean": 32.767040037577644,
+          "test_mean": 25.87864158093442,
+          "frac_test_outside_train_5_95": 0.4420980926430518
+        },
+        "bdod_g_cm3": {
+          "train_mean": 1.1387877236638566,
+          "test_mean": 1.0726711466319716,
+          "frac_test_outside_train_5_95": 0.02069141689373297
+        },
+        "cfvo_pct": {
+          "train_mean": 17.544131427921,
+          "test_mean": 10.453823231688474,
+          "frac_test_outside_train_5_95": 0.010303133514986376
+        },
+        "lithology": {
+          "train_classes": [
+            "mt",
+            "pa",
+            "pb",
+            "py",
+            "sc",
+            "sm",
+            "ss",
+            "su",
+            "vb",
+            "vi",
+            "wb"
+          ],
+          "frac_test_rows_in_unseen_class": 0.3539449231289069,
+          "unseen_classes_in_test": [
+            "va"
+          ]
+        }
+      }
     }
   },
   "results_oso": {
@@ -1138,30 +1254,40 @@
         "ring_max": 0.3333333333333333,
         "ring_mean": 0.15743341369182523,
         "point_raw": 0.14933934930742768,
-        "ring_max_raw": 0.38760065478748795
+        "ring_max_raw": 0.38760065478748795,
+        "clears_susceptibility_gate_0.30": true
       },
       "terrain+soil": {
         "point": 0.1378299120234604,
         "ring_max": 0.17757009345794392,
         "ring_mean": 0.10763408955328452,
         "point_raw": 0.06752567876228832,
-        "ring_max_raw": 0.09853212600478807
+        "ring_max_raw": 0.09853212600478807,
+        "clears_susceptibility_gate_0.30": false
       },
       "terrain+geo": {
         "point": 0.25129533678756477,
         "ring_max": 0.25129533678756477,
         "ring_mean": 0.1471029495787304,
         "point_raw": 0.2431092881640493,
-        "ring_max_raw": 0.2431092881640493
+        "ring_max_raw": 0.2431092881640493,
+        "clears_susceptibility_gate_0.30": false
       },
       "geo_only": {
         "point": 0.2275449101796407,
         "ring_max": 0.2526881720430107,
         "ring_mean": 0.2186416196477646,
         "point_raw": 0.3043707353574802,
-        "ring_max_raw": 0.5868068294750507
+        "ring_max_raw": 0.5868068294750507,
+        "clears_susceptibility_gate_0.30": false
       }
     },
+    "gate": {
+      "threshold": 0.3,
+      "source": "serve/score_global.py susc_near >= 0.3",
+      "note": "the product gates on the ~900 m neighbourhood max, so ring_max is the operationally decisive number, not the point score"
+    },
+    "d24_baseline_note": "D24 records susceptibility 0.023 at Oso, but that is the DEPLOYED product model (different training matrix, road-aware features, tuned params, its own calibration). The terrain-only arm here is trained on region_pnw.csv with untuned BASE_PARAMS at a 16.7% base rate and is NOT comparable to 0.023. Only the within-experiment terrain vs terrain+geo contrast is a valid comparison.",
     "delta_point": 0.07073978123200922,
     "delta_ring_max": -0.08203799654576854
   },
@@ -1170,6 +1296,8 @@
     "SoilGrids models the top 30 cm of SOIL. Deep-seated landslides fail metres to hundreds of metres below that. The Oso probe is therefore a test of a known-imperfect proxy, and was expected in advance to fail.",
     "Untuned BASE_PARAMS throughout so the arms differ only in feature columns; absolute scores are below the tuned numbers reported elsewhere.",
     "PNW labels carry the D10/D11 reporting bias; its terrain-only baseline here is the portable terrain set, not the road-aware product model.",
-    "Texture fractions are compositional (clay+sand+silt=100), so the three are collinear by construction; gain shares split arbitrarily between them."
+    "Texture fractions are compositional (clay+sand+silt=100), so the three are collinear by construction; gain shares split arbitrarily between them.",
+    "PNW SoilGrids coverage is only 80.3% (coastal/water cells are unmapped), and missingness is NOT random with respect to the label: 23.5% of positives vs 18.9% of background, with missing cells averaging 80 m elevation against 377 m. Missingness is therefore a weak proxy for the low-elevation coastal reporting artifact of D10/D11 (ROC 0.523 on its own), so some unknown part of the PNW gain is that artifact rather than substrate physics. Myanmar (100% coverage) and Brazil (97.9%) are clean; Myanmar is the trustworthy positive result.",
+    "Single-point scores are noisy from a ~0.8-ROC model -- D11's warning about judging a probabilistic model by hand-picked points applies to the Oso numbers, which is why the ring and the population results are reported alongside them."
   ]
 }

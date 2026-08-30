@@ -216,6 +216,38 @@ def local_cv(dfs: dict) -> dict:
 
 # -------------------------------------------------------------- (b) transfer --
 
+def shift_diagnosis(tr: pd.DataFrame, te: pd.DataFrame) -> dict:
+    """Why a pooled model fails on a held-out region, in D16's terms.
+
+    D16 diagnosed the terrain transfer failure as covariate shift: 57-63% of
+    Myanmar lay beyond the PNW's 90th percentile. The same question is asked
+    here of the substrate features, plus the one that only categoricals have --
+    how much of the test region sits in a lithology class the model never saw.
+    """
+    out: dict = {}
+    for f in SOIL:
+        a = tr[f].dropna().to_numpy()
+        b = te[f].dropna().to_numpy()
+        if len(a) < 10 or len(b) < 10:
+            continue
+        lo, hi = np.percentile(a, 5), np.percentile(a, 95)
+        out[f] = {
+            "train_mean": float(a.mean()), "test_mean": float(b.mean()),
+            "frac_test_outside_train_5_95": float(((b < lo) | (b > hi)).mean()),
+        }
+    seen = set(tr[CAT].dropna().astype(int).unique())
+    lith = te[CAT].dropna().astype(int)
+    unseen_mass = float((~lith.isin(seen)).mean()) if len(lith) else float("nan")
+    unseen = sorted({geology.GLIM_CLASSES.get(int(v), str(v))
+                     for v in lith.unique() if int(v) not in seen})
+    out["lithology"] = {
+        "train_classes": sorted(geology.GLIM_CLASSES.get(int(v), str(v)) for v in seen),
+        "frac_test_rows_in_unseen_class": unseen_mass,
+        "unseen_classes_in_test": unseen,
+    }
+    return out
+
+
 def transfer(dfs: dict, local: dict) -> dict:
     print("\n(b) cross-region transfer, trained cold on two regions")
     plans = [(["pnw", "brazil"], "myanmar"), (["pnw", "myanmar"], "brazil")]
@@ -253,6 +285,15 @@ def transfer(dfs: dict, local: dict) -> dict:
               f"soil {entry['arms']['terrain+geo']['soil_gain_pct']:.1f}%, "
               f"lith {entry['arms']['terrain+geo']['lith_gain_pct']:.1f}%; "
               f"lith marginal {entry['delta_roc_lith_marginal']:+.4f}")
+        entry["diagnosis"] = shift_diagnosis(tr, te)
+        d = entry["diagnosis"]["lithology"]
+        print(f"  {key:26} {'':12} {d['frac_test_rows_in_unseen_class']*100:.1f}% of "
+              f"test rows sit in a lithology class absent from training "
+              f"{d['unseen_classes_in_test']}")
+        print(f"  {key:26} {'':12} clay outside train 5-95 pctl: "
+              f"{entry['diagnosis']['clay_pct']['frac_test_outside_train_5_95']*100:.1f}%"
+              f" (train mean {entry['diagnosis']['clay_pct']['train_mean']:.1f}%, "
+              f"test {entry['diagnosis']['clay_pct']['test_mean']:.1f}%)")
         res[key] = entry
     return res
 
@@ -314,9 +355,25 @@ def oso_probe(dfs: dict) -> dict:
             "ring_mean": float(np.mean(cal)),
             "point_raw": float(raw[centre_i]),
             "ring_max_raw": float(np.max(raw)),
+            # the deployed gate reads the NEIGHBOURHOOD max, not the point
+            # (serve/score_global.py: susc_near >= 0.3), so this is the number
+            # that would actually decide whether Oso alerts
+            "clears_susceptibility_gate_0.30": bool(np.max(cal) >= 0.30),
         }
         print(f"  {arm:12} point {cal[centre_i]:.4f}   ring-max {np.max(cal):.4f}"
               f"   (raw {raw[centre_i]:.4f} / {np.max(raw):.4f})")
+    res["gate"] = {
+        "threshold": 0.30, "source": "serve/score_global.py susc_near >= 0.3",
+        "note": ("the product gates on the ~900 m neighbourhood max, so ring_max "
+                 "is the operationally decisive number, not the point score"),
+    }
+    res["d24_baseline_note"] = (
+        "D24 records susceptibility 0.023 at Oso, but that is the DEPLOYED "
+        "product model (different training matrix, road-aware features, tuned "
+        "params, its own calibration). The terrain-only arm here is trained on "
+        "region_pnw.csv with untuned BASE_PARAMS at a 16.7% base rate and is "
+        "NOT comparable to 0.023. Only the within-experiment terrain vs "
+        "terrain+geo contrast is a valid comparison.")
     res["delta_point"] = (res["arms"]["terrain+geo"]["point"]
                           - res["arms"]["terrain"]["point"])
     res["delta_ring_max"] = (res["arms"]["terrain+geo"]["ring_max"]
@@ -368,12 +425,17 @@ def print_table(local: dict, tr: dict, oso: dict) -> None:
     if "error" in oso:
         print("  " + oso["error"])
         return
-    print(f"  {'arm':<14} {'point':>8} {'ring-max':>10}")
+    print(f"  {'arm':<14} {'point':>8} {'ring-max':>10} {'gate>=0.30':>12}")
     for arm in ARMS:
         a = oso["arms"][arm]
-        print(f"  {arm:<14} {a['point']:>8.4f} {a['ring_max']:>10.4f}")
+        print(f"  {arm:<14} {a['point']:>8.4f} {a['ring_max']:>10.4f} "
+              f"{('CLEARS' if a['clears_susceptibility_gate_0.30'] else 'fails'):>12}")
     print(f"  {'DELTA':<14} {oso['delta_point']:>+8.4f} "
           f"{oso['delta_ring_max']:>+10.4f}")
+    g = oso["geology_at_site"]
+    print(f"  substrate reported at Oso: clay {g['clay_pct']}%, silt {g['silt_pct']}%, "
+          f"sand {g['sand_pct']}%, lithology {g['lith_code']} ({g['lith_name']})")
+    print("  ring-max is what the product gates on (serve/score_global.py).")
 
 
 # --------------------------------------------------------------------- main --
@@ -402,6 +464,7 @@ def main() -> None:
                                      for k, v in lith.value_counts().items()},
             "clay_pct_mean": float(d["clay_pct"].mean()),
             "sand_pct_mean": float(d["sand_pct"].mean()),
+            "missingness_confound": missingness_confound(d),
         }
 
     local = local_cv(dfs)
@@ -485,7 +548,34 @@ CAVEATS = [
     "is the portable terrain set, not the road-aware product model.",
     "Texture fractions are compositional (clay+sand+silt=100), so the three are "
     "collinear by construction; gain shares split arbitrarily between them.",
+    "PNW SoilGrids coverage is only 80.3% (coastal/water cells are unmapped), and "
+    "missingness is NOT random with respect to the label: 23.5% of positives vs "
+    "18.9% of background, with missing cells averaging 80 m elevation against "
+    "377 m. Missingness is therefore a weak proxy for the low-elevation coastal "
+    "reporting artifact of D10/D11 (ROC 0.523 on its own), so some unknown part "
+    "of the PNW gain is that artifact rather than substrate physics. Myanmar "
+    "(100% coverage) and Brazil (97.9%) are clean; Myanmar is the trustworthy "
+    "positive result.",
+    "Single-point scores are noisy from a ~0.8-ROC model -- D11's warning about "
+    "judging a probabilistic model by hand-picked points applies to the Oso "
+    "numbers, which is why the ring and the population results are reported "
+    "alongside them.",
 ]
+
+
+def missingness_confound(df: pd.DataFrame) -> dict:
+    """Is 'SoilGrids has no data here' itself predicting the label? (D10/D11)"""
+    m = df["clay_pct"].isna()
+    pos, bg = df["label"] == 1, df["label"] == 0
+    out = {"missing_rate": float(m.mean()),
+           "missing_rate_positives": float(m[pos].mean()),
+           "missing_rate_background": float(m[bg].mean())}
+    if 0 < m.mean() < 1:
+        out["roc_of_missingness_alone"] = float(
+            roc_auc_score(df["label"].to_numpy(), m.to_numpy().astype(int)))
+        out["mean_elev_missing"] = float(df.loc[m, "elev_m"].mean())
+        out["mean_elev_present"] = float(df.loc[~m, "elev_m"].mean())
+    return out
 
 if __name__ == "__main__":
     main()
