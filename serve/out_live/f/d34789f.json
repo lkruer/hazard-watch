@@ -1,0 +1,51 @@
+{
+ "location_id": "d34789f",
+ "name": "Medellin, Colombia",
+ "lat": 6.25,
+ "lon": -75.56,
+ "status": "unknown",
+ "message": "Weather sources disagree here right now, so no score is trustworthy. Treat conditions as unknown and rely on local guidance.",
+ "as_of": "2026-08-27",
+ "generated_at": "2026-08-30T01:21:29",
+ "weather": {
+  "rain3d_pctl": 0.709,
+  "rain30d_pctl": 0.602,
+  "rain3d_mm": 24.7,
+  "spi90": 0.354,
+  "spi365": 0.581,
+  "p_severe_drought": 0.112,
+  "data_quality": "disagree",
+  "data_quality_reasons": [
+   "pattern corr 0.484"
+  ],
+  "data_quality_detail": {
+   "corr_monthly": 0.484,
+   "annual_ratio_power_over_era5": 0.648,
+   "recent": "ok",
+   "recent_power_mm": 552,
+   "recent_era5_mm": 402,
+   "recent_ratio": 1.373
+  },
+  "fire_danger": 0.195,
+  "fire_alert": false,
+  "fire_watch": false,
+  "kbdi": 18.0,
+  "fire_date": "2026-08-27"
+ },
+ "static": {
+  "tier_susceptibility": "A",
+  "region_model": "colombia",
+  "susceptibility": 0.1908,
+  "susceptibility_nearby_max": 0.4701,
+  "terrain": {
+   "slope_deg": 3.9,
+   "elev_m": 1507.0,
+   "relief_m": 90.0
+  },
+  "people_10km": 2746238
+ },
+ "caveats": [
+  "percentiles vs this location's own 2004-present record",
+  "not an official warning; consult local authorities"
+ ]
+}

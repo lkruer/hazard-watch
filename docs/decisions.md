@@ -940,6 +940,41 @@ fully servable). The principle now written into the architecture: **the
 freshest data — exactly what a live warning system depends on — is where
 archives fail first, so recency itself must be verified.**
 
+## D32 — Freshness and the cron: the platform now updates itself
+
+Measured latency settled the design (2026-08-30): the POWER **point API lags
+3–4 days** while the bulk zarr lags ~a month, and ERA5 via Open-Meteo is
+same-day. So the daily product scores from the point API — same MERRA-2
+family as every ladder and validation — with ERA5 as the freshness witness.
+
+Architecture: **registration does the heavy statics once** (DEM, point + ring
+susceptibility, tier routing, road distance, flood-basin lookup, people_10km
+→ `serve/locations.json`, geohash ids); **the nightly job touches weather
+only** (`serve/update_locations.py`): fresh tails (2025→now, 20 h TTL) merged
+onto the immutable 2004–2024 caches, all weather hazards scored on the newest
+valid day, one color + one plain sentence composed per the brief, per-location
+JSON + a 180-day history file for the trend chart. Installed as a 06:30 local
+Task Scheduler job, with a GitHub Actions twin (`.github/workflows/
+nightly.yml`) that activates on push — the job is deliberately light enough
+for a free CI runner.
+
+The verify-before-serve gate matured into its final, **percentile-safe**
+form: constant multiplicative bias between sources is harmless to percentile
+products, so the verdict tests (a) pattern — monthly corr ≥ 0.60; (b) sanity —
+long-run ratio in [0.25, 4]; (c) **freshness — the recent window's ratio must
+be consistent with the pair's own long-run bias** (|log(recent/longrun)| ≤
+log 2.2). Measured outcomes on the seed registry: Kathmandu (corr 0.92,
+constant 2.5× orographic bias, recent consistent) now scores — and shows a
+live red on record 30-day monsoon rain over 0.54-susceptibility slopes;
+Dhaka scores green; Freetown (recent 0.37 vs own 1.35 — a 4× story change),
+Medellín (pattern corr 0.48) and La Paz (recent 1.98 vs own 0.67) are served
+as **unknown with reasons named**, not as false alarms and not as silence.
+
+First live board: 5 green, 1 yellow, 1 red (Kathmandu), 3 unknown-with-
+reasons across four continents, as of data three days old. Site plan noted:
+GitHub repo as source of truth, built via Replit; river "today" awaits the
+GloFAS forecast feed.
+
 ---
 
 ## Open / not yet done

@@ -1,0 +1,54 @@
+# Nightly location updates — activates automatically once this repo is pushed
+# to GitHub. Mirrors the local Task Scheduler job so updates stop depending on
+# the laptop being awake.
+#
+# Design notes (why this stays free-tier friendly):
+# - update_locations.py is weather-only: no DEM tiles, no 3 GB ladders. All
+#   heavy statics were computed at registration time into serve/locations.json.
+# - Historical weather caches are NOT in the repo; the point pipelines refetch
+#   a cell in ~2 s on a cold runner, and the runner cache below keeps them warm
+#   between runs.
+# - The run commits its own output (serve/out_live) back to the repo, which is
+#   what the static site (GitHub Pages / Replit) serves.
+
+name: nightly-update
+
+on:
+  schedule:
+    - cron: "45 13 * * *"     # 13:45 UTC daily (POWER's ~3-day-lag data is stable by then)
+  workflow_dispatch: {}        # manual trigger button
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Cache weather cells
+        uses: actions/cache@v4
+        with:
+          path: data/cache
+          key: weather-cache-v1-${{ github.run_number }}
+          restore-keys: weather-cache-v1-
+
+      - name: Install (minimal set for the nightly job)
+        run: pip install numpy pandas scikit-learn lightgbm requests
+
+      - name: Update all registered locations
+        run: python serve/update_locations.py
+
+      - name: Commit results
+        run: |
+          git config user.name "hazard-platform-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add serve/out_live
+          git diff --cached --quiet || git commit -m "nightly update $(date -u +%F)"
+          git push

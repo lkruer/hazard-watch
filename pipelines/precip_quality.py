@@ -172,3 +172,38 @@ if __name__ == "__main__":
         v = check(la, lo)
         print(f"{name:<18} {v['verdict']:<10} "
               f"corr={v.get('corr_monthly')}  ratio={v.get('annual_ratio_power_over_era5')}")
+
+
+def combine_verdict(longrun: dict, recent: dict | None = None) -> dict:
+    """Percentile-safe agreement verdict.
+
+    Percentile products are invariant to CONSTANT multiplicative bias -- a
+    source that always reads 1.6x wet still ranks days identically. So the
+    tests that matter are:
+      pattern     monthly corr >= 0.60 (do the sources tell the same story?)
+      sanity      long-run ratio within [0.25, 4] (not pure nonsense)
+      freshness   recent ratio consistent with the pair's OWN long-run bias:
+                  |log(recent_ratio / longrun_ratio)| <= log(2.2)
+    Measured motivation: Kathmandu (corr 0.92, constant 2.5x dry bias,
+    recent consistent) is FINE for percentiles; Freetown (recent 0.37 vs own
+    baseline 1.35 -- a 4x story change) and Medellin (corr 0.48) are not.
+    """
+    import math
+    corr = longrun.get("corr_monthly")
+    lr = longrun.get("annual_ratio_power_over_era5")
+    reasons = []
+    if corr is None or lr is None:
+        return {"verdict": longrun.get("verdict", "unverified"),
+                "reasons": ["longrun unverified"]}
+    if corr < 0.60:
+        reasons.append(f"pattern corr {corr}")
+    if not (0.25 <= lr <= 4.0):
+        reasons.append(f"long-run ratio {lr}")
+    rr = (recent or {}).get("recent_ratio")
+    if rr is not None and lr > 0:
+        drift = abs(math.log(rr / lr))
+        if drift > math.log(2.2):
+            reasons.append(f"recent ratio {rr} vs own baseline {lr}")
+    elif (recent or {}).get("recent") == "disagree":
+        reasons.append("recent window disagrees")
+    return {"verdict": "disagree" if reasons else "ok", "reasons": reasons}

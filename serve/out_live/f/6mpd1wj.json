@@ -1,0 +1,51 @@
+{
+ "location_id": "6mpd1wj",
+ "name": "La Paz, Bolivia",
+ "lat": -16.49,
+ "lon": -68.13,
+ "status": "unknown",
+ "message": "Weather sources disagree here right now, so no score is trustworthy. Treat conditions as unknown and rely on local guidance.",
+ "as_of": "2026-08-27",
+ "generated_at": "2026-08-30T01:21:29",
+ "weather": {
+  "rain3d_pctl": 0.833,
+  "rain30d_pctl": 1.0,
+  "rain3d_mm": 2.4,
+  "spi90": 0.973,
+  "spi365": 0.448,
+  "p_severe_drought": 0.112,
+  "data_quality": "disagree",
+  "data_quality_reasons": [
+   "recent ratio 1.984 vs own baseline 0.672"
+  ],
+  "data_quality_detail": {
+   "corr_monthly": 0.855,
+   "annual_ratio_power_over_era5": 0.672,
+   "recent": "ok",
+   "recent_power_mm": 146,
+   "recent_era5_mm": 73,
+   "recent_ratio": 1.984
+  },
+  "fire_danger": 0.06,
+  "fire_alert": false,
+  "fire_watch": false,
+  "kbdi": 3.0,
+  "fire_date": "2026-08-27"
+ },
+ "static": {
+  "tier_susceptibility": "B",
+  "region_model": null,
+  "susceptibility": 0.1098,
+  "susceptibility_nearby_max": 0.2672,
+  "terrain": {
+   "slope_deg": 23.8,
+   "elev_m": 3745.0,
+   "relief_m": 259.0
+  },
+  "people_10km": 1454251
+ },
+ "caveats": [
+  "percentiles vs this location's own 2004-present record",
+  "not an official warning; consult local authorities"
+ ]
+}

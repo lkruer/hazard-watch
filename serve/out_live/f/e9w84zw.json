@@ -1,0 +1,51 @@
+{
+ "location_id": "e9w84zw",
+ "name": "Freetown, Sierra Leone",
+ "lat": 8.48,
+ "lon": -13.23,
+ "status": "unknown",
+ "message": "Weather sources disagree here right now, so no score is trustworthy. Treat conditions as unknown and rely on local guidance.",
+ "as_of": "2026-08-27",
+ "generated_at": "2026-08-30T01:21:20",
+ "weather": {
+  "rain3d_pctl": 0.371,
+  "rain30d_pctl": 0.32,
+  "rain3d_mm": 38.3,
+  "spi90": 0.077,
+  "spi365": 0.179,
+  "p_severe_drought": 0.446,
+  "data_quality": "disagree",
+  "data_quality_reasons": [
+   "recent ratio 0.369 vs own baseline 1.345"
+  ],
+  "data_quality_detail": {
+   "corr_monthly": 0.805,
+   "annual_ratio_power_over_era5": 1.345,
+   "recent": "disagree",
+   "recent_power_mm": 694,
+   "recent_era5_mm": 1883,
+   "recent_ratio": 0.369
+  },
+  "fire_danger": 0.435,
+  "fire_alert": false,
+  "fire_watch": true,
+  "kbdi": 38.0,
+  "fire_date": "2026-08-27"
+ },
+ "static": {
+  "tier_susceptibility": "B",
+  "region_model": null,
+  "susceptibility": 0.1868,
+  "susceptibility_nearby_max": 0.9544,
+  "terrain": {
+   "slope_deg": 5.5,
+   "elev_m": 70.0,
+   "relief_m": 198.0
+  },
+  "people_10km": 1803698
+ },
+ "caveats": [
+  "percentiles vs this location's own 2004-present record",
+  "not an official warning; consult local authorities"
+ ]
+}

@@ -1,0 +1,65 @@
+{
+ "generated_at": "2026-08-30T01:21:38",
+ "locations": [
+  {
+   "location_id": "wh0r3he",
+   "name": "Dhaka, Bangladesh",
+   "status": "green",
+   "as_of": "2026-08-27"
+  },
+  {
+   "location_id": "tuuttw2",
+   "name": "Kathmandu, Nepal",
+   "status": "red",
+   "as_of": "2026-08-27"
+  },
+  {
+   "location_id": "e9w84zw",
+   "name": "Freetown, Sierra Leone",
+   "status": "unknown",
+   "as_of": "2026-08-27"
+  },
+  {
+   "location_id": "c23nb74",
+   "name": "Seattle, USA",
+   "status": "green",
+   "as_of": "2026-08-27"
+  },
+  {
+   "location_id": "c20dzqw",
+   "name": "Portland West Hills, USA",
+   "status": "green",
+   "as_of": "2026-08-27"
+  },
+  {
+   "location_id": "d34789f",
+   "name": "Medellin, Colombia",
+   "status": "unknown",
+   "as_of": "2026-08-27"
+  },
+  {
+   "location_id": "6mpd1wj",
+   "name": "La Paz, Bolivia",
+   "status": "unknown",
+   "as_of": "2026-08-27"
+  },
+  {
+   "location_id": "wm7b0t5",
+   "name": "Chongqing, China",
+   "status": "green",
+   "as_of": "2026-08-27"
+  },
+  {
+   "location_id": "kv0yhmw",
+   "name": "Blantyre, Malawi",
+   "status": "green",
+   "as_of": "2026-08-27"
+  },
+  {
+   "location_id": "w3g1p1f",
+   "name": "Can Tho, Vietnam",
+   "status": "green",
+   "as_of": "2026-08-27"
+  }
+ ]
+}

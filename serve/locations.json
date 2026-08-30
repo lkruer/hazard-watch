@@ -1,0 +1,194 @@
+{
+ "locations": [
+  {
+   "id": "wh0r3he",
+   "name": "Dhaka, Bangladesh",
+   "lat": 23.8,
+   "lon": 90.4,
+   "registered": "2026-08-30",
+   "tier_susceptibility": "B",
+   "region_model": null,
+   "susceptibility": 0.0812,
+   "susceptibility_nearby_max": 0.1559,
+   "terrain": {
+    "slope_deg": 4.0,
+    "elev_m": 14.0,
+    "relief_m": 23.0
+   },
+   "flood_basin_cached": true,
+   "flood_note": null,
+   "people_10km": 12546494
+  },
+  {
+   "id": "tuuttw2",
+   "name": "Kathmandu, Nepal",
+   "lat": 27.72,
+   "lon": 85.32,
+   "registered": "2026-08-30",
+   "tier_susceptibility": "B",
+   "region_model": null,
+   "susceptibility": 0.5417,
+   "susceptibility_nearby_max": 0.5417,
+   "terrain": {
+    "slope_deg": 1.9,
+    "elev_m": 1312.0,
+    "relief_m": 48.0
+   },
+   "flood_basin_cached": false,
+   "flood_note": "no discharge record cached for this basin yet (0/21 years; fetch with pipelines/glofas.py --tile)",
+   "people_10km": 3529103
+  },
+  {
+   "id": "e9w84zw",
+   "name": "Freetown, Sierra Leone",
+   "lat": 8.48,
+   "lon": -13.23,
+   "registered": "2026-08-30",
+   "tier_susceptibility": "B",
+   "region_model": null,
+   "susceptibility": 0.1868,
+   "susceptibility_nearby_max": 0.9544,
+   "terrain": {
+    "slope_deg": 5.5,
+    "elev_m": 70.0,
+    "relief_m": 198.0
+   },
+   "flood_basin_cached": false,
+   "flood_note": "no discharge record cached for this basin yet (0/21 years; fetch with pipelines/glofas.py --tile)",
+   "people_10km": 1803698
+  },
+  {
+   "id": "c23nb74",
+   "name": "Seattle, USA",
+   "lat": 47.61,
+   "lon": -122.33,
+   "registered": "2026-08-30",
+   "tier_susceptibility": "A",
+   "region_model": "pnw",
+   "susceptibility": 0.625,
+   "susceptibility_nearby_max": 0.92,
+   "terrain": {
+    "slope_deg": 28.9,
+    "elev_m": 74.0,
+    "relief_m": 78.0
+   },
+   "flood_basin_cached": true,
+   "flood_note": null,
+   "people_10km": 619593
+  },
+  {
+   "id": "c20dzqw",
+   "name": "Portland West Hills, USA",
+   "lat": 45.52,
+   "lon": -122.72,
+   "registered": "2026-08-30",
+   "tier_susceptibility": "A",
+   "region_model": "pnw",
+   "susceptibility": 0.3846,
+   "susceptibility_nearby_max": 0.625,
+   "terrain": {
+    "slope_deg": 16.5,
+    "elev_m": 242.0,
+    "relief_m": 141.0
+   },
+   "flood_basin_cached": true,
+   "flood_note": null,
+   "people_10km": 603618
+  },
+  {
+   "id": "d34789f",
+   "name": "Medellin, Colombia",
+   "lat": 6.25,
+   "lon": -75.56,
+   "registered": "2026-08-30",
+   "tier_susceptibility": "A",
+   "region_model": "colombia",
+   "susceptibility": 0.1908,
+   "susceptibility_nearby_max": 0.4701,
+   "terrain": {
+    "slope_deg": 3.9,
+    "elev_m": 1507.0,
+    "relief_m": 90.0
+   },
+   "flood_basin_cached": false,
+   "flood_note": "no discharge record cached for this basin yet (0/21 years; fetch with pipelines/glofas.py --tile)",
+   "people_10km": 2746238
+  },
+  {
+   "id": "6mpd1wj",
+   "name": "La Paz, Bolivia",
+   "lat": -16.49,
+   "lon": -68.13,
+   "registered": "2026-08-30",
+   "tier_susceptibility": "B",
+   "region_model": null,
+   "susceptibility": 0.1098,
+   "susceptibility_nearby_max": 0.2672,
+   "terrain": {
+    "slope_deg": 23.8,
+    "elev_m": 3745.0,
+    "relief_m": 259.0
+   },
+   "flood_basin_cached": false,
+   "flood_note": "no discharge record cached for this basin yet (0/21 years; fetch with pipelines/glofas.py --tile)",
+   "people_10km": 1454251
+  },
+  {
+   "id": "wm7b0t5",
+   "name": "Chongqing, China",
+   "lat": 29.56,
+   "lon": 106.55,
+   "registered": "2026-08-30",
+   "tier_susceptibility": "B",
+   "region_model": null,
+   "susceptibility": 0.2442,
+   "susceptibility_nearby_max": 0.7373,
+   "terrain": {
+    "slope_deg": 4.2,
+    "elev_m": 242.0,
+    "relief_m": 140.0
+   },
+   "flood_basin_cached": false,
+   "flood_note": "no discharge record cached for this basin yet (0/21 years; fetch with pipelines/glofas.py --tile)",
+   "people_10km": 5592407
+  },
+  {
+   "id": "kv0yhmw",
+   "name": "Blantyre, Malawi",
+   "lat": -15.79,
+   "lon": 35.0,
+   "registered": "2026-08-30",
+   "tier_susceptibility": "A",
+   "region_model": "malawi",
+   "susceptibility": 0.0018,
+   "susceptibility_nearby_max": 0.0077,
+   "terrain": {
+    "slope_deg": 4.5,
+    "elev_m": 1016.0,
+    "relief_m": 45.0
+   },
+   "flood_basin_cached": false,
+   "flood_note": "no discharge record cached for this basin yet (0/21 years; fetch with pipelines/glofas.py --tile)",
+   "people_10km": 879251
+  },
+  {
+   "id": "w3g1p1f",
+   "name": "Can Tho, Vietnam",
+   "lat": 10.03,
+   "lon": 105.78,
+   "registered": "2026-08-30",
+   "tier_susceptibility": "B",
+   "region_model": null,
+   "susceptibility": 0.1189,
+   "susceptibility_nearby_max": 0.2544,
+   "terrain": {
+    "slope_deg": 4.1,
+    "elev_m": 7.0,
+    "relief_m": 19.0
+   },
+   "flood_basin_cached": true,
+   "flood_note": null,
+   "people_10km": 1255842
+  }
+ ]
+}

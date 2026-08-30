@@ -1,0 +1,39 @@
+{
+ "location_id": "kv0yhmw",
+ "name": "Blantyre, Malawi",
+ "lat": -15.79,
+ "lon": 35.0,
+ "status": "green",
+ "message": "Nothing unusual for this location today.",
+ "as_of": "2026-08-27",
+ "generated_at": "2026-08-30T01:21:30",
+ "weather": {
+  "rain3d_pctl": 0.439,
+  "rain30d_pctl": 0.679,
+  "rain3d_mm": 0.0,
+  "spi90": 0.165,
+  "spi365": 0.854,
+  "p_severe_drought": 0.032,
+  "fire_danger": 0.06,
+  "fire_alert": false,
+  "fire_watch": false,
+  "kbdi": 722.0,
+  "fire_date": "2026-08-27"
+ },
+ "static": {
+  "tier_susceptibility": "A",
+  "region_model": "malawi",
+  "susceptibility": 0.0018,
+  "susceptibility_nearby_max": 0.0077,
+  "terrain": {
+   "slope_deg": 4.5,
+   "elev_m": 1016.0,
+   "relief_m": 45.0
+  },
+  "people_10km": 879251
+ },
+ "caveats": [
+  "percentiles vs this location's own 2004-present record",
+  "not an official warning; consult local authorities"
+ ]
+}
