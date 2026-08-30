@@ -755,6 +755,55 @@ corrupts after ~20 GB streamed in one Windows process ("Token … different
 Context"), so the build runs under an auto-retry wrapper — bands are cached
 and each fresh process resumes where the last died.
 
+## D27 — Fire hindcast: the model earns its keep, the threshold did not
+
+*(Workstream executed by a delegated agent under D14's protocol; reviewed and
+its threshold finding fixed by the manager the same hour.)*
+
+Frozen on ≤2015 (1,216 strata; 113 dropped for losing every control to the
+split), replayed to the end of each label record — US 2016–2020 (FPA-FOD stops
+at fire year 2020), Canada 2016–2024 (NFDB runs later; the weather cache is
+the binding limit). 539 cells, **1,304,712 cell-days**, 2,087 reported
+large-fire days: deployment base rate **1.6×10⁻³**, vs 0.32 in training.
+
+**Finding 1 — fire is where the ML actually pays** (POD ±1 day, prospective):
+
+| alarm budget | days/cell/yr | events caught | VPD rule alone |
+|---|---|---|---|
+| 2% | 7.9 | 22.3% | 15.3% |
+| 5% | 20.9 | 44.9% | 28.9% |
+| 10% | 40.9 | 66.3% | 44.0% |
+
+The 14-feature model beats the one-line `vpd_pctl_seasonal` rule by
+1.45–1.55× at every budget — the exact inverse of D14, where the rain rule
+matched the trained model. Fire danger is genuinely multi-signal (KBDI drought
+state + VPD + wind + rainless days); rainfall triggering is not. "The rule is
+nearly as good" holds for landslides and does **not** transfer to fire.
+
+**Finding 2 — the recorded thresholds were structurally wrong, now fixed.**
+The 5% fire threshold 0.4028 alarmed on 14.0% of days (51/cell/yr). Not
+climate drift — the diagnostic reproduced 0.4028 exactly on three sampling
+designs. The cause: **0.4028 is exactly 29/72, an isotonic *plateau mean***,
+and 3.43% of all days score exactly that value; production serves
+`danger >= thr`, so the whole tied block alarms (P(>thr)=4.87%,
+P(≥thr)=8.30%). The landslide threshold 0.40196 = 41/102 — same disease.
+**Fix (manager):** `tie_safe_threshold()` in both calibrators — choose the
+smallest *distinct* score whose ≥-rate fits the budget and record the
+**achieved** rate. Recomputed: trigger 0.4040 achieving 4.95%; fire 0.4067
+achieving 4.86%. Isotonic steps are coarse, so some budgets undershoot
+honestly (landslide "10%" achieves 7.53%) — recorded, not rounded away.
+
+**Finding 3 — one continental threshold quietly taxes the US to subsidise
+Canada** (6.94% of US days for 41.1% POD vs 4.71% of Canadian days for 53.9%
+at the pooled threshold; boreal fire is more weather-determined, matching
+D20's CV gap). Per-region thresholds are the v2 fix.
+
+Data hygiene: NFDB writes missing coordinates as **zeros** — 4 of D20's 2,160
+strata sat at (0.0, 0.0), pairing Parks Canada fires with Gulf-of-Guinea
+weather. Guards added to both label loaders; effect on D20's numbers is
+negligible (4/2160) but the class of bug is now fenced. FAR stays >97% at
+every budget; at this base rate it must.
+
 ---
 
 ## Open / not yet done

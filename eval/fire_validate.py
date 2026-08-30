@@ -105,6 +105,12 @@ def us_fires() -> pd.DataFrame:
     df["date"] = df.apply(to_iso, axis=1)
     df = df.dropna(subset=["date", "lat", "lon"])
     df = df[(df["date"] >= "2005-01-01") & (df["date"] <= fw.END)]
+    # Defensive twin of the ca_fires() null-island guard: FPA-FOD has no
+    # missing-as-zero coordinates today, but future editions may.
+    near0 = (df["lat"].abs() < 1.0) & (df["lon"].abs() < 1.0)
+    df = df[~near0]
+    print(f"  US: dropped {int(near0.sum()):,} null-island records "
+          f"(coords missing-as-zero)")
     print(f"  US fires >= {MIN_ACRES_US:.0f} acres in span: {len(df):,}")
     return df[["lat", "lon", "date"]]
 
@@ -126,6 +132,14 @@ def ca_fires() -> pd.DataFrame:
     out = out[(out["ha"] >= MIN_HA_CA)
               & (out["date"] >= "2005-01-01") & (out["date"] <= fw.END)]
     out = out.dropna(subset=["lat", "lon"])
+    # NFDB writes missing coordinates as zeros, not NaN (Parks Canada records
+    # at LATITUDE = LONGITUDE = 0.0), so the dropna above cannot catch them.
+    # Nothing within a degree of (0, 0) is a Canadian fire; same threshold as
+    # fire_hindcast.implausible().
+    near0 = (out["lat"].abs() < 1.0) & (out["lon"].abs() < 1.0)
+    out = out[~near0]
+    print(f"  Canada: dropped {int(near0.sum()):,} null-island records "
+          f"(coords missing-as-zero)")
     print(f"  Canada fires >= {MIN_HA_CA:.0f} ha in span: {len(out):,}")
     return out[["lat", "lon", "date"]]
 

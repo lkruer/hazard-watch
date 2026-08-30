@@ -26,6 +26,29 @@ BUDGETS = (0.02, 0.05, 0.10)
 RECOMMENDED = 0.05
 
 
+
+
+def tie_safe_threshold(scores, budget):
+    """Threshold whose ACHIEVED alarm rate is <= budget under `>= thr` serving.
+
+    Isotonic calibration emits step functions, so naive quantiles land exactly
+    on plateau values shared by percent-scale masses of days; `>= thr` then
+    admits the whole tied block and overspends the budget (D27: the 5% fire
+    budget spent 8.3-14%). Pick the smallest DISTINCT score whose >=-rate fits
+    the budget, and report the rate actually achieved.
+    """
+    import numpy as np
+    s = np.sort(np.asarray(scores))
+    n = len(s)
+    uniq = np.unique(s)
+    # rate(v) = P(score >= v) = (n - searchsorted_left(v)) / n
+    rates = (n - np.searchsorted(s, uniq, side="left")) / n
+    ok = rates <= budget
+    if not ok.any():
+        return float(uniq[-1]), float(rates[-1])
+    i = int(np.argmax(ok))                    # smallest value fitting budget
+    return float(uniq[i]), float(rates[i])
+
 def main():
     with (ROOT / "models" / "artifacts" / "fire_trigger.pkl").open("rb") as fh:
         b = pickle.load(fh)
@@ -63,11 +86,13 @@ def main():
     fire = {"computed_at": dt.datetime.now().isoformat(timespec="seconds"),
             "samples": int(len(all_p)), "budgets": {}}
     for bud in BUDGETS:
-        thr = float(np.quantile(all_p, 1 - bud))
+        thr, achieved = tie_safe_threshold(all_p, bud)
         fire["budgets"][f"{bud:.2f}"] = {
             "threshold": thr,
-            "expected_alarm_days_per_cell_year": round(bud * 365.25, 1)}
-        print(f"  budget {bud:.0%}: threshold {thr:.4f}")
+            "achieved_alarm_rate": round(achieved, 5),
+            "achieved_alarm_days_per_cell_year": round(achieved * 365.25, 1)}
+        print(f"  budget {bud:.0%}: tie-safe threshold {thr:.4f} "
+              f"achieves {achieved:.2%}")
     fire["threshold"] = fire["budgets"][f"{RECOMMENDED:.2f}"]["threshold"]
     cur["fire"] = fire
     tj.write_text(json.dumps(cur, indent=2), encoding="utf-8")

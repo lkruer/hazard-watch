@@ -1,0 +1,1175 @@
+{
+  "name": "geology-experiment",
+  "layer": "susceptibility",
+  "model": "LightGBM (BASE_PARAMS, untuned)",
+  "status": "complete",
+  "trained_at": "2026-08-29T22:07:32",
+  "question": "do soil-texture and lithology features improve regional susceptibility models, cross-region transfer (D16), and the Oso deep-seated miss (D24)",
+  "regions": [
+    "pnw",
+    "myanmar",
+    "brazil"
+  ],
+  "cv": {
+    "scheme": "GroupKFold on block_id",
+    "n_splits": 5
+  },
+  "params": {
+    "objective": "binary",
+    "n_estimators": 400,
+    "learning_rate": 0.05,
+    "num_leaves": 31,
+    "min_child_samples": 30,
+    "subsample": 0.8,
+    "subsample_freq": 1,
+    "colsample_bytree": 0.8,
+    "reg_lambda": 1.0,
+    "n_jobs": -1,
+    "verbose": -1
+  },
+  "feature_sets": {
+    "terrain": [
+      "elev_m",
+      "slope_deg",
+      "aspect_sin",
+      "aspect_cos",
+      "curvature",
+      "tri",
+      "roughness_std",
+      "relief_range",
+      "tpi"
+    ],
+    "terrain+soil": [
+      "elev_m",
+      "slope_deg",
+      "aspect_sin",
+      "aspect_cos",
+      "curvature",
+      "tri",
+      "roughness_std",
+      "relief_range",
+      "tpi",
+      "clay_pct",
+      "silt_pct",
+      "sand_pct",
+      "bdod_g_cm3",
+      "cfvo_pct"
+    ],
+    "terrain+geo": [
+      "elev_m",
+      "slope_deg",
+      "aspect_sin",
+      "aspect_cos",
+      "curvature",
+      "tri",
+      "roughness_std",
+      "relief_range",
+      "tpi",
+      "clay_pct",
+      "silt_pct",
+      "sand_pct",
+      "bdod_g_cm3",
+      "cfvo_pct",
+      "lith_class"
+    ],
+    "geo_only": [
+      "clay_pct",
+      "silt_pct",
+      "sand_pct",
+      "bdod_g_cm3",
+      "cfvo_pct",
+      "lith_class"
+    ]
+  },
+  "region_geology_summary": {
+    "pnw": {
+      "coverage": {
+        "clay_pct": 0.8030642750373692,
+        "silt_pct": 0.8030642750373692,
+        "sand_pct": 0.8030642750373692,
+        "bdod_g_cm3": 0.8030642750373692,
+        "cfvo_pct": 0.8030642750373692,
+        "lith_class": 0.9497384155455905
+      },
+      "lith_classes_present": {
+        "ss": 2211,
+        "vb": 1415,
+        "su": 968,
+        "py": 173,
+        "vi": 106,
+        "wb": 84,
+        "pb": 51,
+        "mt": 28,
+        "sm": 28,
+        "pa": 19
+      },
+      "clay_pct_mean": 23.861718615635766,
+      "sand_pct_mean": 33.86529395079935
+    },
+    "myanmar": {
+      "coverage": {
+        "clay_pct": 0.9995833333333334,
+        "silt_pct": 0.9995833333333334,
+        "sand_pct": 0.9995833333333334,
+        "bdod_g_cm3": 0.9995833333333334,
+        "cfvo_pct": 0.9995833333333334,
+        "lith_class": 1.0
+      },
+      "lith_classes_present": {
+        "sc": 8651,
+        "ss": 3219,
+        "sm": 111,
+        "wb": 19
+      },
+      "clay_pct_mean": 31.02045990918864,
+      "sand_pct_mean": 32.3735181268626
+    },
+    "brazil": {
+      "coverage": {
+        "clay_pct": 0.9786666666666667,
+        "silt_pct": 0.9786666666666667,
+        "sand_pct": 0.9786666666666667,
+        "bdod_g_cm3": 0.9786666666666667,
+        "cfvo_pct": 0.9786666666666667,
+        "lith_class": 0.9865
+      },
+      "lith_classes_present": {
+        "vb": 5023,
+        "va": 4190,
+        "su": 1630,
+        "ss": 762,
+        "vi": 109,
+        "mt": 75,
+        "pa": 49
+      },
+      "clay_pct_mean": 40.05045270968523,
+      "sand_pct_mean": 25.87864158093442
+    }
+  },
+  "data_sources": [
+    {
+      "name": "SoilGrids 250m v2.0",
+      "provider": "ISRIC - World Soil Information",
+      "license": "CC-BY 4.0",
+      "license_verified": "isric.org/explore/soilgrids and ISRIC Data and Software Policy; WCS GetCapabilities reports AccessConstraints=None, Fees=None",
+      "citation": "Poggio, L., de Sousa, L.M., Batjes, N.H., Heuvelink, G.B.M., Kempen, B., Ribeiro, E., Rossiter, D. (2021). SoilGrids 2.0: producing soil information for the globe with quantified spatial uncertainty. SOIL 7, 217-240.",
+      "access": "WCS 2.0.1 GetCoverage windows from maps.isric.org, SUBSETTINGCRS/OUTPUTCRS EPSG:4326, no key, no account",
+      "layers": [
+        "clay 0-30cm",
+        "sand 0-30cm",
+        "bdod 0-30cm",
+        "cfvo 0-30cm",
+        "silt derived as 1000 - clay - sand (g/kg)"
+      ],
+      "depth_handling": "thickness-weighted mean of 0-5, 5-15, 15-30 cm",
+      "native_resolution_m": 250
+    },
+    {
+      "name": "GLiM Global Lithological Map v1.0 (0.5 degree gridded)",
+      "provider": "Hartmann, J. & Moosdorf, N., University of Hamburg / PANGAEA",
+      "license": "CC-BY 3.0",
+      "license_verified": "doi.pangaea.de/10.1594/PANGAEA.788537 states CC-BY-3.0",
+      "citation": "Hartmann, J., Moosdorf, N. (2012). The new global lithological map database GLiM: a representation of rock properties at the Earth surface. Geochem. Geophys. Geosyst. 13, Q12004. doi:10.1029/2012GC004370",
+      "access": "hdl.handle.net/10013/epic.39939.d001, 38 kB zip, no key",
+      "native_resolution": "0.5 degree (~55 km). The full 1,235,400-polygon shapefile is distributed via CCGM.ORG, a commercial publisher, and is NOT reachable under the project's public/keyless constraint."
+    }
+  ],
+  "results_local_cv": {
+    "pnw": {
+      "n_rows": 5352,
+      "n_pos": 892,
+      "base_rate": 0.16666666666666666,
+      "n_blocks": 268,
+      "arms": {
+        "terrain": {
+          "features": [
+            "elev_m",
+            "slope_deg",
+            "aspect_sin",
+            "aspect_cos",
+            "curvature",
+            "tri",
+            "roughness_std",
+            "relief_range",
+            "tpi"
+          ],
+          "roc_auc_mean": 0.8102195584715515,
+          "pr_auc_mean": 0.5656852474415528,
+          "pr_auc_sd": 0.05632100371287593,
+          "lift_mean": 3.3929093827798247,
+          "pooled_oof_roc": 0.8100763638922961,
+          "pooled_oof_pr": 0.5606426196491556,
+          "importance_top": [
+            {
+              "feature": "elev_m",
+              "gain_pct": 17.344399001250423
+            },
+            {
+              "feature": "tpi",
+              "gain_pct": 16.16496279211369
+            },
+            {
+              "feature": "roughness_std",
+              "gain_pct": 12.574461778612823
+            },
+            {
+              "feature": "tri",
+              "gain_pct": 10.358077958535743
+            },
+            {
+              "feature": "slope_deg",
+              "gain_pct": 10.2236010204112
+            },
+            {
+              "feature": "relief_range",
+              "gain_pct": 9.890213388603229
+            },
+            {
+              "feature": "curvature",
+              "gain_pct": 8.437977648462173
+            },
+            {
+              "feature": "aspect_sin",
+              "gain_pct": 8.069471783544525
+            }
+          ],
+          "soil_gain_pct": 0.0,
+          "lith_gain_pct": 0.0,
+          "geo_gain_pct": 0.0,
+          "terrain_gain_pct": 100.0,
+          "per_geo_feature": {}
+        },
+        "terrain+soil": {
+          "features": [
+            "elev_m",
+            "slope_deg",
+            "aspect_sin",
+            "aspect_cos",
+            "curvature",
+            "tri",
+            "roughness_std",
+            "relief_range",
+            "tpi",
+            "clay_pct",
+            "silt_pct",
+            "sand_pct",
+            "bdod_g_cm3",
+            "cfvo_pct"
+          ],
+          "roc_auc_mean": 0.8201915189736984,
+          "pr_auc_mean": 0.5908068533598368,
+          "pr_auc_sd": 0.06313209118320554,
+          "lift_mean": 3.5403701882981466,
+          "pooled_oof_roc": 0.8206265458786624,
+          "pooled_oof_pr": 0.5881370808175023,
+          "importance_top": [
+            {
+              "feature": "elev_m",
+              "gain_pct": 13.259652414653441
+            },
+            {
+              "feature": "tpi",
+              "gain_pct": 13.031363595296217
+            },
+            {
+              "feature": "roughness_std",
+              "gain_pct": 9.118662956482424
+            },
+            {
+              "feature": "bdod_g_cm3",
+              "gain_pct": 7.593706044830593
+            },
+            {
+              "feature": "tri",
+              "gain_pct": 7.405737585755287
+            },
+            {
+              "feature": "slope_deg",
+              "gain_pct": 7.357460428577566
+            },
+            {
+              "feature": "relief_range",
+              "gain_pct": 6.431154171359618
+            },
+            {
+              "feature": "curvature",
+              "gain_pct": 5.6885633503938156
+            }
+          ],
+          "soil_gain_pct": 27.064051824079044,
+          "lith_gain_pct": 0.0,
+          "geo_gain_pct": 27.064051824079044,
+          "terrain_gain_pct": 72.93594817592096,
+          "per_geo_feature": {
+            "clay_pct": 4.543811295134167,
+            "silt_pct": 5.0141277793528864,
+            "sand_pct": 4.263979130188553,
+            "bdod_g_cm3": 7.593706044830593,
+            "cfvo_pct": 5.648427574572846
+          }
+        },
+        "terrain+geo": {
+          "features": [
+            "elev_m",
+            "slope_deg",
+            "aspect_sin",
+            "aspect_cos",
+            "curvature",
+            "tri",
+            "roughness_std",
+            "relief_range",
+            "tpi",
+            "clay_pct",
+            "silt_pct",
+            "sand_pct",
+            "bdod_g_cm3",
+            "cfvo_pct",
+            "lith_class"
+          ],
+          "roc_auc_mean": 0.8221184843094426,
+          "pr_auc_mean": 0.5929002853729685,
+          "pr_auc_sd": 0.06246375972552173,
+          "lift_mean": 3.552779232384401,
+          "pooled_oof_roc": 0.8224361036819563,
+          "pooled_oof_pr": 0.5913635657004974,
+          "importance_top": [
+            {
+              "feature": "elev_m",
+              "gain_pct": 13.981283014160576
+            },
+            {
+              "feature": "tpi",
+              "gain_pct": 13.01131036706053
+            },
+            {
+              "feature": "roughness_std",
+              "gain_pct": 8.453516371958221
+            },
+            {
+              "feature": "bdod_g_cm3",
+              "gain_pct": 7.970480929282115
+            },
+            {
+              "feature": "tri",
+              "gain_pct": 7.692202432594451
+            },
+            {
+              "feature": "slope_deg",
+              "gain_pct": 7.124393142873107
+            },
+            {
+              "feature": "relief_range",
+              "gain_pct": 6.318704976228648
+            },
+            {
+              "feature": "cfvo_pct",
+              "gain_pct": 5.8971056803506725
+            }
+          ],
+          "soil_gain_pct": 26.612147609948973,
+          "lith_gain_pct": 0.6630698398909084,
+          "geo_gain_pct": 27.275217449839882,
+          "terrain_gain_pct": 72.72478255016011,
+          "per_geo_feature": {
+            "clay_pct": 3.95471760141107,
+            "silt_pct": 4.6210584705666475,
+            "sand_pct": 4.16878492833847,
+            "bdod_g_cm3": 7.970480929282115,
+            "cfvo_pct": 5.8971056803506725,
+            "lith_class": 0.6630698398909084
+          }
+        },
+        "geo_only": {
+          "features": [
+            "clay_pct",
+            "silt_pct",
+            "sand_pct",
+            "bdod_g_cm3",
+            "cfvo_pct",
+            "lith_class"
+          ],
+          "roc_auc_mean": 0.5766849454391816,
+          "pr_auc_mean": 0.21142227790021434,
+          "pr_auc_sd": 0.01269754376980144,
+          "lift_mean": 1.2675245282505558,
+          "pooled_oof_roc": 0.5746684530153431,
+          "pooled_oof_pr": 0.20540074764795163,
+          "importance_top": [
+            {
+              "feature": "bdod_g_cm3",
+              "gain_pct": 23.164064663517266
+            },
+            {
+              "feature": "cfvo_pct",
+              "gain_pct": 20.15219681303763
+            },
+            {
+              "feature": "silt_pct",
+              "gain_pct": 19.44937549754294
+            },
+            {
+              "feature": "clay_pct",
+              "gain_pct": 19.184806052562116
+            },
+            {
+              "feature": "sand_pct",
+              "gain_pct": 16.268340595905727
+            },
+            {
+              "feature": "lith_class",
+              "gain_pct": 1.7812163774343215
+            }
+          ],
+          "soil_gain_pct": 98.21878362256568,
+          "lith_gain_pct": 1.7812163774343215,
+          "geo_gain_pct": 100.0,
+          "terrain_gain_pct": 0.0,
+          "per_geo_feature": {
+            "clay_pct": 19.184806052562116,
+            "silt_pct": 19.44937549754294,
+            "sand_pct": 16.268340595905727,
+            "bdod_g_cm3": 23.164064663517266,
+            "cfvo_pct": 20.15219681303763,
+            "lith_class": 1.7812163774343215
+          }
+        }
+      },
+      "delta_roc": 0.011898925837891094,
+      "delta_pr": 0.027215037931415664,
+      "delta_roc_soil_only": 0.009971960502146882,
+      "delta_roc_lith_marginal": 0.001926965335744213
+    },
+    "myanmar": {
+      "n_rows": 12000,
+      "n_pos": 3000,
+      "base_rate": 0.25,
+      "n_blocks": 32,
+      "arms": {
+        "terrain": {
+          "features": [
+            "elev_m",
+            "slope_deg",
+            "aspect_sin",
+            "aspect_cos",
+            "curvature",
+            "tri",
+            "roughness_std",
+            "relief_range",
+            "tpi"
+          ],
+          "roc_auc_mean": 0.7427136418771758,
+          "pr_auc_mean": 0.4807674792297064,
+          "pr_auc_sd": 0.11179879496731913,
+          "lift_mean": 1.957861174967358,
+          "pooled_oof_roc": 0.7415357777777779,
+          "pooled_oof_pr": 0.4832225459228133,
+          "importance_top": [
+            {
+              "feature": "elev_m",
+              "gain_pct": 15.883938026696038
+            },
+            {
+              "feature": "relief_range",
+              "gain_pct": 13.592192644691238
+            },
+            {
+              "feature": "aspect_sin",
+              "gain_pct": 11.503646901679799
+            },
+            {
+              "feature": "tpi",
+              "gain_pct": 10.226809645139461
+            },
+            {
+              "feature": "slope_deg",
+              "gain_pct": 10.13002377105455
+            },
+            {
+              "feature": "aspect_cos",
+              "gain_pct": 10.106877905018154
+            },
+            {
+              "feature": "tri",
+              "gain_pct": 9.582100222847176
+            },
+            {
+              "feature": "curvature",
+              "gain_pct": 9.526303629162285
+            }
+          ],
+          "soil_gain_pct": 0.0,
+          "lith_gain_pct": 0.0,
+          "geo_gain_pct": 0.0,
+          "terrain_gain_pct": 100.0,
+          "per_geo_feature": {}
+        },
+        "terrain+soil": {
+          "features": [
+            "elev_m",
+            "slope_deg",
+            "aspect_sin",
+            "aspect_cos",
+            "curvature",
+            "tri",
+            "roughness_std",
+            "relief_range",
+            "tpi",
+            "clay_pct",
+            "silt_pct",
+            "sand_pct",
+            "bdod_g_cm3",
+            "cfvo_pct"
+          ],
+          "roc_auc_mean": 0.7551543928704507,
+          "pr_auc_mean": 0.5111885390046134,
+          "pr_auc_sd": 0.12881984827239007,
+          "lift_mean": 2.090402439506586,
+          "pooled_oof_roc": 0.7602194444444444,
+          "pooled_oof_pr": 0.5242692268939873,
+          "importance_top": [
+            {
+              "feature": "bdod_g_cm3",
+              "gain_pct": 10.702530881806728
+            },
+            {
+              "feature": "elev_m",
+              "gain_pct": 10.161118896037578
+            },
+            {
+              "feature": "sand_pct",
+              "gain_pct": 7.894028801112943
+            },
+            {
+              "feature": "aspect_sin",
+              "gain_pct": 7.825325036971996
+            },
+            {
+              "feature": "relief_range",
+              "gain_pct": 7.744277101058082
+            },
+            {
+              "feature": "slope_deg",
+              "gain_pct": 7.128285680622094
+            },
+            {
+              "feature": "aspect_cos",
+              "gain_pct": 7.047730480012854
+            },
+            {
+              "feature": "cfvo_pct",
+              "gain_pct": 6.4023786851584585
+            }
+          ],
+          "soil_gain_pct": 36.90412491789753,
+          "lith_gain_pct": 0.0,
+          "geo_gain_pct": 36.90412491789753,
+          "terrain_gain_pct": 63.09587508210247,
+          "per_geo_feature": {
+            "clay_pct": 5.73122328706966,
+            "silt_pct": 6.173963262749744,
+            "sand_pct": 7.894028801112943,
+            "bdod_g_cm3": 10.702530881806728,
+            "cfvo_pct": 6.4023786851584585
+          }
+        },
+        "terrain+geo": {
+          "features": [
+            "elev_m",
+            "slope_deg",
+            "aspect_sin",
+            "aspect_cos",
+            "curvature",
+            "tri",
+            "roughness_std",
+            "relief_range",
+            "tpi",
+            "clay_pct",
+            "silt_pct",
+            "sand_pct",
+            "bdod_g_cm3",
+            "cfvo_pct",
+            "lith_class"
+          ],
+          "roc_auc_mean": 0.7575001698997041,
+          "pr_auc_mean": 0.5082501058685067,
+          "pr_auc_sd": 0.12292388000314788,
+          "lift_mean": 2.078682622989491,
+          "pooled_oof_roc": 0.7622747407407406,
+          "pooled_oof_pr": 0.5189690602967097,
+          "importance_top": [
+            {
+              "feature": "elev_m",
+              "gain_pct": 10.083670862920638
+            },
+            {
+              "feature": "bdod_g_cm3",
+              "gain_pct": 10.07174572364513
+            },
+            {
+              "feature": "sand_pct",
+              "gain_pct": 8.842110191522073
+            },
+            {
+              "feature": "aspect_sin",
+              "gain_pct": 7.5706305386873565
+            },
+            {
+              "feature": "aspect_cos",
+              "gain_pct": 7.55970077760452
+            },
+            {
+              "feature": "slope_deg",
+              "gain_pct": 7.545649944774011
+            },
+            {
+              "feature": "relief_range",
+              "gain_pct": 7.21878545436944
+            },
+            {
+              "feature": "tpi",
+              "gain_pct": 6.838389886919042
+            }
+          ],
+          "soil_gain_pct": 36.6693595306925,
+          "lith_gain_pct": 0.5305088239987303,
+          "geo_gain_pct": 37.19986835469124,
+          "terrain_gain_pct": 62.80013164530877,
+          "per_geo_feature": {
+            "clay_pct": 5.435755466217449,
+            "silt_pct": 5.767709532507745,
+            "sand_pct": 8.842110191522073,
+            "bdod_g_cm3": 10.07174572364513,
+            "cfvo_pct": 6.55203861680011,
+            "lith_class": 0.5305088239987303
+          }
+        },
+        "geo_only": {
+          "features": [
+            "clay_pct",
+            "silt_pct",
+            "sand_pct",
+            "bdod_g_cm3",
+            "cfvo_pct",
+            "lith_class"
+          ],
+          "roc_auc_mean": 0.6262790642060608,
+          "pr_auc_mean": 0.3260151714777624,
+          "pr_auc_sd": 0.0893224741505798,
+          "lift_mean": 1.3039782019621233,
+          "pooled_oof_roc": 0.6261241481481481,
+          "pooled_oof_pr": 0.32176305006300887,
+          "importance_top": [
+            {
+              "feature": "bdod_g_cm3",
+              "gain_pct": 24.06915038896134
+            },
+            {
+              "feature": "cfvo_pct",
+              "gain_pct": 22.90640878060107
+            },
+            {
+              "feature": "sand_pct",
+              "gain_pct": 19.641951304928064
+            },
+            {
+              "feature": "silt_pct",
+              "gain_pct": 16.072365640777683
+            },
+            {
+              "feature": "clay_pct",
+              "gain_pct": 15.884318871471846
+            },
+            {
+              "feature": "lith_class",
+              "gain_pct": 1.4258050132599949
+            }
+          ],
+          "soil_gain_pct": 98.57419498674,
+          "lith_gain_pct": 1.4258050132599949,
+          "geo_gain_pct": 100.0,
+          "terrain_gain_pct": 0.0,
+          "per_geo_feature": {
+            "clay_pct": 15.884318871471846,
+            "silt_pct": 16.072365640777683,
+            "sand_pct": 19.641951304928064,
+            "bdod_g_cm3": 24.06915038896134,
+            "cfvo_pct": 22.90640878060107,
+            "lith_class": 1.4258050132599949
+          }
+        }
+      },
+      "delta_roc": 0.014786528022528334,
+      "delta_pr": 0.0274826266388003,
+      "delta_roc_soil_only": 0.012440750993274907,
+      "delta_roc_lith_marginal": 0.0023457770292534263
+    },
+    "brazil": {
+      "n_rows": 12000,
+      "n_pos": 3000,
+      "base_rate": 0.25,
+      "n_blocks": 72,
+      "arms": {
+        "terrain": {
+          "features": [
+            "elev_m",
+            "slope_deg",
+            "aspect_sin",
+            "aspect_cos",
+            "curvature",
+            "tri",
+            "roughness_std",
+            "relief_range",
+            "tpi"
+          ],
+          "roc_auc_mean": 0.9520116335014375,
+          "pr_auc_mean": 0.8712592288917577,
+          "pr_auc_sd": 0.012925382428702366,
+          "lift_mean": 3.5099700199303627,
+          "pooled_oof_roc": 0.9479714814814814,
+          "pooled_oof_pr": 0.8641548124159187,
+          "importance_top": [
+            {
+              "feature": "tri",
+              "gain_pct": 29.37484786366928
+            },
+            {
+              "feature": "slope_deg",
+              "gain_pct": 18.753870106653515
+            },
+            {
+              "feature": "aspect_sin",
+              "gain_pct": 12.097004679638387
+            },
+            {
+              "feature": "roughness_std",
+              "gain_pct": 10.508151846715174
+            },
+            {
+              "feature": "elev_m",
+              "gain_pct": 7.681584341068222
+            },
+            {
+              "feature": "aspect_cos",
+              "gain_pct": 7.629969819330513
+            },
+            {
+              "feature": "tpi",
+              "gain_pct": 4.906927723170052
+            },
+            {
+              "feature": "relief_range",
+              "gain_pct": 4.687171788763519
+            }
+          ],
+          "soil_gain_pct": 0.0,
+          "lith_gain_pct": 0.0,
+          "geo_gain_pct": 0.0,
+          "terrain_gain_pct": 100.0,
+          "per_geo_feature": {}
+        },
+        "terrain+soil": {
+          "features": [
+            "elev_m",
+            "slope_deg",
+            "aspect_sin",
+            "aspect_cos",
+            "curvature",
+            "tri",
+            "roughness_std",
+            "relief_range",
+            "tpi",
+            "clay_pct",
+            "silt_pct",
+            "sand_pct",
+            "bdod_g_cm3",
+            "cfvo_pct"
+          ],
+          "roc_auc_mean": 0.952756392666989,
+          "pr_auc_mean": 0.8744354357518198,
+          "pr_auc_sd": 0.019043105776518108,
+          "lift_mean": 3.5217332397095276,
+          "pooled_oof_roc": 0.9483176296296297,
+          "pooled_oof_pr": 0.8660487132327724,
+          "importance_top": [
+            {
+              "feature": "tri",
+              "gain_pct": 23.98527549234471
+            },
+            {
+              "feature": "slope_deg",
+              "gain_pct": 21.741477153473795
+            },
+            {
+              "feature": "aspect_sin",
+              "gain_pct": 10.292316139973241
+            },
+            {
+              "feature": "roughness_std",
+              "gain_pct": 7.746583256680148
+            },
+            {
+              "feature": "aspect_cos",
+              "gain_pct": 6.744324710801429
+            },
+            {
+              "feature": "elev_m",
+              "gain_pct": 4.507323624089876
+            },
+            {
+              "feature": "silt_pct",
+              "gain_pct": 3.997175391731362
+            },
+            {
+              "feature": "relief_range",
+              "gain_pct": 3.1620856410311236
+            }
+          ],
+          "soil_gain_pct": 15.859364415736652,
+          "lith_gain_pct": 0.0,
+          "geo_gain_pct": 15.859364415736652,
+          "terrain_gain_pct": 84.14063558426335,
+          "per_geo_feature": {
+            "clay_pct": 2.5348170445071374,
+            "silt_pct": 3.997175391731362,
+            "sand_pct": 3.1269678595676065,
+            "bdod_g_cm3": 3.10705282839381,
+            "cfvo_pct": 3.093351291536736
+          }
+        },
+        "terrain+geo": {
+          "features": [
+            "elev_m",
+            "slope_deg",
+            "aspect_sin",
+            "aspect_cos",
+            "curvature",
+            "tri",
+            "roughness_std",
+            "relief_range",
+            "tpi",
+            "clay_pct",
+            "silt_pct",
+            "sand_pct",
+            "bdod_g_cm3",
+            "cfvo_pct",
+            "lith_class"
+          ],
+          "roc_auc_mean": 0.9527842877777897,
+          "pr_auc_mean": 0.8751723618563574,
+          "pr_auc_sd": 0.0186267304814106,
+          "lift_mean": 3.524330615216834,
+          "pooled_oof_roc": 0.9469384444444444,
+          "pooled_oof_pr": 0.8636779713854968,
+          "importance_top": [
+            {
+              "feature": "tri",
+              "gain_pct": 26.414129955174214
+            },
+            {
+              "feature": "slope_deg",
+              "gain_pct": 18.732417895707467
+            },
+            {
+              "feature": "aspect_sin",
+              "gain_pct": 10.211224625684856
+            },
+            {
+              "feature": "roughness_std",
+              "gain_pct": 7.284490611346289
+            },
+            {
+              "feature": "aspect_cos",
+              "gain_pct": 6.907745295872918
+            },
+            {
+              "feature": "elev_m",
+              "gain_pct": 4.8877227439568784
+            },
+            {
+              "feature": "silt_pct",
+              "gain_pct": 3.5908145989022064
+            },
+            {
+              "feature": "relief_range",
+              "gain_pct": 3.5768808073031586
+            }
+          ],
+          "soil_gain_pct": 15.18443458838519,
+          "lith_gain_pct": 0.7720367471390023,
+          "geo_gain_pct": 15.956471335524192,
+          "terrain_gain_pct": 84.0435286644758,
+          "per_geo_feature": {
+            "clay_pct": 2.4194634631771224,
+            "silt_pct": 3.5908145989022064,
+            "sand_pct": 3.012251207868554,
+            "bdod_g_cm3": 2.937475535554552,
+            "cfvo_pct": 3.2244297828827557,
+            "lith_class": 0.7720367471390023
+          }
+        },
+        "geo_only": {
+          "features": [
+            "clay_pct",
+            "silt_pct",
+            "sand_pct",
+            "bdod_g_cm3",
+            "cfvo_pct",
+            "lith_class"
+          ],
+          "roc_auc_mean": 0.6903217040573562,
+          "pr_auc_mean": 0.39199726174808946,
+          "pr_auc_sd": 0.04829950401611632,
+          "lift_mean": 1.570344063308918,
+          "pooled_oof_roc": 0.6792358333333333,
+          "pooled_oof_pr": 0.3824358895713474,
+          "importance_top": [
+            {
+              "feature": "sand_pct",
+              "gain_pct": 21.440273292722384
+            },
+            {
+              "feature": "bdod_g_cm3",
+              "gain_pct": 21.274388201247994
+            },
+            {
+              "feature": "cfvo_pct",
+              "gain_pct": 19.84629850897227
+            },
+            {
+              "feature": "silt_pct",
+              "gain_pct": 17.929119260236916
+            },
+            {
+              "feature": "clay_pct",
+              "gain_pct": 15.465269795722449
+            },
+            {
+              "feature": "lith_class",
+              "gain_pct": 4.044650941097983
+            }
+          ],
+          "soil_gain_pct": 95.95534905890202,
+          "lith_gain_pct": 4.044650941097983,
+          "geo_gain_pct": 100.0,
+          "terrain_gain_pct": 0.0,
+          "per_geo_feature": {
+            "clay_pct": 15.465269795722449,
+            "silt_pct": 17.929119260236916,
+            "sand_pct": 21.440273292722384,
+            "bdod_g_cm3": 21.274388201247994,
+            "cfvo_pct": 19.84629850897227,
+            "lith_class": 4.044650941097983
+          }
+        }
+      },
+      "delta_roc": 0.0007726542763522026,
+      "delta_pr": 0.003913132964599719,
+      "delta_roc_soil_only": 0.0007447591655515007,
+      "delta_roc_lith_marginal": 2.789511080070195e-05
+    }
+  },
+  "results_transfer": {
+    "pnw+brazil->myanmar": {
+      "train_regions": [
+        "pnw",
+        "brazil"
+      ],
+      "test_region": "myanmar",
+      "n_train": 17352,
+      "n_test": 12000,
+      "base_rate": 0.25,
+      "arms": {
+        "terrain": {
+          "roc_auc": 0.5149641851851852,
+          "pr_auc": 0.25039083538923973,
+          "soil_gain_pct": 0.0,
+          "lith_gain_pct": 0.0,
+          "geo_gain_pct": 0.0,
+          "terrain_gain_pct": 100.0,
+          "per_geo_feature": {}
+        },
+        "terrain+soil": {
+          "roc_auc": 0.48194744444444443,
+          "pr_auc": 0.23374209542448052,
+          "soil_gain_pct": 23.10783024024392,
+          "lith_gain_pct": 0.0,
+          "geo_gain_pct": 23.10783024024392,
+          "terrain_gain_pct": 76.89216975975609,
+          "per_geo_feature": {
+            "clay_pct": 6.7943891571215875,
+            "silt_pct": 5.295723815731559,
+            "sand_pct": 3.2299036573785243,
+            "bdod_g_cm3": 4.330872920013323,
+            "cfvo_pct": 3.456940689998927
+          }
+        },
+        "terrain+geo": {
+          "roc_auc": 0.48420011111111116,
+          "pr_auc": 0.2359621358505668,
+          "soil_gain_pct": 22.38355725922083,
+          "lith_gain_pct": 1.0957732138479603,
+          "geo_gain_pct": 23.479330473068792,
+          "terrain_gain_pct": 76.52066952693121,
+          "per_geo_feature": {
+            "clay_pct": 7.16392125326437,
+            "silt_pct": 4.750738807135706,
+            "sand_pct": 2.8499241310184686,
+            "bdod_g_cm3": 4.195581990322838,
+            "cfvo_pct": 3.4233910774794487,
+            "lith_class": 1.0957732138479603
+          }
+        },
+        "geo_only": {
+          "roc_auc": 0.512459037037037,
+          "pr_auc": 0.2605965375495916,
+          "soil_gain_pct": 96.0423739638466,
+          "lith_gain_pct": 3.957626036153397,
+          "geo_gain_pct": 100.0,
+          "terrain_gain_pct": 0.0,
+          "per_geo_feature": {
+            "clay_pct": 18.545055135316137,
+            "silt_pct": 17.87759798948677,
+            "sand_pct": 19.018281304505336,
+            "bdod_g_cm3": 22.78240272108385,
+            "cfvo_pct": 17.819036813454506,
+            "lith_class": 3.957626036153397
+          }
+        }
+      },
+      "slope_only_roc": 0.6205433703703703,
+      "local_ceiling_roc": 0.7575001698997041,
+      "delta_roc": -0.030764074074074,
+      "delta_roc_lith_marginal": 0.002252666666666736
+    },
+    "pnw+myanmar->brazil": {
+      "train_regions": [
+        "pnw",
+        "myanmar"
+      ],
+      "test_region": "brazil",
+      "n_train": 17352,
+      "n_test": 12000,
+      "base_rate": 0.25,
+      "arms": {
+        "terrain": {
+          "roc_auc": 0.7057665925925927,
+          "pr_auc": 0.3969775412985502,
+          "soil_gain_pct": 0.0,
+          "lith_gain_pct": 0.0,
+          "geo_gain_pct": 0.0,
+          "terrain_gain_pct": 100.0,
+          "per_geo_feature": {}
+        },
+        "terrain+soil": {
+          "roc_auc": 0.6502754074074074,
+          "pr_auc": 0.33575791536348565,
+          "soil_gain_pct": 37.488984831311946,
+          "lith_gain_pct": 0.0,
+          "geo_gain_pct": 37.488984831311946,
+          "terrain_gain_pct": 62.511015168688054,
+          "per_geo_feature": {
+            "clay_pct": 6.199769377509935,
+            "silt_pct": 6.553802010395803,
+            "sand_pct": 7.049303132036499,
+            "bdod_g_cm3": 11.370467317591999,
+            "cfvo_pct": 6.3156429937777085
+          }
+        },
+        "terrain+geo": {
+          "roc_auc": 0.6605215555555555,
+          "pr_auc": 0.33945058466035827,
+          "soil_gain_pct": 36.62275518628089,
+          "lith_gain_pct": 0.8548352948708865,
+          "geo_gain_pct": 37.47759048115178,
+          "terrain_gain_pct": 62.52240951884822,
+          "per_geo_feature": {
+            "clay_pct": 5.32626736524865,
+            "silt_pct": 5.777494321171324,
+            "sand_pct": 7.624009329684912,
+            "bdod_g_cm3": 11.273665250022106,
+            "cfvo_pct": 6.621318920153901,
+            "lith_class": 0.8548352948708865
+          }
+        },
+        "geo_only": {
+          "roc_auc": 0.481949574074074,
+          "pr_auc": 0.2326328164064007,
+          "soil_gain_pct": 96.97982545569782,
+          "lith_gain_pct": 3.020174544302179,
+          "geo_gain_pct": 100.0,
+          "terrain_gain_pct": 0.0,
+          "per_geo_feature": {
+            "clay_pct": 16.235784121094394,
+            "silt_pct": 16.75150210492039,
+            "sand_pct": 19.077825835344225,
+            "bdod_g_cm3": 25.402488462290147,
+            "cfvo_pct": 19.512224932048664,
+            "lith_class": 3.020174544302179
+          }
+        }
+      },
+      "slope_only_roc": 0.9082824814814815,
+      "local_ceiling_roc": 0.9527842877777897,
+      "delta_roc": -0.045245037037037195,
+      "delta_roc_lith_marginal": 0.01024614814814806
+    }
+  },
+  "results_oso": {
+    "lat": 48.2836,
+    "lon": -121.8477,
+    "ring": {
+      "offsets_deg": 0.008,
+      "n_points": 9,
+      "note": "3x3 lattice; 890 m N-S, 596 m E-W at 48N"
+    },
+    "geology_at_site": {
+      "clay_pct": 13.1,
+      "silt_pct": 42.2,
+      "sand_pct": 44.7,
+      "bdod_g_cm3": 1.03,
+      "cfvo_pct": 19.03,
+      "lith_class": 8.0,
+      "lith_code": "mt",
+      "lith_name": "metamorphic rocks"
+    },
+    "arms": {
+      "terrain": {
+        "point": 0.18055555555555555,
+        "ring_max": 0.3333333333333333,
+        "ring_mean": 0.15743341369182523,
+        "point_raw": 0.14933934930742768,
+        "ring_max_raw": 0.38760065478748795
+      },
+      "terrain+soil": {
+        "point": 0.1378299120234604,
+        "ring_max": 0.17757009345794392,
+        "ring_mean": 0.10763408955328452,
+        "point_raw": 0.06752567876228832,
+        "ring_max_raw": 0.09853212600478807
+      },
+      "terrain+geo": {
+        "point": 0.25129533678756477,
+        "ring_max": 0.25129533678756477,
+        "ring_mean": 0.1471029495787304,
+        "point_raw": 0.2431092881640493,
+        "ring_max_raw": 0.2431092881640493
+      },
+      "geo_only": {
+        "point": 0.2275449101796407,
+        "ring_max": 0.2526881720430107,
+        "ring_mean": 0.2186416196477646,
+        "point_raw": 0.3043707353574802,
+        "ring_max_raw": 0.5868068294750507
+      }
+    },
+    "delta_point": 0.07073978123200922,
+    "delta_ring_max": -0.08203799654576854
+  },
+  "caveats": [
+    "GLiM lith_class is 0.5 degree (~55 km cells). Myanmar's 2x2 deg box holds ~16 cells; within-region variation is minimal by construction, so a null result for lithology here is a resolution result, not a geology result.",
+    "SoilGrids models the top 30 cm of SOIL. Deep-seated landslides fail metres to hundreds of metres below that. The Oso probe is therefore a test of a known-imperfect proxy, and was expected in advance to fail.",
+    "Untuned BASE_PARAMS throughout so the arms differ only in feature columns; absolute scores are below the tuned numbers reported elsewhere.",
+    "PNW labels carry the D10/D11 reporting bias; its terrain-only baseline here is the portable terrain set, not the road-aware product model.",
+    "Texture fractions are compositional (clay+sand+silt=100), so the three are collinear by construction; gain shares split arbitrarily between them."
+  ]
+}

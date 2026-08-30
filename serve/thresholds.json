@@ -1,40 +1,46 @@
 {
-  "computed_at": "2026-08-28T00:34:04",
+  "computed_at": "2026-08-29T22:05:54",
   "grid_cell_days": 702972,
   "note": "score quantiles of the production trigger model over the full 2004-2024 daily grid; 'alarm budget' 0.05 = alarm on the wettest 5% of days at these cells",
   "budgets": {
     "0.02": {
-      "threshold": 0.6439393939393939,
-      "expected_alarm_days_per_cell_year": 7.3
+      "threshold": 0.6441092278657901,
+      "achieved_alarm_rate": 0.01149,
+      "achieved_alarm_days_per_cell_year": 4.2
     },
     "0.05": {
-      "threshold": 0.4019607843137255,
-      "expected_alarm_days_per_cell_year": 18.3
+      "threshold": 0.4040260114158079,
+      "achieved_alarm_rate": 0.04949,
+      "achieved_alarm_days_per_cell_year": 18.1
     },
     "0.10": {
-      "threshold": 0.2765273311897107,
-      "expected_alarm_days_per_cell_year": 36.5
+      "threshold": 0.27683251062816827,
+      "achieved_alarm_rate": 0.07528,
+      "achieved_alarm_days_per_cell_year": 27.5
     }
   },
   "recommended_budget": 0.05,
-  "trigger_threshold": 0.4019607843137255,
+  "trigger_threshold": 0.4040260114158079,
   "fire": {
-    "computed_at": "2026-08-28T01:57:45",
-    "samples": 546041,
+    "computed_at": "2026-08-29T22:07:57",
+    "samples": 550996,
     "budgets": {
       "0.02": {
-        "threshold": 0.5065616797900261,
-        "expected_alarm_days_per_cell_year": 7.3
+        "threshold": 0.5076157478222337,
+        "achieved_alarm_rate": 0.01049,
+        "achieved_alarm_days_per_cell_year": 3.8
       },
       "0.05": {
-        "threshold": 0.4027777777777778,
-        "expected_alarm_days_per_cell_year": 18.3
+        "threshold": 0.4066666666666667,
+        "achieved_alarm_rate": 0.0486,
+        "achieved_alarm_days_per_cell_year": 17.8
       },
       "0.10": {
-        "threshold": 0.3048780487804878,
-        "expected_alarm_days_per_cell_year": 36.5
+        "threshold": 0.30510045705033606,
+        "achieved_alarm_rate": 0.09122,
+        "achieved_alarm_days_per_cell_year": 33.3
       }
     },
-    "threshold": 0.4027777777777778
+    "threshold": 0.4066666666666667
   }
 }
