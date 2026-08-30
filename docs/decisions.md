@@ -880,6 +880,31 @@ Caveat limiting even (a): PNW SoilGrids coverage is 80.3% and its missingness
 tracks the D10/D11 coastal reporting artifact, so part of PNW's +0.012 is that
 artifact; Myanmar (100% coverage) is the trustworthy line.
 
+## D30 — The world engine is live, and parity was the whole game
+
+`score_world.py --date D` now scores the planet in minutes (seconds from
+cache): 9 percentile fields at 0.5°, alert masks, and people-denominated
+summaries. The build's value was the **parity discipline** — requiring world
+fields to agree with the validated point pipelines caught three defects that
+would have silently shipped wrong planetary maps:
+
+1. **KBDI's climate normalizer** was derived from the 400-day scoring window,
+   so a dry year *slowed* the formula's drying — exactly backwards (Paradise
+   read 0.10 vs truth 0.86). Fixed: climatological mean-annual rain from the
+   spi365 ladder. Diff now −0.05.
+2. **Rung-counting quantized percentiles to 1/21 steps**, making the ≥0.98
+   rain gate unreachable — Sukkur read 0.95 at the peak of the 2022 Pakistan
+   floods and did not flag. Fixed with linear interpolation between rungs;
+   Sukkur now 0.999 → alert, 96 cells / **44.7M people** under the flag in
+   the Pakistan box on 2022-08-28 (UN counted 33M affected — right order).
+3. **Off-grid parity sampling** compared different physical cells across
+   mountain gradients (flat Iowa agreed; Sierra/Himalaya "disagreed").
+   Points snapped to the grid; final parity mean |Δ| **0.057, PASS**.
+
+Also: the compressed 1.3 GB window cache failed silently (uncompressed now),
+and highlighted extremes prefer populated cells — POWER covers ocean, and an
+empty Southern Ocean cell is not a useful "most extreme" example.
+
 ---
 
 ## Open / not yet done
