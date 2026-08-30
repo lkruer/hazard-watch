@@ -835,6 +835,51 @@ now"; switching to observed E2020 is a one-line change.
 `serve/score_world.py` now reports `people` beside `cells` for every alert
 mask: "this alert covers 2.3M people" instead of "417 cells flagged".
 
+## D29 — Substrate features: a small honest in-region gain, and worse transfer
+
+*(Delegated agent workstream; negative verdict accepted by the manager —
+geology enters no production model. Numbers in
+`models/runs/geology-experiment.json`.)*
+
+The D24 roadmap named lithology as the Oso fix. Measured on three regions,
+untuned BASE_PARAMS, GroupKFold(5) on block_id. SoilGrids 250m (ISRIC,
+CC-BY 4.0) via 216 WCS GeoTIFF windows (99 MB, no point-API hammering); GLiM
+(CC-BY 3.0, PANGAEA) at the only openly-archived resolution, 0.5° — the
+full-resolution polygons route through a commercial publisher and are
+unreachable under the keyless/open constraint.
+
+(a) In-region geology helps a little, and it is all soil texture:
+
+| region | terrain | +soil | +soil+lith | Δ ROC | lith marginal |
+|---|---|---|---|---|---|
+| pnw | 0.810 | 0.820 | 0.822 | +0.012 | +0.002 |
+| myanmar | 0.743 | 0.755 | 0.758 | +0.015 | +0.002 |
+| brazil | 0.952 | 0.953 | 0.953 | +0.001 | +0.000 |
+
+Soil carries 15–37% of model gain; 0.5° lithology carries under 1% and adds
+≤0.002 ROC over soil alone — a ~55 km cell is a resolution result, not a
+geology result.
+
+(b) **Transfer got worse**: pnw+brazil→myanmar 0.515→0.484 (−0.031),
+pnw+myanmar→brazil 0.706→0.661 (−0.045), both still under the slope floor.
+Mechanism, D16 extended to substrate: 72.1% of Myanmar sits in a lithology
+class with zero training examples; 79.1% of Brazil's clay values fall outside
+the training 5–95 percentile band. Absolute substrate values travel no better
+than absolute terrain values.
+
+(c) **Oso: no, exactly as pre-registered.** SoilGrids reports the top 30 cm as
+sandy and well-drained — which reads as *stable* — while 2014's failure was
+deep-seated in lacustrine clay beneath glacial outwash, below the mapped
+horizon; GLiM calls the cell metamorphic Cascades core, not valley fill. The
+point score rose (0.181→0.251) but the neighbourhood-max the product gates on
+**fell 0.333→0.251, below the 0.30 gate: adding geology would have un-flagged
+Oso.** The honest Oso fix remains LiDAR-derived scarp morphology or a mapped
+deep-seated-landslide inventory, not any open global soil/lithology raster.
+
+Caveat limiting even (a): PNW SoilGrids coverage is 80.3% and its missingness
+tracks the D10/D11 coastal reporting artifact, so part of PNW's +0.012 is that
+artifact; Myanmar (100% coverage) is the trustworthy line.
+
 ---
 
 ## Open / not yet done
