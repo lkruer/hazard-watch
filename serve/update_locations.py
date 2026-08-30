@@ -87,6 +87,10 @@ def compose(loc: dict, w: dict) -> tuple[str, str]:
         yellow.append("the last three months have been exceptionally dry")
     if (w.get("spi365") or 1) <= 0.05:
         yellow.append("a long drought is in progress")
+    wk = w.get("flood_week_max_pctl")
+    if wk is not None and wk >= 0.98 and (flood_p or 0) < 0.98:
+        yellow.append("the river is forecast to run exceptionally high "
+                      f"around {w.get('flood_week_max_date')}")
     if yellow:
         return "yellow", ("Worth watching: " + "; ".join(yellow) +
                           ". Not an alert, but conditions are unusual.")
@@ -151,12 +155,25 @@ def update_one(loc: dict, trig_b, fire_b, drought_b, fire_thr, fire_watch_thr,
             r = glofas_stack.percentile_at(la, lo, date)
         except Exception:                                   # noqa: BLE001
             r = None
-        if r and r.get("is_river"):
+        if r and r.get("is_river") and date <= "2024-12-31":
             w["flood_pctl"] = r["flow_pctl_seasonal"]
             w["flood_m3s"] = r["discharge_m3s"]
         elif date > "2024-12-31":
-            w["flood_note"] = ("river record ends 2024 (GloFAS historical); "
-                               "forecast feed is the planned upgrade")
+            # live dates ride the operational FORECAST (D33): control run,
+            # ranked against the same historical channel cell's seasonal record
+            try:
+                from pipelines.glofas_forecast import outlook
+                fc = outlook(la, lo, glofas_stack)
+            except Exception:                               # noqa: BLE001
+                fc = None
+            if fc and fc.get("is_river"):
+                w["flood_pctl"] = fc["today"]["flow_pctl_seasonal"]
+                w["flood_m3s"] = fc["today"]["discharge_m3s"]
+                w["flood_week_max_pctl"] = fc["week_max"]["flow_pctl_seasonal"]
+                w["flood_week_max_date"] = fc["week_max"]["valid"]
+                w["flood_source"] = f"GloFAS operational forecast (init {fc['init']})"
+            else:
+                w["flood_note"] = "no river forecast fetchable right now"
 
     color, sentence = compose(loc, w)
     rec_out = {

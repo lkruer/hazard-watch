@@ -6,7 +6,7 @@
  "status": "green",
  "message": "Nothing unusual for this location today.",
  "as_of": "2026-08-27",
- "generated_at": "2026-08-30T01:21:29",
+ "generated_at": "2026-08-30T14:08:13",
  "weather": {
   "rain3d_pctl": 0.504,
   "rain30d_pctl": 0.502,
@@ -19,7 +19,11 @@
   "fire_watch": false,
   "kbdi": 619.0,
   "fire_date": "2026-08-27",
-  "flood_note": "river record ends 2024 (GloFAS historical); forecast feed is the planned upgrade"
+  "flood_pctl": 0.71,
+  "flood_m3s": 3288.9,
+  "flood_week_max_pctl": 0.785,
+  "flood_week_max_date": "2026-09-05",
+  "flood_source": "GloFAS operational forecast (init 2026-08-29)"
  },
  "static": {
   "tier_susceptibility": "A",

@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-30T01:21:38",
+ "generated_at": "2026-08-30T14:09:17",
  "locations": [
   {
    "location_id": "wh0r3he",
@@ -22,7 +22,7 @@
   {
    "location_id": "c23nb74",
    "name": "Seattle, USA",
-   "status": "green",
+   "status": "yellow",
    "as_of": "2026-08-27"
   },
   {
@@ -58,7 +58,7 @@
   {
    "location_id": "w3g1p1f",
    "name": "Can Tho, Vietnam",
-   "status": "green",
+   "status": "yellow",
    "as_of": "2026-08-27"
   }
  ]

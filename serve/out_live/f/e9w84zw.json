@@ -6,7 +6,7 @@
  "status": "unknown",
  "message": "Weather sources disagree here right now, so no score is trustworthy. Treat conditions as unknown and rely on local guidance.",
  "as_of": "2026-08-27",
- "generated_at": "2026-08-30T01:21:20",
+ "generated_at": "2026-08-30T14:03:01",
  "weather": {
   "rain3d_pctl": 0.371,
   "rain30d_pctl": 0.32,

@@ -975,6 +975,34 @@ reasons across four continents, as of data three days old. Site plan noted:
 GitHub repo as source of truth, built via Replit; river "today" awaits the
 GloFAS forecast feed.
 
+## D33 — Rivers get a "today" and a week ahead: the GloFAS forecast feed
+
+The last data gap before the site. `cems-glofas-forecast` (operational
+system, LISFLOOD control run, daily inits, leads 24–720 h) via
+`pipelines/glofas_forecast.py`: a ±0.5° window around the point, first seven
+leads, one queued request per location per day, cached by init date.
+
+The number served stays the platform's single move — the forecast discharge
+ranked against **the same historical channel cell's** 21-year seasonal record
+(the D25 stack picks the channel; the forecast is sampled at that exact
+cell, longitude-convention differences handled). The nightly job now uses
+the historical record for past dates and the forecast for live ones, and the
+status composer gained a look-ahead: a forecast week-max ≥ 0.98 raises
+yellow with the date named.
+
+First live morning (init 2026-08-29): Dhaka 0.41 today / 0.52 week-max —
+an unremarkable late-monsoon Ganges, correctly green; **Seattle 0.91 today
+with a forecast week-max of 1.00 around Sep 3** — an early-fall Pacific
+system, correctly yellow with the date; Can Tho 0.88 / 0.99 as the Mekong
+flood season crests, yellow. The forward-looking warning fired on its first
+real day, on real weather.
+
+With this, every capability v1 of the site consumes now exists and updates
+itself nightly: fresh multi-hazard scores, river present + week outlook,
+trend histories, tier and data-quality honesty, people counts — all as
+static JSON. What remains is presentation (GitHub repo → Replit build, per
+the user's chosen path).
+
 ---
 
 ## Open / not yet done
