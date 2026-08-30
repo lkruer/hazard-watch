@@ -447,6 +447,41 @@ def render_validation(v):
             'Dec 2007 (closed I-5) scores the 100.0th percentile, Nooksack Nov 2021 the '
             '98.8th &mdash; both auto-alert with compound rain+river flags. Coverage grows '
             'by 6&deg; tile on demand, cached forever.</p></section>')
+    wd = sorted((RUNS.parent.parent / "data" / "processed" / "world").glob("*/summary.json")) \
+        if (RUNS.parent.parent / "data" / "processed" / "world").exists() else []
+    if wd:
+        import json as _json
+        latest = _json.loads(wd[-1].read_text(encoding="utf-8"))
+        drows = []
+        for d in wd[-4:]:
+            sm = _json.loads(d.read_text(encoding="utf-8"))
+            cells = ", ".join(
+                f'{k.split("_")[0]}: {v.get("cells", 0):,} cells'
+                + (f' / {v["people"]/1e6:.0f}M people' if v.get("people") else "")
+                for k, v in sm.items() if isinstance(v, dict) and "cells" in v)
+            drows.append(f'<tr><td><code>{E(sm.get("date", d.parent.name))}</code></td>'
+                         f'<td class="sm">{cells}</td></tr>')
+        cards.append(
+            '<section class="card"><h2>Planetary engine &mdash; score any date, whole Earth</h2>'
+            '<p class="empty" style="margin-bottom:12px">NASA publishes the entire POWER daily '
+            'archive as a public Zarr store on S3 (D26) &mdash; the same MERRA-2 data every '
+            'validation used. One 30&nbsp;GB pass reduced 25 years of planetary history to '
+            'fortnightly quantile ladders (2.95&nbsp;GB); <code>serve/score_world.py</code> then '
+            'scores all 9 signals for any date in minutes, with alerts denominated in people '
+            '(D28). <strong>Parity gate:</strong> world fields must agree with the validated '
+            'point pipelines &mdash; final mean |&Delta;| <strong>0.057, PASS</strong>, after '
+            'the gate caught three real defects (a backwards KBDI climate normalizer, ladder '
+            'quantization that made the &ge;0.98 rain gate unreachable, off-grid sampling). '
+            '<strong>History test:</strong> on 2022-08-28, Sindh reads the 99.9th rain '
+            'percentile and <strong>44.7M people</strong> sit under the extreme-rain flag in '
+            'the Pakistan box &mdash; the real flood, at its real scale, on its real date.</p>'
+            '<div class="tablewrap"><table class="grid"><thead><tr><th>Scored date</th>'
+            '<th>Alert summary</th></tr></thead><tbody>' + "".join(drows)
+            + '</tbody></table></div>'
+            '<p class="sm muted" style="margin-top:10px">Flood rides its own store: '
+            'priority-basin queue (Ganges live &mdash; Dhaka June-2022 flood reads 98.3rd '
+            'flow percentile, alert fires; Mekong next; eight more queued). World maps: '
+            '<code>reports/render_world.py</code>.</p></section>')
     return "".join(cards)
 
 

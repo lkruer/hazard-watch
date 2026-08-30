@@ -51,10 +51,72 @@ def _monthly(times, vals) -> dict[str, float]:
     return dict(out)
 
 
+RECENT_DAYS = 120
+
+
+def _recent_disagree(c, mp_all) -> dict:
+    """Compare the FRESHEST window specifically. Freetown forced this: POWER
+    and ERA5 agree over 2016-2023 (corr 0.9+) yet diverge 7x in Jun-Jul 2026
+    (145 vs 1,011 mm) -- recent months are where archives fail first, and a
+    live product leans on exactly those months."""
+    import datetime as _dt
+    end = max(mp_all) + "-28"
+    start = (_dt.date.fromisoformat(end) - _dt.timedelta(days=RECENT_DAYS)).isoformat()
+    p_recent = sum(v for m, v in mp_all.items() if m >= start[:7])
+    try:
+        r = SESSION.get(ERA5, params={
+            "latitude": c[0], "longitude": c[1],
+            "start_date": start, "end_date": end,
+            "daily": "precipitation_sum", "timezone": "UTC"}, timeout=120)
+        if r.status_code != 200:
+            return {"recent": "unverified"}
+        e_recent = sum(v or 0 for v in r.json()["daily"]["precipitation_sum"])
+    except Exception:                                       # noqa: BLE001
+        return {"recent": "unverified"}
+    hi = max(p_recent, e_recent)
+    if hi < 30.0:
+        return {"recent": "ok", "recent_power_mm": round(p_recent),
+                "recent_era5_mm": round(e_recent)}
+    ratio = (p_recent + 1.0) / (e_recent + 1.0)
+    verdict = "ok" if 0.4 <= ratio <= 2.5 else "disagree"
+    return {"recent": verdict, "recent_power_mm": round(p_recent),
+            "recent_era5_mm": round(e_recent),
+            "recent_ratio": round(ratio, 3)}
+
+
+def recent_vs_era5(lat: float, lon: float, end_date: str,
+                   power_mm: float, days: int = RECENT_DAYS) -> dict:
+    """Compare a caller-supplied recent POWER total against ERA5 for the SAME
+    window. The caller must supply the POWER side because there are two POWER
+    access paths -- the point cache ends 2024-12-31 while the zarr archive is
+    live -- and a freshness check against the stale path verifies nothing
+    (that miss hid Freetown's 7x divergence on first try)."""
+    import datetime as _dt
+    start = (_dt.date.fromisoformat(end_date)
+             - _dt.timedelta(days=days)).isoformat()
+    try:
+        r = SESSION.get(ERA5, params={
+            "latitude": lat, "longitude": lon,
+            "start_date": start, "end_date": end_date,
+            "daily": "precipitation_sum", "timezone": "UTC"}, timeout=120)
+        if r.status_code != 200:
+            return {"recent": "unverified"}
+        e_mm = sum(v or 0 for v in r.json()["daily"]["precipitation_sum"])
+    except Exception:                                       # noqa: BLE001
+        return {"recent": "unverified"}
+    if max(power_mm, e_mm) < 30.0:
+        return {"recent": "ok", "recent_power_mm": round(power_mm),
+                "recent_era5_mm": round(e_mm)}
+    ratio = (power_mm + 1.0) / (e_mm + 1.0)
+    return {"recent": ("ok" if 0.4 <= ratio <= 2.5 else "disagree"),
+            "recent_power_mm": round(power_mm), "recent_era5_mm": round(e_mm),
+            "recent_ratio": round(ratio, 3)}
+
+
 def check(lat: float, lon: float) -> dict:
     """Agreement verdict for the POWER precip cell containing (lat, lon)."""
     c = nasapower.cell(lat, lon)
-    cache = PQ_DIR / f"{c[0]:+06.1f}_{c[1]:+07.1f}.json"
+    cache = PQ_DIR / f"pq2_{c[0]:+06.1f}_{c[1]:+07.1f}.json"
     if cache.exists():
         try:
             return json.loads(cache.read_text(encoding="utf-8"))
@@ -88,8 +150,11 @@ def check(lat: float, lon: float) -> dict:
         return {"verdict": "unverified", "detail": "insufficient overlap"}
     corr = float(np.corrcoef(a, b)[0, 1]) if a.std() > 0 and b.std() > 0 else 0.0
     ratio = float(a.sum() / b.sum())
-    verdict = "ok" if (corr >= 0.60 and 0.6 <= ratio <= 1.6) else "disagree"
-    out = {"verdict": verdict, "corr_monthly": round(corr, 3),
+    longrun_ok = (corr >= 0.60 and 0.6 <= ratio <= 1.6)
+    rec = _recent_disagree(c, mp)
+    verdict = ("disagree" if (not longrun_ok or rec.get("recent") == "disagree")
+               else "ok")
+    out = {"verdict": verdict, **rec, "corr_monthly": round(corr, 3),
            "annual_ratio_power_over_era5": round(ratio, 3),
            "n_months": len(months),
            "detail": ("POWER and ERA5 agree here" if verdict == "ok" else

@@ -905,6 +905,41 @@ Also: the compressed 1.3 GB window cache failed silently (uncompressed now),
 and highlighted extremes prefer populated cells — POWER covers ocean, and an
 empty Southern Ocean cell is not a useful "most extreme" example.
 
+## D31 — The heartbeat: latest-edge snapshot, city watchlist, and freshness
+
+The platform now has its operational rhythm: `score_world --date <latest>` +
+`serve/watchlist.py` — 50 exposed metros across every regime, weather
+percentiles from the world fields, river state where basins are cached,
+`people_10km` on every row, one static JSON.
+
+Building it surfaced the sharpest data lesson of the project. Freetown read
+rain30d = 0.00 at the height of monsoon season. Not a NaN cell, not
+quantization: NASA POWER's archive genuinely claims ~145 mm fell in Jun–Jul
+2026 where ERA5 reports **1,011 mm** — a 7× divergence in the freshest
+months, at a coast where the two sources agree well historically
+(corr 0.81 over 2016–2023). The long-run agreement check (D24) passed and
+verified nothing, twice over: first because agreement-then ≠ agreement-now,
+and second because the point-API cache ends in 2024, so a "recent" check
+against it compared the wrong era entirely.
+
+Fixes now in force:
+- `recent_vs_era5()` — the caller supplies the recent POWER total **from the
+  same zarr window the world engine scored**, compared against ERA5 for the
+  identical dates; ratio outside [0.4, 2.5] ⇒ disagree.
+- **Verify-on-alert** in the watchlist: any precip-derived flag triggers the
+  two-source check (long-run + freshness); on disagreement the flags move to
+  `unverified_flags` with `data_quality` naming the numbers. Freetown's
+  false drought_3mo + fire_weather are withheld, not served.
+- Coastal-cell snap (Freetown's peninsula is smaller than a 0.5° cell) and
+  flag hygiene on degenerate cells.
+
+Standing limits recorded: the GloFAS historical record ends 2024 (the
+watchlist's river column is honestly empty on 2026 dates until the forecast
+product is added); Ganges 2024 is pending upstream availability (20/21 years,
+fully servable). The principle now written into the architecture: **the
+freshest data — exactly what a live warning system depends on — is where
+archives fail first, so recency itself must be verified.**
+
 ---
 
 ## Open / not yet done
