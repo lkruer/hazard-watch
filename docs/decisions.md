@@ -724,6 +724,37 @@ uncached basin reports Tier C with "no discharge record cached yet", honestly.
 **All four of the brief's Tier-1 hazards are now live in the global scorer,
 each with its own independent public-data validation.**
 
+## D26 — The whole-world substrate: NASA POWER's public Zarr archive
+
+The user set the target: cover the whole world for every hazard. The blocker
+was arithmetic — the point API at ~2s/cell × ~65,000 land cells cannot paint
+a planet. The unlock: NASA publishes the **entire POWER daily archive**
+(MERRA-2, 0.5°×0.625°, 1981–present, all variables) as an anonymously
+readable Zarr store on AWS S3 (`s3://nasa-power/merra2/temporal/...`) — the
+same data the point API serves, so every validation done against the API
+carries over to bulk reads unchanged.
+
+Architecture built on it:
+
+- `pipelines/power_global.py` streams the store once in latitude bands and
+  reduces 25 years of daily history to **fortnightly 21-step quantile
+  ladders** per cell for every validated signal (rain3d/30d, spi90/180/365,
+  KBDI, VPD, tmax, wind). ~30 GB one-time pass → ~1–2 GB of lookup tables.
+- `serve/score_world.py --date D` then scores the planet in one ~400 MB
+  trailing-window pull + numpy: global percentile fields and alert masks per
+  hazard. `--parity` compares world fields to the point pipelines at
+  reference sites (pass bar: mean |Δ| ≤ 0.10) so planetary maps provably say
+  what the validations validated. `reports/render_world.py` draws the maps.
+- Flood cannot ride this store (discharge lives on EWDS) — its global path
+  stays the D25 tile queue, now running a ten-basin priority list ordered by
+  flood-exposed population (Ganges first).
+
+Build reliability notes: a rolling-window off-by-one killed the first pass
+(fixed with the prefix-sum form, brute-force verified); s3fs's async loop
+corrupts after ~20 GB streamed in one Windows process ("Token … different
+Context"), so the build runs under an auto-retry wrapper — bands are cached
+and each fresh process resumes where the last died.
+
 ---
 
 ## Open / not yet done
