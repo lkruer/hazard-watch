@@ -57,22 +57,31 @@ def _pred(bundle, feats: dict) -> float | None:
 def compose(loc: dict, w: dict) -> tuple[str, str]:
     """One dominant color + one plain sentence. Acute hazards outrank slow
     ones; data problems outrank silence."""
+    flood_p = w.get("flood_pctl")
+    # The river signal comes from GloFAS's own meteorology, not from the
+    # POWER series the quality gate audits -- so a flood red stands even
+    # where rain sources disagree. Khartoum forced this: the Nile at its
+    # seasonal record (1.00) was being served as "unknown".
+    if flood_p is not None and flood_p >= 0.98:
+        return "red", ("The river is exceptionally high for this time of "
+                       "year. Stay aware of water levels and local warnings.")
     if w.get("data_quality") == "disagree":
-        return "unknown", ("Weather sources disagree here right now, so no "
-                           "score is trustworthy. Treat conditions as unknown "
-                           "and rely on local guidance.")
+        extra = ""
+        if flood_p is not None and flood_p >= 0.95:
+            extra = (" The river, measured independently, IS running high -- "
+                     "watch water levels.")
+        return "unknown", ("Rainfall sources disagree here right now, so "
+                           "rain-based scores are not trustworthy. Treat "
+                           "those as unknown and rely on local guidance."
+                           + extra)
     rain = max(w.get("rain3d_pctl") or 0, w.get("rain30d_pctl") or 0)
     susc = loc.get("susceptibility_nearby_max") or 0
     fire_a = w.get("fire_alert")
-    flood_p = w.get("flood_pctl")
 
     if rain >= 0.98 and susc >= 0.30:
         return "red", ("Rain here is extreme for this time of year and the "
                        "slopes nearby are the kind that fail. Be careful on "
                        "and below steep ground.")
-    if flood_p is not None and flood_p >= 0.98:
-        return "red", ("The river is exceptionally high for this time of "
-                       "year. Stay aware of water levels and local warnings.")
     if fire_a:
         return "red", ("Fire weather is dangerous today: unusually hot, dry "
                        "conditions. A fire that starts can spread fast.")

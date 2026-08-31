@@ -3,10 +3,10 @@
  "name": "Khartoum, Sudan",
  "lat": 15.5,
  "lon": 32.56,
- "status": "unknown",
- "message": "Weather sources disagree here right now, so no score is trustworthy. Treat conditions as unknown and rely on local guidance.",
+ "status": "red",
+ "message": "The river is exceptionally high for this time of year. Stay aware of water levels and local warnings.",
  "as_of": "2026-08-28",
- "generated_at": "2026-08-31T09:07:16",
+ "generated_at": "2026-08-31T09:12:09",
  "weather": {
   "rain3d_pctl": 0.351,
   "rain30d_pctl": 0.331,

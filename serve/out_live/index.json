@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-31T09:07:16",
+ "generated_at": "2026-08-31T09:12:09",
  "locations": [
   {
    "location_id": "wh0r3he",
@@ -106,7 +106,7 @@
   {
    "location_id": "sdz0hvt",
    "name": "Khartoum, Sudan",
-   "status": "unknown",
+   "status": "red",
    "as_of": "2026-08-28"
   }
  ]

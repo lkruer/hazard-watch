@@ -6,7 +6,7 @@
  "status": "yellow",
  "message": "Worth watching: the river is running high; the river is forecast to run exceptionally high around 2026-09-05. Not an alert, but conditions are unusual.",
  "as_of": "2026-08-28",
- "generated_at": "2026-08-31T08:52:52",
+ "generated_at": "2026-08-31T09:09:05",
  "weather": {
   "rain3d_pctl": 0.73,
   "rain30d_pctl": 0.469,
