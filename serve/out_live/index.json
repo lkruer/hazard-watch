@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-31T09:12:09",
+ "generated_at": "2026-08-31T21:16:54",
  "locations": [
   {
    "location_id": "wh0r3he",
@@ -22,7 +22,7 @@
   {
    "location_id": "c23nb74",
    "name": "Seattle, USA",
-   "status": "yellow",
+   "status": "green",
    "as_of": "2026-08-28"
   },
   {
@@ -58,7 +58,7 @@
   {
    "location_id": "w3g1p1f",
    "name": "Can Tho, Vietnam",
-   "status": "yellow",
+   "status": "green",
    "as_of": "2026-08-28"
   },
   {
@@ -88,25 +88,25 @@
   {
    "location_id": "9ypzyyg",
    "name": "Memphis, USA",
-   "status": "yellow",
+   "status": "green",
    "as_of": "2026-08-28"
   },
   {
    "location_id": "w4rqqbv",
    "name": "Bangkok, Thailand",
-   "status": "red",
+   "status": "green",
    "as_of": "2026-08-28"
   },
   {
    "location_id": "w4urvp4",
    "name": "Yangon, Myanmar",
-   "status": "yellow",
+   "status": "green",
    "as_of": "2026-08-28"
   },
   {
    "location_id": "sdz0hvt",
    "name": "Khartoum, Sudan",
-   "status": "red",
+   "status": "unknown",
    "as_of": "2026-08-28"
   }
  ]
