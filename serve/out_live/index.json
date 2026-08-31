@@ -1,65 +1,113 @@
 {
- "generated_at": "2026-08-30T14:09:17",
+ "generated_at": "2026-08-31T09:07:16",
  "locations": [
   {
    "location_id": "wh0r3he",
    "name": "Dhaka, Bangladesh",
    "status": "green",
-   "as_of": "2026-08-27"
+   "as_of": "2026-08-28"
   },
   {
    "location_id": "tuuttw2",
    "name": "Kathmandu, Nepal",
    "status": "red",
-   "as_of": "2026-08-27"
+   "as_of": "2026-08-28"
   },
   {
    "location_id": "e9w84zw",
    "name": "Freetown, Sierra Leone",
    "status": "unknown",
-   "as_of": "2026-08-27"
+   "as_of": "2026-08-28"
   },
   {
    "location_id": "c23nb74",
    "name": "Seattle, USA",
    "status": "yellow",
-   "as_of": "2026-08-27"
+   "as_of": "2026-08-28"
   },
   {
    "location_id": "c20dzqw",
    "name": "Portland West Hills, USA",
    "status": "green",
-   "as_of": "2026-08-27"
+   "as_of": "2026-08-28"
   },
   {
    "location_id": "d34789f",
    "name": "Medellin, Colombia",
    "status": "unknown",
-   "as_of": "2026-08-27"
+   "as_of": "2026-08-28"
   },
   {
    "location_id": "6mpd1wj",
    "name": "La Paz, Bolivia",
    "status": "unknown",
-   "as_of": "2026-08-27"
+   "as_of": "2026-08-28"
   },
   {
    "location_id": "wm7b0t5",
    "name": "Chongqing, China",
    "status": "green",
-   "as_of": "2026-08-27"
+   "as_of": "2026-08-28"
   },
   {
    "location_id": "kv0yhmw",
    "name": "Blantyre, Malawi",
    "status": "green",
-   "as_of": "2026-08-27"
+   "as_of": "2026-08-28"
   },
   {
    "location_id": "w3g1p1f",
    "name": "Can Tho, Vietnam",
    "status": "yellow",
-   "as_of": "2026-08-27"
+   "as_of": "2026-08-28"
+  },
+  {
+   "location_id": "tsbvx4t",
+   "name": "Sukkur, Pakistan",
+   "status": "unknown",
+   "as_of": "2026-08-28"
+  },
+  {
+   "location_id": "wt3q10w",
+   "name": "Wuhan, China",
+   "status": "green",
+   "as_of": "2026-08-28"
+  },
+  {
+   "location_id": "s43sb7r",
+   "name": "Niamey, Niger",
+   "status": "red",
+   "as_of": "2026-08-28"
+  },
+  {
+   "location_id": "u1hcy3k",
+   "name": "Cologne, Germany",
+   "status": "green",
+   "as_of": "2026-08-28"
+  },
+  {
+   "location_id": "9ypzyyg",
+   "name": "Memphis, USA",
+   "status": "yellow",
+   "as_of": "2026-08-28"
+  },
+  {
+   "location_id": "w4rqqbv",
+   "name": "Bangkok, Thailand",
+   "status": "red",
+   "as_of": "2026-08-28"
+  },
+  {
+   "location_id": "w4urvp4",
+   "name": "Yangon, Myanmar",
+   "status": "yellow",
+   "as_of": "2026-08-28"
+  },
+  {
+   "location_id": "sdz0hvt",
+   "name": "Khartoum, Sudan",
+   "status": "unknown",
+   "as_of": "2026-08-28"
   }
  ]
 }

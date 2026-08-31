@@ -1,0 +1,44 @@
+{
+ "location_id": "u1hcy3k",
+ "name": "Cologne, Germany",
+ "lat": 50.94,
+ "lon": 6.96,
+ "status": "green",
+ "message": "Nothing unusual for this location today.",
+ "as_of": "2026-08-28",
+ "generated_at": "2026-08-31T09:00:32",
+ "weather": {
+  "rain3d_pctl": 0.79,
+  "rain30d_pctl": 0.673,
+  "rain3d_mm": 11.3,
+  "spi90": 0.19,
+  "spi365": 0.336,
+  "p_severe_drought": 0.131,
+  "fire_danger": 0.107,
+  "fire_alert": false,
+  "fire_watch": false,
+  "kbdi": 213.0,
+  "fire_date": "2026-08-28",
+  "flood_pctl": 0.114,
+  "flood_m3s": 1032.8,
+  "flood_week_max_pctl": 0.172,
+  "flood_week_max_date": "2026-09-02",
+  "flood_source": "GloFAS operational forecast (init 2026-08-30)"
+ },
+ "static": {
+  "tier_susceptibility": "B",
+  "region_model": null,
+  "susceptibility": 0.1511,
+  "susceptibility_nearby_max": 0.2182,
+  "terrain": {
+   "slope_deg": 8.5,
+   "elev_m": 52.0,
+   "relief_m": 43.0
+  },
+  "people_10km": 1131225
+ },
+ "caveats": [
+  "percentiles vs this location's own 2004-present record",
+  "not an official warning; consult local authorities"
+ ]
+}

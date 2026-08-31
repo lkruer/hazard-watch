@@ -1,0 +1,44 @@
+{
+ "location_id": "s43sb7r",
+ "name": "Niamey, Niger",
+ "lat": 13.51,
+ "lon": 2.13,
+ "status": "red",
+ "message": "Fire weather is dangerous today: unusually hot, dry conditions. A fire that starts can spread fast.",
+ "as_of": "2026-08-28",
+ "generated_at": "2026-08-31T08:59:05",
+ "weather": {
+  "rain3d_pctl": 0.438,
+  "rain30d_pctl": 0.011,
+  "rain3d_mm": 11.8,
+  "spi90": 0.399,
+  "spi365": 0.318,
+  "p_severe_drought": 0.112,
+  "fire_danger": 0.507,
+  "fire_alert": true,
+  "fire_watch": true,
+  "kbdi": 210.0,
+  "fire_date": "2026-08-28",
+  "flood_pctl": 0.155,
+  "flood_m3s": 864.0,
+  "flood_week_max_pctl": 0.155,
+  "flood_week_max_date": "2026-08-31",
+  "flood_source": "GloFAS operational forecast (init 2026-08-30)"
+ },
+ "static": {
+  "tier_susceptibility": "B",
+  "region_model": null,
+  "susceptibility": 0.143,
+  "susceptibility_nearby_max": 0.143,
+  "terrain": {
+   "slope_deg": 0.6,
+   "elev_m": 222.0,
+   "relief_m": 12.0
+  },
+  "people_10km": 1542645
+ },
+ "caveats": [
+  "percentiles vs this location's own 2004-present record",
+  "not an official warning; consult local authorities"
+ ]
+}

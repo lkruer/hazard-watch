@@ -1,0 +1,57 @@
+{
+ "location_id": "sdz0hvt",
+ "name": "Khartoum, Sudan",
+ "lat": 15.5,
+ "lon": 32.56,
+ "status": "unknown",
+ "message": "Weather sources disagree here right now, so no score is trustworthy. Treat conditions as unknown and rely on local guidance.",
+ "as_of": "2026-08-28",
+ "generated_at": "2026-08-31T09:07:16",
+ "weather": {
+  "rain3d_pctl": 0.351,
+  "rain30d_pctl": 0.331,
+  "rain3d_mm": 1.5,
+  "spi90": 0.147,
+  "spi365": 0.345,
+  "p_severe_drought": 0.227,
+  "data_quality": "disagree",
+  "data_quality_reasons": [
+   "pattern corr 0.546",
+   "long-run ratio 5.023"
+  ],
+  "data_quality_detail": {
+   "corr_monthly": 0.546,
+   "annual_ratio_power_over_era5": 5.023,
+   "recent": "disagree",
+   "recent_power_mm": 53,
+   "recent_era5_mm": 5,
+   "recent_ratio": 8.89
+  },
+  "fire_danger": 0.245,
+  "fire_alert": false,
+  "fire_watch": false,
+  "kbdi": 690.0,
+  "fire_date": "2026-08-28",
+  "flood_pctl": 1.0,
+  "flood_m3s": 4800.0,
+  "flood_week_max_pctl": 1.0,
+  "flood_week_max_date": "2026-08-31",
+  "flood_source": "GloFAS operational forecast (init 2026-08-30)"
+ },
+ "static": {
+  "tier_susceptibility": "B",
+  "region_model": null,
+  "susceptibility": 0.0206,
+  "susceptibility_nearby_max": 0.1743,
+  "terrain": {
+   "slope_deg": 0.5,
+   "elev_m": 385.0,
+   "relief_m": 12.0
+  },
+  "people_10km": 1858432
+ },
+ "caveats": [
+  "percentiles vs this location's own 2004-present record",
+  "not an official warning; consult local authorities"
+ ]
+}

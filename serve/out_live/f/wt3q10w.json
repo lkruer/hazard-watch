@@ -1,0 +1,44 @@
+{
+ "location_id": "wt3q10w",
+ "name": "Wuhan, China",
+ "lat": 30.59,
+ "lon": 114.31,
+ "status": "green",
+ "message": "Nothing unusual for this location today.",
+ "as_of": "2026-08-28",
+ "generated_at": "2026-08-31T08:57:40",
+ "weather": {
+  "rain3d_pctl": 0.295,
+  "rain30d_pctl": 0.505,
+  "rain3d_mm": 0.7,
+  "spi90": 0.397,
+  "spi365": 0.778,
+  "p_severe_drought": 0.024,
+  "fire_danger": 0.219,
+  "fire_alert": false,
+  "fire_watch": false,
+  "kbdi": 393.0,
+  "fire_date": "2026-08-28",
+  "flood_pctl": 0.361,
+  "flood_m3s": 25501.0,
+  "flood_week_max_pctl": 0.541,
+  "flood_week_max_date": "2026-09-06",
+  "flood_source": "GloFAS operational forecast (init 2026-08-30)"
+ },
+ "static": {
+  "tier_susceptibility": "B",
+  "region_model": null,
+  "susceptibility": 0.0076,
+  "susceptibility_nearby_max": 0.1099,
+  "terrain": {
+   "slope_deg": 0.0,
+   "elev_m": 15.0,
+   "relief_m": 14.0
+  },
+  "people_10km": 5537939
+ },
+ "caveats": [
+  "percentiles vs this location's own 2004-present record",
+  "not an official warning; consult local authorities"
+ ]
+}

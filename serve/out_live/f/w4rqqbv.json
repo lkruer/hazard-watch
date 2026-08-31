@@ -1,0 +1,44 @@
+{
+ "location_id": "w4rqqbv",
+ "name": "Bangkok, Thailand",
+ "lat": 13.76,
+ "lon": 100.5,
+ "status": "red",
+ "message": "The river is exceptionally high for this time of year. Stay aware of water levels and local warnings.",
+ "as_of": "2026-08-28",
+ "generated_at": "2026-08-31T09:04:20",
+ "weather": {
+  "rain3d_pctl": 0.625,
+  "rain30d_pctl": 0.708,
+  "rain3d_mm": 25.0,
+  "spi90": 0.759,
+  "spi365": 0.679,
+  "p_severe_drought": 0.038,
+  "fire_danger": 0.034,
+  "fire_alert": false,
+  "fire_watch": false,
+  "kbdi": 56.0,
+  "fire_date": "2026-08-28",
+  "flood_pctl": 0.98,
+  "flood_m3s": 3846.7,
+  "flood_week_max_pctl": 0.98,
+  "flood_week_max_date": "2026-08-31",
+  "flood_source": "GloFAS operational forecast (init 2026-08-30)"
+ },
+ "static": {
+  "tier_susceptibility": "B",
+  "region_model": null,
+  "susceptibility": 0.1675,
+  "susceptibility_nearby_max": 0.3229,
+  "terrain": {
+   "slope_deg": 0.9,
+   "elev_m": 5.0,
+   "relief_m": 16.0
+  },
+  "people_10km": 4976029
+ },
+ "caveats": [
+  "percentiles vs this location's own 2004-present record",
+  "not an official warning; consult local authorities"
+ ]
+}
