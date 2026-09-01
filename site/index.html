@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hazard Watch — live natural-hazard status, anywhere on Earth</title>
+<meta name="description" content="Free, open, location-based natural hazard status: landslide, fire, drought and river conditions, updated daily from public data.">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0a0e14">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand__mark">hazard<span class="accent">·</span>watch</span>
+    <span class="brand__tag">live earth conditions</span>
+  </div>
+  <div class="topbar__spacer"></div>
+  <a class="navlink" href="about.html">About &amp; data</a>
+  <a class="navlink" href="https://github.com/lkruer/hazard-watch" rel="noopener">GitHub</a>
+</header>
+
+<div id="map" role="application" aria-label="World map of monitored locations"></div>
+
+<div class="strip" id="strip" aria-live="polite"></div>
+
+<aside class="rail" id="rail">
+  <div class="rail__head">
+    <span class="rail__title">Monitored locations</span>
+    <span class="rail__asof" id="asof">loading…</span>
+  </div>
+  <div class="rail__list" id="list">
+    <div class="skeleton">Loading live status…</div>
+  </div>
+</aside>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="js/app.js"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js").catch(function () {});
+}
+</script>
+</body>
+</html>

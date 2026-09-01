@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About &amp; data — Hazard Watch</title>
+<meta name="theme-color" content="#0a0e14">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="page">
+
+<header class="topbar">
+  <div class="brand">
+    <a href="index.html" style="text-decoration:none">
+      <span class="brand__mark">hazard<span class="accent">·</span>watch</span></a>
+    <span class="brand__tag">about &amp; data</span>
+  </div>
+  <div class="topbar__spacer"></div>
+  <a class="navlink" href="index.html">← Map</a>
+</header>
+
+<main class="prose">
+  <h1>What this is</h1>
+  <p>A free, open, location-based status board for the natural hazards that can
+  actually be anticipated: <b>rain-triggered landslides, fire-danger
+  conditions, drought, and river levels</b>. Pick a monitored spot and you get
+  one color, one plain sentence, and the numbers behind them — updated daily
+  from public data, built to work on cheap phones and weak connections.</p>
+
+  <p>It does <b>not</b> predict earthquakes or tsunamis. Nothing can; a
+  confident-looking number there would be a lie, so we don't show one.</p>
+
+  <h2>How the scores work</h2>
+  <p>Everything is compared to <i>that location's own history</i>, never an
+  absolute threshold — 40&nbsp;mm of rain is a wet week in Oregon and a
+  catastrophe in the Atacama. "98th percentile" means: for this place, at this
+  time of year, conditions like today happened only 2% of the time in the last
+  two decades. Slope danger comes from models trained on ~55,000 recorded
+  landslides across four continents; fire danger was checked against 49,000
+  real fires in two countries; drought agrees with expert US drought maps
+  ~80% of the time; river levels were validated against real river gauges.</p>
+
+  <h2>Honesty rules</h2>
+  <ul>
+    <li>Every model's accuracy — including its misses — is measured on data it
+    never saw, and published in the
+    <a href="https://github.com/lkruer/hazard-watch/blob/main/docs/decisions.md">decision log</a>.</li>
+    <li>When two independent weather sources disagree about a place, its
+    rain-based scores are <b>withheld</b>, not served wrong. You'll see
+    "data uncertain" with the reason.</li>
+    <li>A place with weak data still gets shown — with a lower confidence tier,
+    never with fake precision.</li>
+    <li>This is context, <b>not an official warning system</b>. Always follow
+    local authorities.</li>
+  </ul>
+
+  <h2>Data sources &amp; credit</h2>
+  <div class="card"><ul class="caveats">
+    <li><b>Weather:</b> NASA POWER (MERRA-2), public domain; cross-checked
+    against ERA5 via Open-Meteo (CC-BY 4.0, © ECMWF/Copernicus).</li>
+    <li><b>Landslide records:</b> NASA COOLR / Global Landslide Catalog
+    (open).</li>
+    <li><b>Terrain:</b> Copernicus DEM GLO-30 © DLR/ESA/Airbus, provided by
+    the European Union's Copernicus programme.</li>
+    <li><b>Rivers:</b> GloFAS river discharge © European Union,
+    Copernicus Emergency Management Service.</li>
+    <li><b>Fire records:</b> USDA FPA-FOD (public domain);
+    Canadian NFDB © Natural Resources Canada (open).</li>
+    <li><b>Drought truth:</b> U.S. Drought Monitor (NDMC/USDA/NOAA, open).</li>
+    <li><b>Population:</b> GHS-POP R2023A © European Union 1995–2026,
+    CC-BY 4.0 (Global Human Settlement Layer, JRC). Values shown are
+    aggregates derived from it.</li>
+    <li><b>Soil (evaluated):</b> SoilGrids © ISRIC, CC-BY 4.0.</li>
+    <li><b>Roads:</b> © OpenStreetMap contributors, ODbL.</li>
+    <li><b>Map imagery:</b> © Esri — Source: Esri, Maxar, Earthstar
+    Geographics; labels © Esri.</li>
+  </ul></div>
+
+  <h2>Limits, stated plainly</h2>
+  <ul>
+    <li>Weather-based scores lag ~3 days behind real time (source latency).</li>
+    <li>Wind-driven fire events are under-detected — coarse daily wind data
+    can't see downslope windstorms. Measured, documented.</li>
+    <li>Dam-regulated rivers (e.g. the Columbia) follow turbine schedules no
+    natural-flow model can know.</li>
+    <li>Landslide types with no surface signature (deep-seated failures like
+    Oso 2014) need geology data that isn't openly available at usable
+    resolution yet.</li>
+  </ul>
+
+  <h2>Open everything</h2>
+  <p>Code, models, validations, and the full decision history live at
+  <a href="https://github.com/lkruer/hazard-watch">github.com/lkruer/hazard-watch</a>.
+  Every input dataset is public; every accuracy claim is reproducible from the
+  repository.</p>
+
+  <footer class="sitefoot">hazard·watch — built to help, honestly.</footer>
+</main>
+</body>
+</html>

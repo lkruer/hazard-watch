@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Location report — Hazard Watch</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0a0e14">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="page">
+
+<header class="topbar">
+  <div class="brand">
+    <a href="index.html" style="text-decoration:none">
+      <span class="brand__mark">hazard<span class="accent">·</span>watch</span></a>
+    <span class="brand__tag">location report</span>
+  </div>
+  <div class="topbar__spacer"></div>
+  <a class="navlink" href="index.html">← Map</a>
+  <a class="navlink" href="about.html">About</a>
+</header>
+
+<main class="sheet" id="sheet">
+  <div class="skeleton">Loading report…</div>
+</main>
+
+<script src="js/location.js"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js").catch(function () {});
+}
+</script>
+</body>
+</html>

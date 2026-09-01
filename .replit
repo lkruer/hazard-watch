@@ -1,0 +1,5 @@
+run = "python -m http.server 8000"
+entrypoint = "site/index.html"
+
+[deployment]
+run = ["python", "-m", "http.server", "8000"]
