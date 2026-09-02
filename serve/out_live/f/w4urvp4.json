@@ -5,20 +5,20 @@
  "lon": 96.2,
  "status": "green",
  "message": "Nothing unusual for this location today.",
- "as_of": "2026-08-28",
- "generated_at": "2026-09-01T13:52:22",
+ "as_of": "2026-08-30",
+ "generated_at": "2026-09-02T13:53:21",
  "weather": {
-  "rain3d_pctl": 0.937,
-  "rain30d_pctl": 0.889,
-  "rain3d_mm": 63.9,
-  "spi90": 0.961,
+  "rain3d_pctl": 0.889,
+  "rain30d_pctl": 0.919,
+  "rain3d_mm": 55.1,
+  "spi90": 0.979,
   "spi365": 0.999,
   "p_severe_drought": 0.001,
-  "fire_danger": 0.031,
+  "fire_danger": 0.011,
   "fire_alert": false,
   "fire_watch": false,
   "kbdi": 24.0,
-  "fire_date": "2026-08-28"
+  "fire_date": "2026-08-30"
  },
  "static": {
   "tier_susceptibility": "B",
