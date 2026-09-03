@@ -6,9 +6,9 @@
  "status": "green",
  "message": "Nothing unusual for this location today.",
  "as_of": "2026-08-30",
- "generated_at": "2026-09-02T13:53:16",
+ "generated_at": "2026-09-03T13:52:53",
  "weather": {
-  "rain3d_pctl": 0.723,
+  "rain3d_pctl": 0.724,
   "rain30d_pctl": 0.621,
   "rain3d_mm": 11.2,
   "spi90": 0.454,
