@@ -2,10 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Location report — Hazard Watch</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0a0e14">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
@@ -28,6 +30,7 @@
   <div class="skeleton">Loading report…</div>
 </main>
 
+<script src="js/labels.js"></script>
 <script src="js/location.js"></script>
 <script>
 if ("serviceWorker" in navigator) {

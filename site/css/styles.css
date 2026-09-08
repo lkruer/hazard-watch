@@ -9,7 +9,7 @@
   --panel-border: rgba(255, 255, 255, 0.09);
   --text: #e9eef6;
   --dim: #9aa7b8;
-  --faint: #63707f;
+  --faint: #8592a3;   /* 5.7:1 on panel — quiet, but still WCAG AA */
   --accent: #3ec2d4;
   --green: #37c47e;
   --yellow: #ecc23f;
@@ -125,7 +125,7 @@ button { font: inherit; cursor: pointer; }
 .locrow .dot { width: 11px; height: 11px; border-radius: 50%; justify-self: center; }
 .locrow__name { font-size: 14px; font-weight: 500; line-height: 1.25;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.locrow__sub { font-size: 11.5px; color: var(--faint); }
+.locrow__sub { font-size: 11.5px; color: var(--dim); }
 .locrow__people { font-size: 11px; color: var(--dim);
   font-family: "IBM Plex Mono", monospace; white-space: nowrap; }
 
@@ -135,18 +135,21 @@ button { font: inherit; cursor: pointer; }
 .dot--red { background: var(--red); }
 .dot--unknown { background: transparent; border: 2px solid var(--unknown); }
 
-/* map markers (divIcon) */
-.marker { position: relative; width: 18px; height: 18px; }
+/* map markers (divIcon) — 44px invisible hit area, ~22px painted disc.
+   Dual-contrast ringing (light inner ring + dark keyline) keeps markers
+   readable over bright desert and dark forest imagery alike. */
+.marker { position: relative; width: 44px; height: 44px; }
 .marker__core {
-  position: absolute; inset: 3px; border-radius: 50%;
-  border: 2px solid rgba(6, 9, 13, 0.9);
-  box-shadow: 0 1px 6px rgba(0,0,0,.6);
+  position: absolute; inset: 11px; border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.92);
+  box-shadow: 0 0 0 1.5px rgba(0, 0, 0, 0.55), 0 1px 6px rgba(0, 0, 0, 0.6);
 }
 .marker--green .marker__core { background: var(--green); }
 .marker--yellow .marker__core { background: var(--yellow); }
 .marker--red .marker__core { background: var(--red); }
-.marker--unknown .marker__core { background: #2a3340; border-color: var(--unknown); }
-.marker__pulse { position: absolute; inset: 0; border-radius: 50%; opacity: 0; }
+.marker--unknown .marker__core { background: var(--unknown);
+  border-style: dashed; }
+.marker__pulse { position: absolute; inset: 11px; border-radius: 50%; opacity: 0; }
 .marker--red .marker__pulse { background: var(--red); animation: pulse 1.8s ease-out infinite; }
 .marker--yellow .marker__pulse { background: var(--yellow); animation: pulse 2.6s ease-out infinite; }
 @keyframes pulse {
@@ -166,21 +169,53 @@ button { font: inherit; cursor: pointer; }
 }
 .leaflet-popup-tip { background: var(--panel-solid); }
 .pop { min-width: 220px; }
-.pop__status { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.pop__status { display: flex; align-items: center; gap: 8px; margin-bottom: 2px; }
 .pop__status .dot { width: 10px; height: 10px; border-radius: 50%; }
 .pop__name { font-weight: 600; font-size: 15px; }
-.pop__msg { font-size: 12.5px; color: var(--dim); margin: 4px 0 10px; }
+.pop__word { font-size: 12px; font-weight: 600; letter-spacing: .05em;
+  text-transform: uppercase; margin-bottom: 4px; }
+.pop__word--green { color: var(--green); }
+.pop__word--yellow { color: var(--yellow); }
+.pop__word--red { color: var(--red); }
+.pop__word--unknown { color: var(--unknown); }
+.pop__msg { font-size: 12.5px; color: var(--dim); margin: 4px 0 8px; }
+.pop__meta { font-size: 11px; color: var(--faint);
+  font-family: "IBM Plex Mono", monospace; margin-bottom: 10px; }
+.pop__near { font-size: 12px; color: var(--dim); margin-bottom: 10px; }
 .pop a.btn {
   display: inline-block; background: var(--accent); color: #06232a;
   font-weight: 600; font-size: 12.5px; padding: 7px 12px; border-radius: 8px;
 }
 .pop a.btn:hover { text-decoration: none; filter: brightness(1.08); }
 
-/* mobile: rail becomes a bottom sheet */
+/* rail intro + mobile collapse handle */
+.rail__intro { padding: 9px 16px 10px; font-size: 12px; color: var(--dim);
+  line-height: 1.5; border-bottom: 1px solid var(--panel-border); }
+.rail__handle { display: none; }
+
+/* mobile: rail becomes a collapsible bottom sheet that never covers the
+   attribution or zoom controls */
 @media (max-width: 720px) {
   .rail { top: auto; left: 0; right: 0; bottom: 0; width: 100%;
-    max-height: 46vh; border-radius: 16px 16px 0 0; }
+    max-height: 46vh; max-height: 46dvh; border-radius: 16px 16px 0 0;
+    transition: max-height .25s ease; }
+  .rail__list { padding-bottom: calc(6px + env(safe-area-inset-bottom)); }
+  .rail__handle { display: block; width: 100%; padding: 8px 0 4px;
+    background: transparent; border: 0; }
+  .rail__handle::before { content: ""; display: block; width: 44px;
+    height: 4px; border-radius: 2px; margin: 0 auto;
+    background: rgba(255, 255, 255, .28); }
+  body.rail-collapsed .rail { max-height: 92px; }
+  body.rail-collapsed .rail__intro,
+  body.rail-collapsed .rail__list { display: none; }
+  .leaflet-bottom { bottom: 46vh; bottom: 46dvh; margin-bottom: 6px; }
+  body.rail-collapsed .leaflet-bottom { bottom: 92px; }
   .strip { top: 56px; }
+  /* topbar: brand + links fit one line on small phones */
+  .topbar { gap: 8px; padding: 10px 12px; }
+  .brand__tag { display: none; }
+  .brand__mark { font-size: 15px; }
+  .topbar a.navlink { font-size: 12px; padding: 6px 7px; white-space: nowrap; }
 }
 
 /* ---------- location page ---------- */
@@ -219,16 +254,20 @@ button { font: inherit; cursor: pointer; }
 
 .hero__msg { font-size: 17px; line-height: 1.6; margin: 14px 0 4px; max-width: 58ch; }
 .hero__meta { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 12px;
-  font-size: 12px; color: var(--faint); }
-.hero__meta b { color: var(--dim); font-weight: 500; }
+  font-size: 12px; color: var(--dim); }
+.hero__meta b { color: var(--text); font-weight: 500; }
+/* the one filled-accent control on the page: primary for the core audience */
 .listen {
   margin-top: 16px; display: inline-flex; align-items: center; gap: 9px;
-  background: rgba(255,255,255,.07); color: var(--text);
-  border: 1px solid var(--panel-border); border-radius: 10px; padding: 9px 15px;
-  font-size: 13.5px;
+  background: var(--accent); color: #06232a; font-weight: 600;
+  border: 1px solid transparent; border-radius: 10px; padding: 12px 20px;
+  font-size: 15px; min-height: 44px;
 }
-.listen:hover { background: rgba(255,255,255,.11); }
-.listen[data-speaking="1"] { border-color: var(--accent); color: var(--accent); }
+.listen:hover { filter: brightness(1.08); }
+.listen[data-speaking="1"] {
+  background: rgba(62, 194, 212, 0.12); color: var(--accent);
+  border-color: var(--accent);
+}
 
 .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
 .card {
@@ -237,22 +276,33 @@ button { font: inherit; cursor: pointer; }
 }
 .card h3 { margin: 0 0 4px; font-size: 12px; font-weight: 600;
   letter-spacing: .08em; text-transform: uppercase; color: var(--dim); }
-.card .big { font-size: 26px; font-weight: 500; font-family: "IBM Plex Mono", monospace; }
-.card .sub { font-size: 12px; color: var(--faint); margin-top: 2px; }
-.bar { height: 6px; border-radius: 4px; background: rgba(255,255,255,.08);
-  margin-top: 12px; overflow: hidden; }
-.bar > i { display: block; height: 100%; border-radius: 4px;
-  background: linear-gradient(90deg, var(--green), var(--yellow) 62%, var(--red) 92%); }
-.bar--drought > i { background: linear-gradient(90deg, var(--red), var(--yellow) 30%, var(--green) 60%); }
+.card .verdict { font-size: 15px; font-weight: 600; margin: 2px 0 6px; }
+.verdict--green { color: var(--green); }
+.verdict--yellow { color: var(--yellow); }
+.verdict--red { color: var(--red); }
+.verdict--unknown { color: var(--unknown); }
+.card .big { font-size: 24px; font-weight: 500; font-family: "IBM Plex Mono", monospace; }
+.card .biglabel { font-family: "IBM Plex Sans", sans-serif; font-size: 12px;
+  color: var(--faint); font-weight: 400; }
+.card .sub { font-size: 12px; color: var(--dim); margin-top: 4px; }
+.card .warn { color: var(--yellow); }
+/* the ramp is pinned to the full track and clipped to the value, so the
+   fill's TIP color honestly reflects severity (a 20% bar ends green) */
+.bar { position: relative; height: 6px; border-radius: 4px;
+  background: rgba(255,255,255,.08); margin-top: 12px; overflow: hidden; }
+.bar > i { position: absolute; inset: 0;
+  background: linear-gradient(90deg, var(--green), var(--yellow) 62%, var(--red) 92%);
+  clip-path: inset(0 calc(100% - var(--w, 0%)) 0 0 round 4px); }
 
 .trend { padding-bottom: 10px; }
 .trend svg { width: 100%; height: auto; display: block; }
+#trendbox { min-height: 100px; }
 .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 8px;
   font-size: 11.5px; color: var(--dim); }
 .legend i { display: inline-block; width: 14px; height: 3px; border-radius: 2px;
   margin-right: 5px; vertical-align: middle; }
 
-.caveats { font-size: 12.5px; color: var(--faint); line-height: 1.7; }
+.caveats { font-size: 12.5px; color: var(--dim); line-height: 1.7; }
 .caveats li { margin-bottom: 4px; }
 .qnote {
   border-left: 3px solid var(--unknown); background: var(--unknown-soft);
@@ -267,7 +317,13 @@ button { font: inherit; cursor: pointer; }
 .prose p, .prose li { color: #c8d2de; font-size: 14.5px; }
 .prose .card { margin-top: 10px; }
 
-.skeleton { color: var(--faint); padding: 40px; text-align: center; }
+.skeleton { color: var(--dim); padding: 40px; text-align: center;
+  line-height: 2; }
+button.btn.retry {
+  background: var(--accent); color: #06232a; font-weight: 600;
+  border: 0; border-radius: 8px; padding: 8px 16px; font-size: 13px;
+  margin-top: 10px;
+}
 footer.sitefoot {
   margin-top: 26px; text-align: center; font-size: 11.5px; color: var(--faint);
 }

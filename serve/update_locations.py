@@ -278,8 +278,12 @@ def main() -> None:
     for loc in reg["locations"]:
         r = update_one(loc, trig_b, fire_b, drought_b,
                        fire_thr, fire_watch_thr, stack_of(loc))
-        index.append({k: r[k] for k in ("location_id", "name", "status",
-                                        "as_of")})
+        # index rows carry enough for the map's first paint (markers, rail,
+        # popups) so the site needs exactly ONE fetch before it renders
+        index.append({**{k: r[k] for k in ("location_id", "name", "status",
+                                           "as_of", "lat", "lon", "message")},
+                      "people_10km": r["static"].get("people_10km"),
+                      "staleness_days": r["weather"].get("staleness_days")})
         print(f"  {r['status']:<8} {r['name']:<28} as of {r['as_of']}  "
               f"{r['message'][:58]}")
     (OUT / "index.json").write_text(json.dumps(

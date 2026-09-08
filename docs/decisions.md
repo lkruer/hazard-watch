@@ -1003,6 +1003,67 @@ trend histories, tier and data-quality honesty, people counts — all as
 static JSON. What remains is presentation (GitHub repo → Replit build, per
 the user's chosen path).
 
+## D34 — When the primary feed stalls, bridge it — with the bias the pair taught us
+
+D31 predicted this failure and 2026-09-08 delivered it: NASA POWER's point
+API froze at 2026-08-30 while the nightly cron kept committing — nine days
+of "fresh" runs faithfully serving nine-day-old weather. Everything worked;
+the input had silently stopped. ERA5T (Open-Meteo archive) was current
+through *the same day* we checked.
+
+The fix reuses the platform's own epistemology rather than inventing new
+trust. `combine_verdict` already established that constant multiplicative
+bias between POWER and ERA5 is harmless to percentile products — only story
+changes are fatal. So when POWER's tail lags more than 5 days, `fresh.py`
+now fills **trailing days only** from ERA5, corrected by the pair's own
+2025+ overlap at that exact cell: a ratio for precip and wind (the wind
+ratio ~0.2 silently absorbs km/h→m/s *and* 10 m→2 m), an additive offset
+for tmax and RH. Mid-history gaps stay absent — the climatology every
+percentile ranks against remains pure POWER. In normal operation (lag ≤ 5
+days) the series stays single-source.
+
+Two honesty rules rode along, both cheap now and expensive to retrofit:
+acute *alerts* (fire red, rain-red) require data ≤ 7 days old — a
+present-tense claim needs present-tense evidence, and a stale rain-red
+degrades to a watch that states its age; and the served JSON says exactly
+what happened (`rain_tail_source`, `staleness_days`, dynamic caveats).
+
+The restored board immediately asserted something: Chongqing red, fire.
+Verified against raw inputs before shipping — 37 °C (90th pctl), RH at the
+*4th* percentile for season, VPD 94th, nine rain-free days: the 2022
+Chongqing fire pattern, arriving through the backup feed. First day back
+and the bridge carried a real warning.
+
+## D35 — The site earns the same scrutiny as the models
+
+A six-lens review (visual craft, UX/content, accessibility, mobile,
+robustness, map experience) with adversarial verification upheld 22 findings
+— several the kind that would have quietly betrayed the product's values:
+
+- The drought card's big number was a *rain* percentile under the word
+  "Drought" — 89% displayed in a wet month read as "89% drought". Cards now
+  lead with plain-word verdicts ("No drought", "Severe drought") and every
+  number points the same direction as its title.
+- The severity-bar gradient spanned the *fill* element, so a severe-drought
+  sliver rendered with a green tip. The ramp is now pinned to the full track
+  and clipped to the value — the tip color is the severity.
+- Offline, every location page 404'd (`caches.match` never ignored `?id=`),
+  the shell cache never invalidated (deploys silently never reached
+  returning users), and Leaflet wasn't cached at all. The worker is now
+  versioned, vendors Leaflet locally, and serves any report offline.
+- The hardcoded "lags ~3 days" copy contradicted the very staleness field
+  the pipeline now publishes. Freshness is computed from the data, and the
+  ERA5 gap-fill provenance is shown in each report's Notes.
+- One fetch now paints the whole map (index.json carries coordinates,
+  status, message, population), markers are 44 px tap targets stacked by
+  severity, `fitBounds` frames the actual network — with a guard for the
+  0×0-container degenerate case (background/hidden launches) that testing
+  itself uncovered.
+
+The pattern worth keeping: the review only paid off because every finding
+was verified against the real files before a line changed — same rule as
+the models, where nothing ships on plausibility alone.
+
 ---
 
 ## Open / not yet done
