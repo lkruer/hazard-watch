@@ -77,11 +77,20 @@ def compose(loc: dict, w: dict) -> tuple[str, str]:
     rain = max(w.get("rain3d_pctl") or 0, w.get("rain30d_pctl") or 0)
     susc = loc.get("susceptibility_nearby_max") or 0
     fire_a = w.get("fire_alert")
+    # Acute "today" claims need recent data. If both weather sources have
+    # stalled (staleness beyond a week), degrade rain-red to a watch rather
+    # than assert present-tense danger from old numbers.
+    stale = (w.get("staleness_days") or 0) > 7
 
-    if rain >= 0.98 and susc >= 0.30:
+    if rain >= 0.98 and susc >= 0.30 and not stale:
         return "red", ("Rain here is extreme for this time of year and the "
                        "slopes nearby are the kind that fail. Be careful on "
                        "and below steep ground.")
+    if rain >= 0.98 and susc >= 0.30 and stale:
+        return "yellow", ("Rain was extreme for the season in the most "
+                          f"recent data, which is {w['staleness_days']} days "
+                          "old (upstream delay). Treat slopes with caution "
+                          "and check local warnings.")
     if fire_a:
         return "red", ("Fire weather is dangerous today: unusually hot, dry "
                        "conditions. A fire that starts can spread fast.")
@@ -113,8 +122,17 @@ def update_one(loc: dict, trig_b, fire_b, drought_b, fire_thr, fire_watch_thr,
     la, lo = loc["lat"], loc["lon"]
     w: dict = {}
 
-    rs = fresh.rain_series(la, lo)
+    rain_fill: dict = {}
+    rs = fresh.rain_series(la, lo, info_out=rain_fill)
     date = fresh.last_valid_date(rs) if rs else None
+    if date:
+        w["staleness_days"] = (dt.date.today()
+                               - dt.date.fromisoformat(date)).days
+    if rain_fill:
+        f_ = rain_fill["fields"].get("precipitation_sum", {})
+        w["rain_tail_source"] = (
+            f"last {f_.get('days')} days from {rain_fill['source']}, "
+            f"bias-corrected (POWER feed paused {f_.get('power_through')})")
     if rs is not None and date:
         f = rs.features(date)
         if f:
@@ -145,19 +163,26 @@ def update_one(loc: dict, trig_b, fire_b, drought_b, fire_thr, fire_watch_thr,
                                             "annual_ratio_power_over_era5")},
                                         **rec}
 
-    fs = fresh.fire_series(la, lo)
+    fire_fill: dict = {}
+    fs = fresh.fire_series(la, lo, info_out=fire_fill)
     fdate = fresh.last_valid_date(fs, "tmax") if fs else None
     if fs is not None and fdate:
         ff = fs.features(fdate)
         if ff:
             danger = _pred(fire_b, ff)
+            fire_lag = (dt.date.today() - dt.date.fromisoformat(fdate)).days
             w["fire_danger"] = None if danger is None else round(danger, 3)
+            # a fire ALERT is a present-tense claim -- require recent data
             w["fire_alert"] = bool(danger is not None and danger >= fire_thr
-                                   and w.get("data_quality") != "disagree")
+                                   and w.get("data_quality") != "disagree"
+                                   and fire_lag <= 7)
             w["fire_watch"] = bool(danger is not None
                                    and danger >= fire_watch_thr)
             w["kbdi"] = round(ff["kbdi"], 0)
             w["fire_date"] = fdate
+            if fire_fill:
+                w["fire_tail_source"] = (
+                    f"recent days from {fire_fill['source']}, bias-corrected")
 
     if glofas_stack is not None and date:
         try:
@@ -185,6 +210,15 @@ def update_one(loc: dict, trig_b, fire_b, drought_b, fire_thr, fire_watch_thr,
                 w["flood_note"] = "no river forecast fetchable right now"
 
     color, sentence = compose(loc, w)
+    caveats = ["percentiles vs this location's own 2004-present record",
+               "not an official warning; consult local authorities"]
+    if rain_fill or fire_fill:
+        caveats.append("NASA POWER's feed is delayed right now; the most "
+                       "recent days come from ERA5, bias-corrected against "
+                       "this cell's own overlap with POWER")
+    if (w.get("staleness_days") or 0) > 7:
+        caveats.append(f"freshest weather here is {w['staleness_days']} "
+                       "days old (upstream delays in both sources)")
     rec_out = {
         "location_id": loc["id"], "name": loc["name"],
         "lat": la, "lon": lo,
@@ -195,8 +229,7 @@ def update_one(loc: dict, trig_b, fire_b, drought_b, fire_thr, fire_watch_thr,
         "static": {k: loc.get(k) for k in
                    ("tier_susceptibility", "region_model", "susceptibility",
                     "susceptibility_nearby_max", "terrain", "people_10km")},
-        "caveats": ["percentiles vs this location's own 2004-present record",
-                    "not an official warning; consult local authorities"],
+        "caveats": caveats,
     }
     (OUT / "f").mkdir(parents=True, exist_ok=True)
     (OUT / "f" / f"{loc['id']}.json").write_text(

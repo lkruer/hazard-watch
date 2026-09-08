@@ -5,20 +5,28 @@
  "lon": 114.31,
  "status": "green",
  "message": "Nothing unusual for this location today.",
- "as_of": "2026-08-30",
- "generated_at": "2026-09-08T13:54:53",
+ "as_of": "2026-09-08",
+ "generated_at": "2026-09-08T14:46:55",
  "weather": {
-  "rain3d_pctl": 0.726,
-  "rain30d_pctl": 0.624,
-  "rain3d_mm": 11.2,
-  "spi90": 0.458,
-  "spi365": 0.765,
-  "p_severe_drought": 0.017,
-  "fire_danger": 0.034,
+  "staleness_days": 0,
+  "rain_tail_source": "last 9 days from ERA5 (Open-Meteo), bias-corrected (POWER feed paused 2026-08-30)",
+  "rain3d_pctl": 0.142,
+  "rain30d_pctl": 0.497,
+  "rain3d_mm": 0.0,
+  "spi90": 0.46,
+  "spi365": 0.625,
+  "p_severe_drought": 0.032,
+  "fire_danger": 0.245,
   "fire_alert": false,
   "fire_watch": false,
-  "kbdi": 374.0,
-  "fire_date": "2026-08-30"
+  "kbdi": 461.0,
+  "fire_date": "2026-09-08",
+  "fire_tail_source": "recent days from ERA5 (Open-Meteo), bias-corrected",
+  "flood_pctl": 0.409,
+  "flood_m3s": 26859.2,
+  "flood_week_max_pctl": 0.409,
+  "flood_week_max_date": "2026-09-08",
+  "flood_source": "GloFAS operational forecast (init 2026-09-07)"
  },
  "static": {
   "tier_susceptibility": "B",
@@ -34,6 +42,7 @@
  },
  "caveats": [
   "percentiles vs this location's own 2004-present record",
-  "not an official warning; consult local authorities"
+  "not an official warning; consult local authorities",
+  "NASA POWER's feed is delayed right now; the most recent days come from ERA5, bias-corrected against this cell's own overlap with POWER"
  ]
 }

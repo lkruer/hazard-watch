@@ -3,22 +3,30 @@
  "name": "Memphis, USA",
  "lat": 35.15,
  "lon": -90.05,
- "status": "green",
- "message": "Nothing unusual for this location today.",
- "as_of": "2026-08-30",
- "generated_at": "2026-09-08T13:54:56",
+ "status": "yellow",
+ "message": "Worth watching: fire weather is elevated. Not an alert, but conditions are unusual.",
+ "as_of": "2026-09-08",
+ "generated_at": "2026-09-08T14:51:32",
  "weather": {
-  "rain3d_pctl": 0.238,
-  "rain30d_pctl": 0.298,
-  "rain3d_mm": 0.1,
-  "spi90": 0.649,
-  "spi365": 0.214,
-  "p_severe_drought": 0.132,
-  "fire_danger": 0.195,
+  "staleness_days": 0,
+  "rain_tail_source": "last 9 days from ERA5 (Open-Meteo), bias-corrected (POWER feed paused 2026-08-30)",
+  "rain3d_pctl": 0.513,
+  "rain30d_pctl": 0.226,
+  "rain3d_mm": 2.0,
+  "spi90": 0.638,
+  "spi365": 0.156,
+  "p_severe_drought": 0.227,
+  "fire_danger": 0.403,
   "fire_alert": false,
-  "fire_watch": false,
-  "kbdi": 643.0,
-  "fire_date": "2026-08-30"
+  "fire_watch": true,
+  "kbdi": 704.0,
+  "fire_date": "2026-09-08",
+  "fire_tail_source": "recent days from ERA5 (Open-Meteo), bias-corrected",
+  "flood_pctl": 0.241,
+  "flood_m3s": 7785.2,
+  "flood_week_max_pctl": 0.241,
+  "flood_week_max_date": "2026-09-08",
+  "flood_source": "GloFAS operational forecast (init 2026-09-07)"
  },
  "static": {
   "tier_susceptibility": "B",
@@ -34,6 +42,7 @@
  },
  "caveats": [
   "percentiles vs this location's own 2004-present record",
-  "not an official warning; consult local authorities"
+  "not an official warning; consult local authorities",
+  "NASA POWER's feed is delayed right now; the most recent days come from ERA5, bias-corrected against this cell's own overlap with POWER"
  ]
 }

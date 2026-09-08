@@ -3,22 +3,25 @@
  "name": "Chongqing, China",
  "lat": 29.56,
  "lon": 106.55,
- "status": "green",
- "message": "Nothing unusual for this location today.",
- "as_of": "2026-08-30",
- "generated_at": "2026-09-08T13:54:49",
+ "status": "red",
+ "message": "Fire weather is dangerous today: unusually hot, dry conditions. A fire that starts can spread fast.",
+ "as_of": "2026-09-08",
+ "generated_at": "2026-09-08T14:42:55",
  "weather": {
-  "rain3d_pctl": 0.808,
-  "rain30d_pctl": 0.782,
-  "rain3d_mm": 26.5,
-  "spi90": 0.356,
-  "spi365": 0.839,
-  "p_severe_drought": 0.008,
-  "fire_danger": 0.107,
-  "fire_alert": false,
-  "fire_watch": false,
-  "kbdi": 174.0,
-  "fire_date": "2026-08-30"
+  "staleness_days": 0,
+  "rain_tail_source": "last 9 days from ERA5 (Open-Meteo), bias-corrected (POWER feed paused 2026-08-30)",
+  "rain3d_pctl": 0.133,
+  "rain30d_pctl": 0.509,
+  "rain3d_mm": 0.2,
+  "spi90": 0.17,
+  "spi365": 0.669,
+  "p_severe_drought": 0.032,
+  "fire_danger": 0.421,
+  "fire_alert": true,
+  "fire_watch": true,
+  "kbdi": 352.0,
+  "fire_date": "2026-09-08",
+  "fire_tail_source": "recent days from ERA5 (Open-Meteo), bias-corrected"
  },
  "static": {
   "tier_susceptibility": "B",
@@ -34,6 +37,7 @@
  },
  "caveats": [
   "percentiles vs this location's own 2004-present record",
-  "not an official warning; consult local authorities"
+  "not an official warning; consult local authorities",
+  "NASA POWER's feed is delayed right now; the most recent days come from ERA5, bias-corrected against this cell's own overlap with POWER"
  ]
 }
