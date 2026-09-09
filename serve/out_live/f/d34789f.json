@@ -5,35 +5,35 @@
  "lon": -75.56,
  "status": "unknown",
  "message": "Rainfall sources disagree here right now, so rain-based scores are not trustworthy. Treat those as unknown and rely on local guidance.",
- "as_of": "2026-09-08",
- "generated_at": "2026-09-08T14:42:52",
+ "as_of": "2026-09-09",
+ "generated_at": "2026-09-09T13:53:44",
  "weather": {
   "staleness_days": 0,
-  "rain_tail_source": "last 9 days from ERA5 (Open-Meteo), bias-corrected (POWER feed paused 2026-08-30)",
-  "rain3d_pctl": 0.152,
-  "rain30d_pctl": 0.534,
-  "rain3d_mm": 5.4,
-  "spi90": 0.391,
+  "rain_tail_source": "last 10 days from ERA5 (Open-Meteo), bias-corrected (POWER feed paused 2026-08-30)",
+  "rain3d_pctl": 0.234,
+  "rain30d_pctl": 0.553,
+  "rain3d_mm": 7.3,
+  "spi90": 0.401,
   "spi365": 0.54,
   "p_severe_drought": 0.214,
   "data_quality": "disagree",
   "data_quality_reasons": [
    "pattern corr 0.484",
-   "recent ratio 1.508 vs own baseline 0.648"
+   "recent ratio 1.521 vs own baseline 0.648"
   ],
   "data_quality_detail": {
    "corr_monthly": 0.484,
    "annual_ratio_power_over_era5": 0.648,
    "recent": "ok",
    "recent_power_mm": 569,
-   "recent_era5_mm": 377,
-   "recent_ratio": 1.508
+   "recent_era5_mm": 374,
+   "recent_ratio": 1.521
   },
-  "fire_danger": 0.289,
+  "fire_danger": 0.403,
   "fire_alert": false,
-  "fire_watch": false,
-  "kbdi": 77.0,
-  "fire_date": "2026-09-08",
+  "fire_watch": true,
+  "kbdi": 86.0,
+  "fire_date": "2026-09-09",
   "fire_tail_source": "recent days from ERA5 (Open-Meteo), bias-corrected"
  },
  "static": {

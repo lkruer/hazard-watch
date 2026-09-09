@@ -5,17 +5,17 @@
  "lon": 68.87,
  "status": "unknown",
  "message": "Rainfall sources disagree here right now, so rain-based scores are not trustworthy. Treat those as unknown and rely on local guidance.",
- "as_of": "2026-09-08",
- "generated_at": "2026-09-08T14:45:44",
+ "as_of": "2026-09-09",
+ "generated_at": "2026-09-09T13:53:52",
  "weather": {
   "staleness_days": 0,
-  "rain_tail_source": "last 9 days from ERA5 (Open-Meteo), bias-corrected (POWER feed paused 2026-08-30)",
-  "rain3d_pctl": 0.552,
-  "rain30d_pctl": 0.48,
+  "rain_tail_source": "last 10 days from ERA5 (Open-Meteo), bias-corrected (POWER feed paused 2026-08-30)",
+  "rain3d_pctl": 0.562,
+  "rain30d_pctl": 0.487,
   "rain3d_mm": 0.0,
-  "spi90": 0.341,
-  "spi365": 0.721,
-  "p_severe_drought": 0.032,
+  "spi90": 0.344,
+  "spi365": 0.481,
+  "p_severe_drought": 0.102,
   "data_quality": "disagree",
   "data_quality_reasons": [
    "recent ratio 5.124 vs own baseline 2.323"
@@ -28,17 +28,12 @@
    "recent_era5_mm": 8,
    "recent_ratio": 5.124
   },
-  "fire_danger": 0.219,
+  "fire_danger": 0.38,
   "fire_alert": false,
-  "fire_watch": false,
-  "kbdi": 775.0,
-  "fire_date": "2026-09-08",
-  "fire_tail_source": "recent days from ERA5 (Open-Meteo), bias-corrected",
-  "flood_pctl": 0.622,
-  "flood_m3s": 6237.6,
-  "flood_week_max_pctl": 0.673,
-  "flood_week_max_date": "2026-09-14",
-  "flood_source": "GloFAS operational forecast (init 2026-09-07)"
+  "fire_watch": true,
+  "kbdi": 776.0,
+  "fire_date": "2026-09-09",
+  "fire_tail_source": "recent days from ERA5 (Open-Meteo), bias-corrected"
  },
  "static": {
   "tier_susceptibility": "B",
