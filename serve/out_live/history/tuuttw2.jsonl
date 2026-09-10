@@ -3,3 +3,4 @@
 {"as_of": "2026-08-30", "status": "red", "rain3d_pctl": 0.949, "rain30d_pctl": 1.0, "spi90": 0.911, "fire_danger": 0.011, "flood_pctl": null}
 {"as_of": "2026-09-08", "status": "yellow", "rain3d_pctl": 0.62, "rain30d_pctl": 0.979, "spi90": 0.946, "fire_danger": 0.107, "flood_pctl": null}
 {"as_of": "2026-09-09", "status": "yellow", "rain3d_pctl": 0.669, "rain30d_pctl": 0.979, "spi90": 0.947, "fire_danger": 0.107, "flood_pctl": null}
+{"as_of": "2026-09-10", "status": "red", "rain3d_pctl": 0.726, "rain30d_pctl": 0.98, "spi90": 0.954, "fire_danger": 0.305, "flood_pctl": null}
