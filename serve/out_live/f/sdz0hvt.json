@@ -5,15 +5,15 @@
  "lon": 32.56,
  "status": "unknown",
  "message": "Rainfall sources disagree here right now, so rain-based scores are not trustworthy. Treat those as unknown and rely on local guidance.",
- "as_of": "2026-09-08",
- "generated_at": "2026-09-11T13:53:19",
+ "as_of": "2026-09-09",
+ "generated_at": "2026-09-12T13:50:30",
  "weather": {
   "staleness_days": 3,
-  "rain3d_pctl": 0.272,
-  "rain30d_pctl": 0.191,
-  "rain3d_mm": 0.4,
-  "spi90": 0.091,
-  "spi365": 0.107,
+  "rain3d_pctl": 0.455,
+  "rain30d_pctl": 0.198,
+  "rain3d_mm": 1.2,
+  "spi90": 0.1,
+  "spi365": 0.091,
   "p_severe_drought": 0.419,
   "data_quality": "disagree",
   "data_quality_reasons": [
@@ -24,15 +24,15 @@
    "corr_monthly": 0.546,
    "annual_ratio_power_over_era5": 5.023,
    "recent": "disagree",
-   "recent_power_mm": 60,
+   "recent_power_mm": 59,
    "recent_era5_mm": 8,
-   "recent_ratio": 6.986
+   "recent_ratio": 6.868
   },
   "fire_danger": 0.289,
   "fire_alert": false,
   "fire_watch": false,
-  "kbdi": 701.0,
-  "fire_date": "2026-09-08"
+  "kbdi": 703.0,
+  "fire_date": "2026-09-09"
  },
  "static": {
   "tier_susceptibility": "B",
