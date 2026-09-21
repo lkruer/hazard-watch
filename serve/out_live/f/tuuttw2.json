@@ -6,9 +6,9 @@
  "status": "red",
  "message": "Rain here is extreme for this time of year and the slopes nearby are the kind that fail. Be careful on and below steep ground.",
  "as_of": "2026-09-17",
- "generated_at": "2026-09-20T13:51:02",
+ "generated_at": "2026-09-21T13:53:41",
  "weather": {
-  "staleness_days": 3,
+  "staleness_days": 4,
   "rain3d_pctl": 0.956,
   "rain30d_pctl": 0.999,
   "rain3d_mm": 63.8,
