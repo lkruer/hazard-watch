@@ -6,9 +6,9 @@
  "status": "yellow",
  "message": "Worth watching: rain is unusually heavy for the season. Not an alert, but conditions are unusual.",
  "as_of": "2026-09-22",
- "generated_at": "2026-09-25T13:54:12",
+ "generated_at": "2026-09-26T13:50:47",
  "weather": {
-  "staleness_days": 3,
+  "staleness_days": 4,
   "rain3d_pctl": 0.957,
   "rain30d_pctl": 0.935,
   "rain3d_mm": 79.2,
