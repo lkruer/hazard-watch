@@ -5,21 +5,21 @@
  "lon": 100.5,
  "status": "red",
  "message": "Rain here is extreme for this time of year and the slopes nearby are the kind that fail. Be careful on and below steep ground.",
- "as_of": "2026-09-26",
- "generated_at": "2026-09-29T13:56:58",
+ "as_of": "2026-09-27",
+ "generated_at": "2026-09-30T18:35:12",
  "weather": {
   "staleness_days": 3,
   "rain3d_pctl": 1.0,
   "rain30d_pctl": 1.0,
-  "rain3d_mm": 250.6,
+  "rain3d_mm": 269.3,
   "spi90": 0.981,
-  "spi365": 0.818,
+  "spi365": 0.857,
   "p_severe_drought": 0.004,
   "fire_danger": 0.031,
   "fire_alert": false,
   "fire_watch": false,
-  "kbdi": 15.0,
-  "fire_date": "2026-09-26"
+  "kbdi": 17.0,
+  "fire_date": "2026-09-27"
  },
  "static": {
   "tier_susceptibility": "B",
