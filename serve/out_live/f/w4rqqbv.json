@@ -3,23 +3,35 @@
  "name": "Bangkok, Thailand",
  "lat": 13.76,
  "lon": 100.5,
- "status": "red",
- "message": "Rain here is extreme for this time of year and the slopes nearby are the kind that fail. Be careful on and below steep ground.",
- "as_of": "2026-10-16",
- "generated_at": "2026-10-19T19:29:44",
+ "status": "unknown",
+ "message": "Rainfall sources disagree here right now, so rain-based scores are not trustworthy. Treat those as unknown and rely on local guidance.",
+ "as_of": "2026-10-17",
+ "generated_at": "2026-10-20T18:07:10",
  "weather": {
   "staleness_days": 3,
-  "rain3d_pctl": 0.822,
-  "rain30d_pctl": 0.987,
-  "rain3d_mm": 37.3,
-  "spi90": 0.96,
-  "spi365": 0.851,
-  "p_severe_drought": 0.004,
-  "fire_danger": 0.219,
+  "rain3d_pctl": 1.0,
+  "rain30d_pctl": 0.993,
+  "rain3d_mm": 1553.3,
+  "spi90": 1.0,
+  "spi365": 1.0,
+  "p_severe_drought": 0,
+  "data_quality": "disagree",
+  "data_quality_reasons": [
+   "recent ratio 23.459 vs own baseline 0.915"
+  ],
+  "data_quality_detail": {
+   "corr_monthly": 0.93,
+   "annual_ratio_power_over_era5": 0.915,
+   "recent": "disagree",
+   "recent_power_mm": 28243,
+   "recent_era5_mm": 1203,
+   "recent_ratio": 23.459
+  },
+  "fire_danger": 0.011,
   "fire_alert": false,
   "fire_watch": false,
-  "kbdi": 31.0,
-  "fire_date": "2026-10-16"
+  "kbdi": 53.0,
+  "fire_date": "2026-10-17"
  },
  "static": {
   "tier_susceptibility": "B",

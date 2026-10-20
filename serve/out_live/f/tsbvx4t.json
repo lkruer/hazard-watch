@@ -3,23 +3,35 @@
  "name": "Sukkur, Pakistan",
  "lat": 27.7,
  "lon": 68.87,
- "status": "green",
- "message": "Nothing unusual for this location today.",
- "as_of": "2026-10-16",
- "generated_at": "2026-10-19T19:29:38",
+ "status": "unknown",
+ "message": "Rainfall sources disagree here right now, so rain-based scores are not trustworthy. Treat those as unknown and rely on local guidance.",
+ "as_of": "2026-10-17",
+ "generated_at": "2026-10-20T18:07:04",
  "weather": {
   "staleness_days": 3,
-  "rain3d_pctl": 0.912,
-  "rain30d_pctl": 0.728,
-  "rain3d_mm": 0.1,
-  "spi90": 0.252,
-  "spi365": 0.352,
-  "p_severe_drought": 0.145,
-  "fire_danger": 0.245,
+  "rain3d_pctl": 0.86,
+  "rain30d_pctl": 0.927,
+  "rain3d_mm": 0.0,
+  "spi90": 0.867,
+  "spi365": 0.954,
+  "p_severe_drought": 0.001,
+  "data_quality": "disagree",
+  "data_quality_reasons": [
+   "recent ratio 52.253 vs own baseline 2.323"
+  ],
+  "data_quality_detail": {
+   "corr_monthly": 0.836,
+   "annual_ratio_power_over_era5": 2.323,
+   "recent": "disagree",
+   "recent_power_mm": 454,
+   "recent_era5_mm": 8,
+   "recent_ratio": 52.253
+  },
+  "fire_danger": 0.283,
   "fire_alert": false,
   "fire_watch": false,
-  "kbdi": 788.0,
-  "fire_date": "2026-10-16"
+  "kbdi": 452.0,
+  "fire_date": "2026-10-17"
  },
  "static": {
   "tier_susceptibility": "B",

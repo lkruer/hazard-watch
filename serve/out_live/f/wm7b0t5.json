@@ -3,23 +3,35 @@
  "name": "Chongqing, China",
  "lat": 29.56,
  "lon": 106.55,
- "status": "green",
- "message": "Nothing unusual for this location today.",
- "as_of": "2026-10-16",
- "generated_at": "2026-10-19T19:29:36",
+ "status": "unknown",
+ "message": "Rainfall sources disagree here right now, so rain-based scores are not trustworthy. Treat those as unknown and rely on local guidance.",
+ "as_of": "2026-10-17",
+ "generated_at": "2026-10-20T18:07:01",
  "weather": {
   "staleness_days": 3,
-  "rain3d_pctl": 0.738,
-  "rain30d_pctl": 0.582,
-  "rain3d_mm": 13.8,
-  "spi90": 0.361,
-  "spi365": 0.393,
-  "p_severe_drought": 0.132,
-  "fire_danger": 0.047,
+  "rain3d_pctl": 0.969,
+  "rain30d_pctl": 0.943,
+  "rain3d_mm": 249.1,
+  "spi90": 0.954,
+  "spi365": 0.966,
+  "p_severe_drought": 0.001,
+  "data_quality": "disagree",
+  "data_quality_reasons": [
+   "recent ratio 15.943 vs own baseline 0.994"
+  ],
+  "data_quality_detail": {
+   "corr_monthly": 0.889,
+   "annual_ratio_power_over_era5": 0.994,
+   "recent": "disagree",
+   "recent_power_mm": 9750,
+   "recent_era5_mm": 611,
+   "recent_ratio": 15.943
+  },
+  "fire_danger": 0.011,
   "fire_alert": false,
   "fire_watch": false,
-  "kbdi": 116.0,
-  "fire_date": "2026-10-16"
+  "kbdi": 24.0,
+  "fire_date": "2026-10-17"
  },
  "static": {
   "tier_susceptibility": "B",

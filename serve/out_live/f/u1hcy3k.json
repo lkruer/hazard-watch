@@ -3,23 +3,35 @@
  "name": "Cologne, Germany",
  "lat": 50.94,
  "lon": 6.96,
- "status": "green",
- "message": "Nothing unusual for this location today.",
- "as_of": "2026-10-16",
- "generated_at": "2026-10-19T19:29:42",
+ "status": "unknown",
+ "message": "Rainfall sources disagree here right now, so rain-based scores are not trustworthy. Treat those as unknown and rely on local guidance.",
+ "as_of": "2026-10-17",
+ "generated_at": "2026-10-20T18:07:07",
  "weather": {
   "staleness_days": 3,
-  "rain3d_pctl": 0.412,
-  "rain30d_pctl": 0.729,
-  "rain3d_mm": 2.5,
-  "spi90": 0.499,
-  "spi365": 0.154,
-  "p_severe_drought": 0.419,
-  "fire_danger": 0.245,
+  "rain3d_pctl": 0.969,
+  "rain30d_pctl": 0.974,
+  "rain3d_mm": 165.1,
+  "spi90": 0.977,
+  "spi365": 1.0,
+  "p_severe_drought": 0.004,
+  "data_quality": "disagree",
+  "data_quality_reasons": [
+   "recent ratio 26.358 vs own baseline 0.873"
+  ],
+  "data_quality_detail": {
+   "corr_monthly": 0.9,
+   "annual_ratio_power_over_era5": 0.873,
+   "recent": "disagree",
+   "recent_power_mm": 5147,
+   "recent_era5_mm": 194,
+   "recent_ratio": 26.358
+  },
+  "fire_danger": 0.006,
   "fire_alert": false,
   "fire_watch": false,
-  "kbdi": 57.0,
-  "fire_date": "2026-10-16"
+  "kbdi": 4.0,
+  "fire_date": "2026-10-17"
  },
  "static": {
   "tier_susceptibility": "B",
