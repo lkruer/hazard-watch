@@ -3,35 +3,23 @@
  "name": "Seattle, USA",
  "lat": 47.61,
  "lon": -122.33,
- "status": "unknown",
- "message": "Rainfall sources disagree here right now, so rain-based scores are not trustworthy. Treat those as unknown and rely on local guidance.",
- "as_of": "2026-10-19",
- "generated_at": "2026-10-22T18:10:26",
+ "status": "green",
+ "message": "Nothing unusual for this location today.",
+ "as_of": "2026-10-20",
+ "generated_at": "2026-10-23T17:58:23",
  "weather": {
   "staleness_days": 3,
-  "rain3d_pctl": 0.655,
-  "rain30d_pctl": 0.934,
-  "rain3d_mm": 15.1,
-  "spi90": 0.939,
-  "spi365": 0.978,
-  "p_severe_drought": 0.001,
-  "data_quality": "disagree",
-  "data_quality_reasons": [
-   "recent ratio 39.623 vs own baseline 1.026"
-  ],
-  "data_quality_detail": {
-   "corr_monthly": 0.971,
-   "annual_ratio_power_over_era5": 1.026,
-   "recent": "disagree",
-   "recent_power_mm": 3367,
-   "recent_era5_mm": 84,
-   "recent_ratio": 39.623
-  },
-  "fire_danger": 0.037,
+  "rain3d_pctl": 0.06,
+  "rain30d_pctl": 0.081,
+  "rain3d_mm": 0.0,
+  "spi90": 0.198,
+  "spi365": 0.645,
+  "p_severe_drought": 0.085,
+  "fire_danger": 0.06,
   "fire_alert": false,
   "fire_watch": false,
-  "kbdi": 46.0,
-  "fire_date": "2026-10-19"
+  "kbdi": 54.0,
+  "fire_date": "2026-10-20"
  },
  "static": {
   "tier_susceptibility": "A",
