@@ -6,9 +6,9 @@
  "status": "unknown",
  "message": "Rainfall sources disagree here right now, so rain-based scores are not trustworthy. Treat those as unknown and rely on local guidance.",
  "as_of": "2026-10-21",
- "generated_at": "2026-10-24T16:59:19",
+ "generated_at": "2026-10-25T17:13:51",
  "weather": {
-  "staleness_days": 3,
+  "staleness_days": 4,
   "rain3d_pctl": 0.996,
   "rain30d_pctl": 0.986,
   "rain3d_mm": 326.2,
