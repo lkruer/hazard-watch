@@ -3,23 +3,25 @@
  "name": "Blantyre, Malawi",
  "lat": -15.79,
  "lon": 35.0,
- "status": "yellow",
- "message": "Worth watching: rain is unusually heavy for the season. Not an alert, but conditions are unusual.",
- "as_of": "2026-10-21",
- "generated_at": "2026-10-26T19:34:48",
+ "status": "green",
+ "message": "Nothing unusual for this location today.",
+ "as_of": "2026-10-27",
+ "generated_at": "2026-10-27T18:59:22",
  "weather": {
-  "staleness_days": 5,
-  "rain3d_pctl": 0.248,
-  "rain30d_pctl": 0.957,
-  "rain3d_mm": 0.0,
-  "spi90": 0.933,
-  "spi365": 0.885,
+  "staleness_days": 0,
+  "rain_tail_source": "last 6 days from ERA5 (Open-Meteo), bias-corrected (POWER feed paused 2026-10-21)",
+  "rain3d_pctl": 0.539,
+  "rain30d_pctl": 0.946,
+  "rain3d_mm": 0.5,
+  "spi90": 0.894,
+  "spi365": 0.898,
   "p_severe_drought": 0.004,
-  "fire_danger": 0.22,
+  "fire_danger": 0.167,
   "fire_alert": false,
   "fire_watch": false,
-  "kbdi": 696.0,
-  "fire_date": "2026-10-21"
+  "kbdi": 724.0,
+  "fire_date": "2026-10-27",
+  "fire_tail_source": "recent days from ERA5 (Open-Meteo), bias-corrected"
  },
  "static": {
   "tier_susceptibility": "A",
@@ -35,6 +37,7 @@
  },
  "caveats": [
   "percentiles vs this location's own 2004-present record",
-  "not an official warning; consult local authorities"
+  "not an official warning; consult local authorities",
+  "NASA POWER's feed is delayed right now; the most recent days come from ERA5, bias-corrected against this cell's own overlap with POWER"
  ]
 }

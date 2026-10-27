@@ -5,21 +5,23 @@
  "lon": -90.05,
  "status": "red",
  "message": "Fire weather is dangerous today: unusually hot, dry conditions. A fire that starts can spread fast.",
- "as_of": "2026-10-21",
- "generated_at": "2026-10-26T19:34:53",
+ "as_of": "2026-10-27",
+ "generated_at": "2026-10-27T18:59:30",
  "weather": {
-  "staleness_days": 5,
-  "rain3d_pctl": 0.272,
-  "rain30d_pctl": 0.094,
+  "staleness_days": 0,
+  "rain_tail_source": "last 6 days from ERA5 (Open-Meteo), bias-corrected (POWER feed paused 2026-10-21)",
+  "rain3d_pctl": 0.248,
+  "rain30d_pctl": 0.074,
   "rain3d_mm": 0.0,
-  "spi90": 0.011,
-  "spi365": 0.033,
+  "spi90": 0.001,
+  "spi365": 0.001,
   "p_severe_drought": 0.472,
-  "fire_danger": 0.641,
+  "fire_danger": 0.43,
   "fire_alert": true,
   "fire_watch": true,
-  "kbdi": 767.0,
-  "fire_date": "2026-10-21"
+  "kbdi": 771.0,
+  "fire_date": "2026-10-27",
+  "fire_tail_source": "recent days from ERA5 (Open-Meteo), bias-corrected"
  },
  "static": {
   "tier_susceptibility": "B",
@@ -35,6 +37,7 @@
  },
  "caveats": [
   "percentiles vs this location's own 2004-present record",
-  "not an official warning; consult local authorities"
+  "not an official warning; consult local authorities",
+  "NASA POWER's feed is delayed right now; the most recent days come from ERA5, bias-corrected against this cell's own overlap with POWER"
  ]
 }

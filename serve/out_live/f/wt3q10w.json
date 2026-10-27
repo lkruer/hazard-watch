@@ -5,21 +5,23 @@
  "lon": 114.31,
  "status": "green",
  "message": "Nothing unusual for this location today.",
- "as_of": "2026-10-21",
- "generated_at": "2026-10-26T19:34:50",
+ "as_of": "2026-10-27",
+ "generated_at": "2026-10-27T18:59:26",
  "weather": {
-  "staleness_days": 5,
-  "rain3d_pctl": 0.802,
-  "rain30d_pctl": 0.808,
-  "rain3d_mm": 10.6,
-  "spi90": 0.347,
-  "spi365": 0.522,
+  "staleness_days": 0,
+  "rain_tail_source": "last 6 days from ERA5 (Open-Meteo), bias-corrected (POWER feed paused 2026-10-21)",
+  "rain3d_pctl": 0.632,
+  "rain30d_pctl": 0.815,
+  "rain3d_mm": 4.1,
+  "spi90": 0.338,
+  "spi365": 0.51,
   "p_severe_drought": 0.085,
-  "fire_danger": 0.037,
+  "fire_danger": 0.047,
   "fire_alert": false,
   "fire_watch": false,
-  "kbdi": 364.0,
-  "fire_date": "2026-10-21"
+  "kbdi": 398.0,
+  "fire_date": "2026-10-27",
+  "fire_tail_source": "recent days from ERA5 (Open-Meteo), bias-corrected"
  },
  "static": {
   "tier_susceptibility": "B",
@@ -35,6 +37,7 @@
  },
  "caveats": [
   "percentiles vs this location's own 2004-present record",
-  "not an official warning; consult local authorities"
+  "not an official warning; consult local authorities",
+  "NASA POWER's feed is delayed right now; the most recent days come from ERA5, bias-corrected against this cell's own overlap with POWER"
  ]
 }
