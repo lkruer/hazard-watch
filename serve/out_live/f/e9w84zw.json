@@ -5,35 +5,33 @@
  "lon": -13.23,
  "status": "unknown",
  "message": "Rainfall sources disagree here right now, so rain-based scores are not trustworthy. Treat those as unknown and rely on local guidance.",
- "as_of": "2026-10-29",
- "generated_at": "2026-10-29T19:13:37",
+ "as_of": "2026-10-27",
+ "generated_at": "2026-10-30T18:52:27",
  "weather": {
-  "staleness_days": 0,
-  "rain_tail_source": "last 8 days from ERA5 (Open-Meteo), bias-corrected (POWER feed paused 2026-10-21)",
-  "rain3d_pctl": 0.633,
-  "rain30d_pctl": 0.617,
-  "rain3d_mm": 16.5,
-  "spi90": 0.023,
-  "spi365": 0.024,
+  "staleness_days": 3,
+  "rain3d_pctl": 0.442,
+  "rain30d_pctl": 0.553,
+  "rain3d_mm": 7.9,
+  "spi90": 0.027,
+  "spi365": 0.028,
   "p_severe_drought": 0.768,
   "data_quality": "disagree",
   "data_quality_reasons": [
-   "recent ratio 0.137 vs own baseline 1.345"
+   "recent ratio 0.129 vs own baseline 1.345"
   ],
   "data_quality_detail": {
    "corr_monthly": 0.805,
    "annual_ratio_power_over_era5": 1.345,
    "recent": "disagree",
-   "recent_power_mm": 301,
-   "recent_era5_mm": 2204,
-   "recent_ratio": 0.137
+   "recent_power_mm": 285,
+   "recent_era5_mm": 2217,
+   "recent_ratio": 0.129
   },
-  "fire_danger": 0.289,
+  "fire_danger": 0.245,
   "fire_alert": false,
   "fire_watch": false,
-  "kbdi": 354.0,
-  "fire_date": "2026-10-29",
-  "fire_tail_source": "recent days from ERA5 (Open-Meteo), bias-corrected"
+  "kbdi": 346.0,
+  "fire_date": "2026-10-27"
  },
  "static": {
   "tier_susceptibility": "B",
@@ -49,7 +47,6 @@
  },
  "caveats": [
   "percentiles vs this location's own 2004-present record",
-  "not an official warning; consult local authorities",
-  "NASA POWER's feed is delayed right now; the most recent days come from ERA5, bias-corrected against this cell's own overlap with POWER"
+  "not an official warning; consult local authorities"
  ]
 }

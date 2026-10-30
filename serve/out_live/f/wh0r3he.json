@@ -3,25 +3,23 @@
  "name": "Dhaka, Bangladesh",
  "lat": 23.8,
  "lon": 90.4,
- "status": "green",
- "message": "Nothing unusual for this location today.",
- "as_of": "2026-10-29",
- "generated_at": "2026-10-29T19:13:34",
+ "status": "red",
+ "message": "Fire weather is dangerous today: unusually hot, dry conditions. A fire that starts can spread fast.",
+ "as_of": "2026-10-27",
+ "generated_at": "2026-10-30T18:52:25",
  "weather": {
-  "staleness_days": 0,
-  "rain_tail_source": "last 8 days from ERA5 (Open-Meteo), bias-corrected (POWER feed paused 2026-10-21)",
-  "rain3d_pctl": 0.858,
-  "rain30d_pctl": 0.079,
-  "rain3d_mm": 17.4,
-  "spi90": 0.199,
-  "spi365": 0.736,
+  "staleness_days": 3,
+  "rain3d_pctl": 0.668,
+  "rain30d_pctl": 0.023,
+  "rain3d_mm": 4.0,
+  "spi90": 0.19,
+  "spi365": 0.737,
   "p_severe_drought": 0.032,
-  "fire_danger": 0.107,
-  "fire_alert": false,
-  "fire_watch": false,
-  "kbdi": 644.0,
-  "fire_date": "2026-10-29",
-  "fire_tail_source": "recent days from ERA5 (Open-Meteo), bias-corrected"
+  "fire_danger": 0.407,
+  "fire_alert": true,
+  "fire_watch": true,
+  "kbdi": 679.0,
+  "fire_date": "2026-10-27"
  },
  "static": {
   "tier_susceptibility": "B",
@@ -37,7 +35,6 @@
  },
  "caveats": [
   "percentiles vs this location's own 2004-present record",
-  "not an official warning; consult local authorities",
-  "NASA POWER's feed is delayed right now; the most recent days come from ERA5, bias-corrected against this cell's own overlap with POWER"
+  "not an official warning; consult local authorities"
  ]
 }
