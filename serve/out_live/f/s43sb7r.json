@@ -5,21 +5,21 @@
  "lon": 2.13,
  "status": "green",
  "message": "Nothing unusual for this location today.",
- "as_of": "2026-11-07",
- "generated_at": "2026-11-10T20:37:02",
+ "as_of": "2026-11-09",
+ "generated_at": "2026-11-12T21:06:42",
  "weather": {
   "staleness_days": 3,
-  "rain3d_pctl": 0.82,
-  "rain30d_pctl": 0.277,
+  "rain3d_pctl": 0.854,
+  "rain30d_pctl": 0.284,
   "rain3d_mm": 0.0,
-  "spi90": 0.529,
+  "spi90": 0.561,
   "spi365": 0.63,
   "p_severe_drought": 0.032,
   "fire_danger": 0.245,
   "fire_alert": false,
   "fire_watch": false,
-  "kbdi": 534.0,
-  "fire_date": "2026-11-07"
+  "kbdi": 549.0,
+  "fire_date": "2026-11-09"
  },
  "static": {
   "tier_susceptibility": "B",
