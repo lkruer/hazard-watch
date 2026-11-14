@@ -5,21 +5,21 @@
  "lon": 100.5,
  "status": "yellow",
  "message": "Worth watching: rain is unusually heavy for the season. Not an alert, but conditions are unusual.",
- "as_of": "2026-11-10",
- "generated_at": "2026-11-13T20:39:49",
+ "as_of": "2026-11-11",
+ "generated_at": "2026-11-14T18:52:10",
  "weather": {
   "staleness_days": 3,
-  "rain3d_pctl": 0.887,
-  "rain30d_pctl": 0.956,
-  "rain3d_mm": 18.8,
+  "rain3d_pctl": 0.773,
+  "rain30d_pctl": 0.95,
+  "rain3d_mm": 9.2,
   "spi90": 0.996,
   "spi365": 0.896,
   "p_severe_drought": 0.002,
   "fire_danger": 0.031,
   "fire_alert": false,
   "fire_watch": false,
-  "kbdi": 40.0,
-  "fire_date": "2026-11-10"
+  "kbdi": 56.0,
+  "fire_date": "2026-11-11"
  },
  "static": {
   "tier_susceptibility": "B",
