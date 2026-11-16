@@ -5,21 +5,21 @@
  "lon": -90.05,
  "status": "yellow",
  "message": "Worth watching: a long drought is in progress. Not an alert, but conditions are unusual.",
- "as_of": "2026-11-12",
- "generated_at": "2026-11-15T20:00:33",
+ "as_of": "2026-11-13",
+ "generated_at": "2026-11-16T23:02:22",
  "weather": {
   "staleness_days": 3,
-  "rain3d_pctl": 0.351,
-  "rain30d_pctl": 0.247,
+  "rain3d_pctl": 0.357,
+  "rain30d_pctl": 0.21,
   "rain3d_mm": 0.2,
   "spi90": 0.051,
   "spi365": 0.028,
-  "p_severe_drought": 0.419,
-  "fire_danger": 0.305,
+  "p_severe_drought": 0.39,
+  "fire_danger": 0.219,
   "fire_alert": false,
   "fire_watch": false,
   "kbdi": 604.0,
-  "fire_date": "2026-11-12"
+  "fire_date": "2026-11-13"
  },
  "static": {
   "tier_susceptibility": "B",
